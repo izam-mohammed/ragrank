@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "ragrank"
+version = "0.1.0"
+description = "An evaluation libarary for RAG models"
+authors = ["Izam Mohammed"]
+license = "Apatche 2.0"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
