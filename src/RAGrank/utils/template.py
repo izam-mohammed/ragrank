@@ -2,6 +2,19 @@ import os
 from pathlib import Path
 import logging
 
+
+print(f"current working dir - {os.getcwd()}")
+input_val = input("press ENTER to proceed, 'q' to exit, 'up' to go root: ")
+input_val = input_val.lower()
+while input_val:
+    if input_val == "up":
+        os.chdir("../")
+    elif not input_val:
+        break
+    else:
+        exit()
+
+
 logging.basicConfig(level=logging.INFO, format="[%(asctime)s]: %(message)s:")
 
 project_name = "RAGrank"
@@ -43,8 +56,8 @@ list_of_files = [
     f"src/{project_name}/config/__init__.py",
     f"src/{project_name}/config/base.py",
     f"src/{project_name}/config/run_config.py",
-    f"src/{project_name}/_version.py"
-    f"src/{project_name}/api.py",
+    f"src/{project_name}/_version.py",
+    f"src/{project_name}/_api.py",
     f"src/{project_name}/constants.py",
     f"src/{project_name}/cache.py",
     f"src/{project_name}/runner.py",
