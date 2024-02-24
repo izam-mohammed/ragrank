@@ -5,6 +5,19 @@ import logging
 logging.basicConfig(level=logging.INFO, format="[%(asctime)s]: %(message)s:")
 
 project_name = "RAGrank"
+docs_folder = "docs/docs"
+metrics=[
+    "response_related/response_relevancy",
+    "safity_related/thretening",
+    "efficiency_related/response_time",
+    "novelty_related/creativity",
+    "coverage_related/domain_coverage",
+    "interpretebility_related/transparancy",
+    "robustness_related/Adversarial_robustness",
+    "chat_related/satisfaction",
+    "language_related/grammar",
+    "coding_related/code_quality",
+]
 
 list_of_files = [
     f"src/{project_name}/llm/__init__.py",
@@ -64,8 +77,53 @@ list_of_files = [
     ".devcontainer/devcontainer.json",
     ".devcontainer/docker-compose.yaml",
     ".readthedocs.yaml",
-    
+    "docs/api_reference/create_api_rst.py",
+
+    #docs related
+    f"{docs_folder}/index.md",
+    f"{docs_folder}/getting_started/index.md",
+    f"{docs_folder}/getting_started/quick_start.md",
+    f"{docs_folder}/getting_started/basic_evluation.md",
+    f"{docs_folder}/getting_started/test_data_generation.md",
+    f"{docs_folder}/core_concepts/index.md",
+    f"{docs_folder}/core_concepts/what_is_llm.md",
+    f"{docs_folder}/core_concepts/what_and_why_rag.md",
+    f"{docs_folder}/core_concepts/why_evaluation.md",
+    f"{docs_folder}/core_concepts/why_ragrank.md",
+    f"{docs_folder}/metrics/index.md",
+    f"{docs_folder}/evaluation/index.md",
+    f"{docs_folder}/evaluation/comprehensive_evaluation.md",
+    f"{docs_folder}/evaluation/with_custom_data.md",
+    f"{docs_folder}/evaluation/with_custom_llm_and_embedding.md",
+    f"{docs_folder}/evaluation/eval_chain.md",
+    f"{docs_folder}/evaluation/with_decorators.md",
+    f"{docs_folder}/evaluation/with_custom_prompts.md",
+    f"{docs_folder}/evaluation/callbacks_and_cache.md",
+    f"{docs_folder}/integrations/framework/index.md",
+    f"{docs_folder}/integrations/llm/index.md",
+    f"{docs_folder}/integrations/evalution/index.md",
+    f"{docs_folder}/integrations/vectordb/index.md",
+    f"{docs_folder}/metrics/index.md",
+    f"{docs_folder}/metrics/response_related/index.md",
+    f"{docs_folder}/metrics/safity_related/index.md",
+    f"{docs_folder}/metrics/efficiency_related/index.md",
+    f"{docs_folder}/metrics/novelty_related/index.md",
+    f"{docs_folder}/metrics/coverage_related/index.md",
+    f"{docs_folder}/metrics/interpretebility_related/index.md",
+    f"{docs_folder}/metrics/robustness_related/index.md",
+    f"{docs_folder}/metrics/chat_related/index.md",
+    f"{docs_folder}/metrics/language_related/index.md",
+    f"{docs_folder}/metrics/coding_related/index.md",
+    f"{docs_folder}/api_reference/index.md",
+    f"{docs_folder}/community/index.md",
+    f"{docs_folder}/more/index.md",
+    f"{docs_folder}/more/about_us.md",
+    f"{docs_folder}/more/contributing.md",
+    f"{docs_folder}/more/security.md",
 ]
+
+# adding the metric
+list_of_files += [f"{docs_folder}/metrics/{metric}.md" for metric in metrics]
 
 for filepath in list_of_files:
     filepath = Path(filepath)
