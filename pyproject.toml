@@ -7,8 +7,19 @@ license = "Apatche 2.0"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = ">=3.8.1,<4.0"
+python = ">=3.9,<4.0"
 
+[tool.poetry.group.docs]
+optional = true
+
+[tool.poetry.group.docs.dependencies]
+sphinx = "^7.2.6"
+
+[tool.poetry.group.dev]
+optional = true
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0.1"
 
 [build-system]
 requires = ["poetry-core"]
