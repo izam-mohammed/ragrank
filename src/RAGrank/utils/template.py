@@ -38,7 +38,7 @@ list_of_files = [
     f"src/{project_name}/llm/openai.py",
     f"src/{project_name}/llm/langchain.py",
     f"src/{project_name}/embedding/__init__.py",
-    f"src/{project_name}/embedchain/base.py",
+    f"src/{project_name}/embedding/base.py",
     f"src/{project_name}/embedding/langchain.py",
     f"src/{project_name}/metrics/__init__.py",
     f"src/{project_name}/metrics/base.py",
