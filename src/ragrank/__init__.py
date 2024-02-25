@@ -1,3 +1,3 @@
-from evaluation import evaluate
+from ragrank.evaluation import evaluate
 
 __all__ = ["evaluate"]
