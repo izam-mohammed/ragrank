@@ -8,6 +8,8 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.9,<4.0"
+numpy = "^1.26.4"
+pathlib = "^1.0.1"
 
 [tool.poetry.group.docs]
 optional = true
