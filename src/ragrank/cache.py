@@ -1,7 +1,13 @@
-class RagrankBaseCache:
+class CacheManager:
     def __init__(self) -> None:
         ...
 
-class RagrankCacheManager:
-    def __init__(self) -> None:
+    @classmethod
+    def get_cache_dir(self):
+        ...
+
+    def save(self):
+        ...
+
+    def from_dir(self, dir:str):
         ...
