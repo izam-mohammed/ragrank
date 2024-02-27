@@ -5,7 +5,7 @@ description = "An evaluation libarary for RAG models"
 authors = ["Izam Mohammed <izamdeveloper1@gmail.com>"]
 license = "Apache-2.0"
 readme = "README.md"
-repository = "https://github.com/Auto-Playground/RAGrank"
+repository = "https://github.com/Auto-Playground/Ragrank"
 packages = [
     { include = "ragrank", from = "src" },
 ]
@@ -30,6 +30,8 @@ furo = "^2024.1.29"
 myst-parser = "^2.0.0"
 sphinx-design = "^0.5.0"
 linkify-it-py = "^2.0.3"
+sphinxext-opengraph = "^0.9.1"
+sphinx-copybutton = "^0.5.2"
 
 [tool.poetry.group.dev]
 optional = true
