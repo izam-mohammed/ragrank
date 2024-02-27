@@ -17,7 +17,7 @@ while input_val:
 
 logging.basicConfig(level=logging.INFO, format="[%(asctime)s]: %(message)s:")
 
-project_name = "RAGrank"
+project_name = "Ragrank"
 docs_folder = "docs/docs"
 metrics=[
     "response_related/response_relevancy",
