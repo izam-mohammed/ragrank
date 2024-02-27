@@ -1,53 +1,29 @@
 ```{toctree}
+:hidden:
 
+get_started/index
+core_concepts/index
+evaluation/index
 metrics/index
+integrations/index
+api_reference/index
+community/index
+more/index
 ```
 
-# Heading 1
+# Ragrank 🎯
 
-Hallo world!
+Ragrank 📊 user-friendly Python library designed to simplify the evaluation process of your Retrieval Augmented Generation (RAG) models.
 
-```{note}
-An admonition note!
-```
+**With Ragrank, you can:**
 
-[Link to the heading](#heading-1)
+- Effortlessly assess the performance of your models by providing clear rankings and feedback on their generated outputs. 📈
+- Gain valuable insights into their strengths and weaknesses, allowing you to optimize them for specific tasks and unlock their full potential. 💡
+- Save valuable time and resources by automating the evaluation process, freeing you to focus on other crucial aspects of your project. ⏳
 
-## Math
 
-```python
-from package import module
-module.call("string")
-```
+**Ragrank is packed with features:**
 
-## Definition list
-
-term
-: definition
-
-## Math
-
-$$\pi = 3.14159$$
-
-## Figures
-
-```{figure} https://via.placeholder.com/150
-:width: 100px
-:align: center
-
-Figure caption
-```
-
-## Tables
-
-```{list-table}
-:header-rows: 1
-:align: center
-
-* - Header 1
-  - Header 2
-* - Item 1 a
-  - Item 2 a
-* - Item 1 b
-  - Item 2 b
-```
+- Easy to learn and use, even for developers with minimal experience in RAG models. 📘
+- Highly customizable, allowing you to tailor the evaluation process to your specific needs and data. 🛠️
+- Open-source, making it freely available for contribution and collaboration, fostering a vibrant community around RAG evaluation. 🌟
