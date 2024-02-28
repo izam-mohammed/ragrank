@@ -2,7 +2,7 @@
 
 Here are the metrics related to safity of the RAG model
 
-- Propt Ingestion
+- Prompt Ingestion
 - Thretening
 - Toxicity
 

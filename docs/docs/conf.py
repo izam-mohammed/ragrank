@@ -1,23 +1,24 @@
 import os
 import sys
-sys.path.insert(0, os.path.abspath('.'))
+
+sys.path.insert(0, os.path.abspath("."))
 
 
 # -- Project information --------
 
-project = 'Ragrank'
-copyright = '2024, Izam Mohammed'
-author = 'Izam Mohammed'
-release = '0.1.1'
+project = "Ragrank"
+copyright = "2024, Izam Mohammed"
+author = "Izam Mohammed"
+release = "0.0.1"
 
 
 # -- General configuration ------
 
 extensions = [
-    'myst_parser',
-    'sphinx_design',
+    "myst_parser",
+    "sphinx_design",
     # 'sphinxext.opengraph',
-    'sphinx_copybutton',
+    "sphinx_copybutton",
 ]
 
 myst_enable_extensions = [
@@ -41,12 +42,12 @@ myst_highlight_code_blocks = True
 myst_heading_anchors = 2
 
 # templates_path = ['_templates']
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
-html_theme = 'furo'
-html_title = 'Ragrank'
+html_theme = "furo"
+html_title = "Ragrank"
 html_favicon = "./_static/favicon.ico"
-html_static_path = ['_static']
+html_static_path = ["_static"]
 language = "en"
 
 html_theme_options = {
@@ -56,11 +57,9 @@ html_theme_options = {
     "dark_css_variables": {
         "color-highlight-on-target": "#ffffff00",
     },
-
     "source_repository": "https://github.com/Auto-Playground/Ragrank",
     "source_branch": "main",
     "source_directory": "docs/docs/",
-
     "footer_icons": [
         {
             "name": "GitHub",

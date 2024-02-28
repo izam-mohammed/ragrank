@@ -1,6 +1,6 @@
 # More
 
-Here are some addtional details about the library
+Here are some additional details about the library
 
 - About Us
 - Contributing

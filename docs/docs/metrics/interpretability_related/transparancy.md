@@ -1,17 +1,17 @@
-# Transparancy
+# Transparency
 
-This measure the Transparancy of your RAG model
+This measure the Transparency of your RAG model
 
 ```python 
 from ragrank import evaluate
 from ragrank.dataset import load_data
-from ragrank.metrics import transparancy
+from ragrank.metrics import transparency
 
 data = load_data()
 result = evaluate(
     data,
     metrics=[
-        transparancy,
+        transparency,
     ],
 )
 result

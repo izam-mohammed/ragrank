@@ -1,0 +1,40 @@
+name: Release on PyPi
+on:
+  release:
+    types:
+      - created
+
+jobs:
+  publish:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [3.9]
+        poetry-version: [1.1.2]
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Run image
+        uses: abatilo/actions-poetry@v2.0.0
+        with:
+          poetry-version: ${{ matrix.poetry-version }}
+      - name: Publish PyPi
+        env:
+          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+        run: |
+          poetry config pypi-token.pypi $PYPI_TOKEN
+          poetry publish --build
+      - name: Documentation build
+        uses: johannes-huther/webhook.sh@v1.0.0
+        with:
+          webhook_url: https://readthedocs.org/api/v2/webhook/ragrank/263828/
+          webhook_secret: ${{ secrets.DOC_TOKEN }}
+      - name: API ref build
+        uses: johannes-huther/webhook.sh@v1.0.0
+        with:
+          webhook_url: https://readthedocs.org/api/v2/webhook/api-ragrank/263829/
+          webhook_secret: ${{ secrets.APIREF_TOKEN }}

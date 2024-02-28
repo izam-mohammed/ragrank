@@ -1,7 +1,6 @@
+import logging
 import os
 from pathlib import Path
-import logging
-
 
 print(f"current working dir - {os.getcwd()}")
 input_val = input("press ENTER to proceed, 'q' to exit, 'up' to go root: ")
@@ -19,13 +18,13 @@ logging.basicConfig(level=logging.INFO, format="[%(asctime)s]: %(message)s:")
 
 project_name = "Ragrank"
 docs_folder = "docs/docs"
-metrics=[
+metrics = [
     "response_related/response_relevancy",
     "safity_related/thretening",
     "efficiency_related/response_time",
     "novelty_related/creativity",
     "coverage_related/domain_coverage",
-    "interpretebility_related/transparancy",
+    "interpretebility_related/transparency",
     "robustness_related/Adversarial_robustness",
     "chat_related/satisfaction",
     "language_related/grammar",
@@ -77,7 +76,6 @@ list_of_files = [
     f"src/{project_name}/validation/metric_validator.py",
     f"src/{project_name}/validation/llm_validator.py",
     f"src/{project_name}/validation/embedding_validator.py",
-
     ".github/ISSUE_TEMPLATE/bug-report.yml",
     ".github/ISSUE_TEMPLATE/config.yml",
     ".github/ISSUE_TEMPLATE/documentation.yml",
@@ -96,8 +94,7 @@ list_of_files = [
     ".devcontainer/docker-compose.yaml",
     ".readthedocs.yaml",
     "docs/api_reference/create_api_rst.py",
-
-    #docs related
+    # docs related
     f"{docs_folder}/index.md",
     f"{docs_folder}/getting_started/index.md",
     f"{docs_folder}/getting_started/quick_start.md",
