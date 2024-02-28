@@ -6,4 +6,5 @@ class RagrankBaseDataset(ABC):
         super().__init__()
 
     @abstractmethod
-    def upload(self, data): ...
+    def upload(self, data):
+        ...
