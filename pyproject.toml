@@ -38,7 +38,18 @@ optional = true
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0.1"
+isort = "^5.13.2"
+black = "^24.2.0"
+ruff = "0.0.47"
+codespell = "^2.2.6"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+
+[tool.ruff]
+line-length = 79
+
+[tool.black]
+line-length = 79

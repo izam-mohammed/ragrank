@@ -47,6 +47,52 @@ html5lib = ["html5lib"]
 lxml = ["lxml"]
 
 [[package]]
+name = "black"
+version = "24.2.0"
+description = "The uncompromising code formatter."
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "black-24.2.0-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:6981eae48b3b33399c8757036c7f5d48a535b962a7c2310d19361edeef64ce29"},
+    {file = "black-24.2.0-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:d533d5e3259720fdbc1b37444491b024003e012c5173f7d06825a77508085430"},
+    {file = "black-24.2.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:61a0391772490ddfb8a693c067df1ef5227257e72b0e4108482b8d41b5aee13f"},
+    {file = "black-24.2.0-cp310-cp310-win_amd64.whl", hash = "sha256:992e451b04667116680cb88f63449267c13e1ad134f30087dec8527242e9862a"},
+    {file = "black-24.2.0-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:163baf4ef40e6897a2a9b83890e59141cc8c2a98f2dda5080dc15c00ee1e62cd"},
+    {file = "black-24.2.0-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:e37c99f89929af50ffaf912454b3e3b47fd64109659026b678c091a4cd450fb2"},
+    {file = "black-24.2.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:4f9de21bafcba9683853f6c96c2d515e364aee631b178eaa5145fc1c61a3cc92"},
+    {file = "black-24.2.0-cp311-cp311-win_amd64.whl", hash = "sha256:9db528bccb9e8e20c08e716b3b09c6bdd64da0dd129b11e160bf082d4642ac23"},
+    {file = "black-24.2.0-cp312-cp312-macosx_10_9_x86_64.whl", hash = "sha256:d84f29eb3ee44859052073b7636533ec995bd0f64e2fb43aeceefc70090e752b"},
+    {file = "black-24.2.0-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:1e08fb9a15c914b81dd734ddd7fb10513016e5ce7e6704bdd5e1251ceee51ac9"},
+    {file = "black-24.2.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:810d445ae6069ce64030c78ff6127cd9cd178a9ac3361435708b907d8a04c693"},
+    {file = "black-24.2.0-cp312-cp312-win_amd64.whl", hash = "sha256:ba15742a13de85e9b8f3239c8f807723991fbfae24bad92d34a2b12e81904982"},
+    {file = "black-24.2.0-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:7e53a8c630f71db01b28cd9602a1ada68c937cbf2c333e6ed041390d6968faf4"},
+    {file = "black-24.2.0-cp38-cp38-macosx_11_0_arm64.whl", hash = "sha256:93601c2deb321b4bad8f95df408e3fb3943d85012dddb6121336b8e24a0d1218"},
+    {file = "black-24.2.0-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:a0057f800de6acc4407fe75bb147b0c2b5cbb7c3ed110d3e5999cd01184d53b0"},
+    {file = "black-24.2.0-cp38-cp38-win_amd64.whl", hash = "sha256:faf2ee02e6612577ba0181f4347bcbcf591eb122f7841ae5ba233d12c39dcb4d"},
+    {file = "black-24.2.0-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:057c3dc602eaa6fdc451069bd027a1b2635028b575a6c3acfd63193ced20d9c8"},
+    {file = "black-24.2.0-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:08654d0797e65f2423f850fc8e16a0ce50925f9337fb4a4a176a7aa4026e63f8"},
+    {file = "black-24.2.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:ca610d29415ee1a30a3f30fab7a8f4144e9d34c89a235d81292a1edb2b55f540"},
+    {file = "black-24.2.0-cp39-cp39-win_amd64.whl", hash = "sha256:4dd76e9468d5536abd40ffbc7a247f83b2324f0c050556d9c371c2b9a9a95e31"},
+    {file = "black-24.2.0-py3-none-any.whl", hash = "sha256:e8a6ae970537e67830776488bca52000eaa37fa63b9988e8c487458d9cd5ace6"},
+    {file = "black-24.2.0.tar.gz", hash = "sha256:bce4f25c27c3435e4dace4815bcb2008b87e167e3bf4ee47ccdc5ce906eb4894"},
+]
+
+[package.dependencies]
+click = ">=8.0.0"
+mypy-extensions = ">=0.4.3"
+packaging = ">=22.0"
+pathspec = ">=0.9.0"
+platformdirs = ">=2"
+tomli = {version = ">=1.1.0", markers = "python_version < \"3.11\""}
+typing-extensions = {version = ">=4.0.1", markers = "python_version < \"3.11\""}
+
+[package.extras]
+colorama = ["colorama (>=0.4.3)"]
+d = ["aiohttp (>=3.7.4)", "aiohttp (>=3.7.4,!=3.9.0)"]
+jupyter = ["ipython (>=7.8.0)", "tokenize-rt (>=3.2.0)"]
+uvloop = ["uvloop (>=0.15.2)"]
+
+[[package]]
 name = "certifi"
 version = "2024.2.2"
 description = "Python package for providing Mozilla's CA Bundle."
@@ -157,6 +203,37 @@ files = [
 ]
 
 [[package]]
+name = "click"
+version = "8.1.7"
+description = "Composable command line interface toolkit"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "click-8.1.7-py3-none-any.whl", hash = "sha256:ae74fb96c20a0277a1d615f1e4d73c8414f5a98db8b799a7931d1582f3390c28"},
+    {file = "click-8.1.7.tar.gz", hash = "sha256:ca9853ad459e787e2192211578cc907e7594e294c7ccc834310722b41b9ca6de"},
+]
+
+[package.dependencies]
+colorama = {version = "*", markers = "platform_system == \"Windows\""}
+
+[[package]]
+name = "codespell"
+version = "2.2.6"
+description = "Codespell"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "codespell-2.2.6-py3-none-any.whl", hash = "sha256:9ee9a3e5df0990604013ac2a9f22fa8e57669c827124a2e961fe8a1da4cacc07"},
+    {file = "codespell-2.2.6.tar.gz", hash = "sha256:a8c65d8eb3faa03deabab6b3bbe798bea72e1799c7e9e955d57eca4096abcff9"},
+]
+
+[package.extras]
+dev = ["Pygments", "build", "chardet", "pre-commit", "pytest", "pytest-cov", "pytest-dependency", "ruff", "tomli", "twine"]
+hard-encoding-detection = ["chardet"]
+toml = ["tomli"]
+types = ["chardet (>=5.1.0)", "mypy", "pytest", "pytest-cov", "pytest-dependency"]
+
+[[package]]
 name = "colorama"
 version = "0.4.6"
 description = "Cross-platform colored terminal text."
@@ -260,6 +337,20 @@ files = [
     {file = "iniconfig-2.0.0-py3-none-any.whl", hash = "sha256:b6a85871a79d2e3b22d2d1b94ac2824226a63c6b741c88f7ae975f18b6778374"},
     {file = "iniconfig-2.0.0.tar.gz", hash = "sha256:2d91e135bf72d31a410b17c16da610a82cb55f6b0477d1a902134b24a455b8b3"},
 ]
+
+[[package]]
+name = "isort"
+version = "5.13.2"
+description = "A Python utility / library to sort Python imports."
+optional = false
+python-versions = ">=3.8.0"
+files = [
+    {file = "isort-5.13.2-py3-none-any.whl", hash = "sha256:8ca5e72a8d85860d5a3fa69b8745237f2939afe12dbf656afbcb47fe72d947a6"},
+    {file = "isort-5.13.2.tar.gz", hash = "sha256:48fdfcb9face5d58a4f6dde2e72a1fb8dcaf8ab26f95ab49fab84c2ddefb0109"},
+]
+
+[package.extras]
+colors = ["colorama (>=0.4.6)"]
 
 [[package]]
 name = "jinja2"
@@ -422,6 +513,17 @@ files = [
 ]
 
 [[package]]
+name = "mypy-extensions"
+version = "1.0.0"
+description = "Type system extensions for programs checked with the mypy type checker."
+optional = false
+python-versions = ">=3.5"
+files = [
+    {file = "mypy_extensions-1.0.0-py3-none-any.whl", hash = "sha256:4392f6c0eb8a5668a69e23d168ffa70f0be9ccfd32b5cc2d26a34ae5b844552d"},
+    {file = "mypy_extensions-1.0.0.tar.gz", hash = "sha256:75dbf8955dc00442a438fc4d0666508a9a97b6bd41aa2f0ffe9d2f2725af0782"},
+]
+
+[[package]]
 name = "myst-parser"
 version = "2.0.0"
 description = "An extended [CommonMark](https://spec.commonmark.org/) compliant parser,"
@@ -513,6 +615,32 @@ files = [
     {file = "pathlib-1.0.1-py3-none-any.whl", hash = "sha256:f35f95ab8b0f59e6d354090350b44a80a80635d22efdedfa84c7ad1cf0a74147"},
     {file = "pathlib-1.0.1.tar.gz", hash = "sha256:6940718dfc3eff4258203ad5021090933e5c04707d5ca8cc9e73c94a7894ea9f"},
 ]
+
+[[package]]
+name = "pathspec"
+version = "0.12.1"
+description = "Utility library for gitignore style pattern matching of file paths."
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "pathspec-0.12.1-py3-none-any.whl", hash = "sha256:a0d503e138a4c123b27490a4f7beda6a01c6f288df0e4a8b79c7eb0dc7b4cc08"},
+    {file = "pathspec-0.12.1.tar.gz", hash = "sha256:a482d51503a1ab33b1c67a6c3813a26953dbdc71c31dacaef9a838c4e29f5712"},
+]
+
+[[package]]
+name = "platformdirs"
+version = "4.2.0"
+description = "A small Python package for determining appropriate platform-specific dirs, e.g. a \"user data dir\"."
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "platformdirs-4.2.0-py3-none-any.whl", hash = "sha256:0614df2a2f37e1a662acbd8e2b25b92ccf8632929bc6d43467e17fe89c75e068"},
+    {file = "platformdirs-4.2.0.tar.gz", hash = "sha256:ef0cc731df711022c174543cb70a9b5bd22e5a9337c8624ef2c2ceb8ddad8768"},
+]
+
+[package.extras]
+docs = ["furo (>=2023.9.10)", "proselint (>=0.13)", "sphinx (>=7.2.6)", "sphinx-autodoc-typehints (>=1.25.2)"]
+test = ["appdirs (==1.4.4)", "covdefaults (>=2.3)", "pytest (>=7.4.3)", "pytest-cov (>=4.1)", "pytest-mock (>=3.12)"]
 
 [[package]]
 name = "pluggy"
@@ -662,6 +790,31 @@ files = [
 requests = ">=2.0.1,<3.0.0"
 
 [[package]]
+name = "ruff"
+version = "0.0.47"
+description = "An extremely fast Python linter, written in Rust."
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "ruff-0.0.47-py3-none-macosx_10_7_x86_64.whl", hash = "sha256:5a7676ba137ddb48a372f5c0d1d36e0b540dc463e52bccec0cd5a7bb3ee445a6"},
+    {file = "ruff-0.0.47-py3-none-macosx_10_9_x86_64.macosx_11_0_arm64.macosx_10_9_universal2.whl", hash = "sha256:8976cd08eaf7d3004a066d3bfc081a67a4a098b1a33a9124cb1e30ec6c82c350"},
+    {file = "ruff-0.0.47-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:89fc2639359837a81790534c2cb731e72097ca2e196176d127e65df4947b56fb"},
+    {file = "ruff-0.0.47-py3-none-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:58a72fee08205f0a5227d2771cfa93249f5906f42164dd545113f81862667efa"},
+    {file = "ruff-0.0.47-py3-none-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:13f249fa61f07f79195fcc198fa6c95fcab28f8239c7a0d052a8c30bb4f5ac10"},
+    {file = "ruff-0.0.47-py3-none-manylinux_2_17_ppc64.manylinux2014_ppc64.whl", hash = "sha256:6d41b983b217864931a414299b5277647063576b3acbb0fac434cb398dd400f4"},
+    {file = "ruff-0.0.47-py3-none-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:ba400ddd1d702add3dfe9f7716cb01118fe0f7a76d563d117042d52b8bdb8930"},
+    {file = "ruff-0.0.47-py3-none-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:f1e48c6bfd0e0e9e13123b4cf6867f2189156a0610b4162e830a471af8e9b91b"},
+    {file = "ruff-0.0.47-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:dc71465271ec048b7bf1c6efb0eaa399a681b441987c39f2688a2c6bc3e090cf"},
+    {file = "ruff-0.0.47-py3-none-musllinux_1_2_aarch64.whl", hash = "sha256:8b20f815f60aedf5645de37616844805137f84fd3192e425a6d1ab679e124739"},
+    {file = "ruff-0.0.47-py3-none-musllinux_1_2_armv7l.whl", hash = "sha256:60a46a976c9aea046d0ada804e79ba081eb40cf7080b5e980aca68b3e5fbbf40"},
+    {file = "ruff-0.0.47-py3-none-musllinux_1_2_i686.whl", hash = "sha256:3cf244cb464dbe358ea919da9037e0019b1c7722ccdcc97f2fc0ca1c66a34c56"},
+    {file = "ruff-0.0.47-py3-none-musllinux_1_2_x86_64.whl", hash = "sha256:770a4b7aa9078410dbd8df2feccd9dfa2ba532b54139b33248ed2a0e41591c62"},
+    {file = "ruff-0.0.47-py3-none-win32.whl", hash = "sha256:5e84ce23c3c2b07a1ae431e5de614294fb122ac611c258776948dc774707a6d5"},
+    {file = "ruff-0.0.47-py3-none-win_amd64.whl", hash = "sha256:4da0b61955038037c483554bb16758da222d1091690959cdf594cc19b057796c"},
+    {file = "ruff-0.0.47.tar.gz", hash = "sha256:206c8b0ffae4fe8dcb279089585d2fdcce8c56e2e2a313a8402619cee3f9331b"},
+]
+
+[[package]]
 name = "snowballstemmer"
 version = "2.2.0"
 description = "This package provides 29 stemmers for 28 languages generated from Snowball algorithms."
@@ -777,25 +930,6 @@ theme-rtd = ["sphinx-rtd-theme (>=1.0,<2.0)"]
 theme-sbt = ["sphinx-book-theme (>=1.0,<2.0)"]
 
 [[package]]
-name = "sphinx-rtd-theme"
-version = "2.0.0"
-description = "Read the Docs theme for Sphinx"
-optional = false
-python-versions = ">=3.6"
-files = [
-    {file = "sphinx_rtd_theme-2.0.0-py2.py3-none-any.whl", hash = "sha256:ec93d0856dc280cf3aee9a4c9807c60e027c7f7b461b77aeffed682e68f0e586"},
-    {file = "sphinx_rtd_theme-2.0.0.tar.gz", hash = "sha256:bd5d7b80622406762073a04ef8fadc5f9151261563d47027de09910ce03afe6b"},
-]
-
-[package.dependencies]
-docutils = "<0.21"
-sphinx = ">=5,<8"
-sphinxcontrib-jquery = ">=4,<5"
-
-[package.extras]
-dev = ["bump2version", "sphinxcontrib-httpdomain", "transifex-client", "wheel"]
-
-[[package]]
 name = "sphinxcontrib-applehelp"
 version = "1.0.8"
 description = "sphinxcontrib-applehelp is a Sphinx extension which outputs Apple help books"
@@ -842,20 +976,6 @@ files = [
 lint = ["docutils-stubs", "flake8", "mypy"]
 standalone = ["Sphinx (>=5)"]
 test = ["html5lib", "pytest"]
-
-[[package]]
-name = "sphinxcontrib-jquery"
-version = "4.1"
-description = "Extension to include jQuery on newer Sphinx releases"
-optional = false
-python-versions = ">=2.7"
-files = [
-    {file = "sphinxcontrib-jquery-4.1.tar.gz", hash = "sha256:1620739f04e36a2c779f1a131a2dfd49b2fd07351bf1968ced074365933abc7a"},
-    {file = "sphinxcontrib_jquery-4.1-py2.py3-none-any.whl", hash = "sha256:f936030d7d0147dd026a4f2b5a57343d233f1fc7b363f68b3d4f1cb0993878ae"},
-]
-
-[package.dependencies]
-Sphinx = ">=1.8"
 
 [[package]]
 name = "sphinxcontrib-jsmath"
@@ -929,6 +1049,17 @@ files = [
 ]
 
 [[package]]
+name = "typing-extensions"
+version = "4.10.0"
+description = "Backported and Experimental Type Hints for Python 3.8+"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "typing_extensions-4.10.0-py3-none-any.whl", hash = "sha256:69b1a937c3a517342112fb4c6df7e72fc39a38e7891a5730ed4985b5214b5475"},
+    {file = "typing_extensions-4.10.0.tar.gz", hash = "sha256:b0abd7c89e8fb96f98db18d86106ff1d90ab692004eb746cf6eda2682f91b3cb"},
+]
+
+[[package]]
 name = "uc-micro-py"
 version = "1.0.3"
 description = "Micro subset of unicode data files for linkify-it-py projects."
@@ -977,4 +1108,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<4.0"
-content-hash = "94bb343110ded782a4308d9c3f60292a0e0aff16683b068fc0b830522e7b9da1"
+content-hash = "2bd75b3cea34a738b994c68df4bbe6a4fb34672ae9ed600d990f90d3b6bb4cd2"
