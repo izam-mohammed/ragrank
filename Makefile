@@ -8,8 +8,6 @@ format: ## Running code formatter: black and isort
 	@poetry run isort .
 	@echo "(black) Formatting codebase..."
 	@poetry run black .
-
-lint: ## Running lint checker: ruff
 	@echo "(ruff) Linting development project..."
 	@poetry run ruff .
 
@@ -18,8 +16,6 @@ clean: ## Clean all generated files
 	@cd $(GIT_ROOT)/docs && make clean
 	@cd $(GIT_ROOT) || exit 1
 	@find . -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete
-
-run-ci: format lint ## Running all CI checks
 
 test: ## Run tests
 	@echo "Running tests..."
