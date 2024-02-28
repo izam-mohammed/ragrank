@@ -43,6 +43,8 @@ black = "^24.2.0"
 ruff = "0.0.47"
 codespell = "^2.2.6"
 bandit = "^1.7.7"
+flake8 = "^7.0.0"
+safety = "^3.0.1"
 
 [build-system]
 requires = ["poetry-core"]
