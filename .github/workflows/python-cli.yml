@@ -6,8 +6,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [3.9]
-        poetry-version: [1.1.2]
+        python-version: [3.11]
+        poetry-version: [1.6.1]
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
@@ -29,8 +29,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [3.9]
-        poetry-version: [1.1.2]
+        python-version: [3.11]
+        poetry-version: [1.6.1]
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
