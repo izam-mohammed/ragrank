@@ -2,7 +2,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import Union, List
+from typing import Union
+
 
 class TraceType(Enum):
     LLM = "LLM"
@@ -12,9 +13,11 @@ class TraceType(Enum):
     AGENT = "Agent"
     CHAIN = "Chain"
 
+
 class TraceStatus(Enum):
     SUCCESS = "Success"
     ERROR = "Error"
+
 
 @dataclass
 class LLMMetadata:
@@ -25,19 +28,21 @@ class LLMMetadata:
 class EmbeddingMetadata:
     model: str
 
+
 @dataclass
 class Event:
     name: str
 
+
 @dataclass
 class BaseTrace:
-    type: Union[TraceType, str]
+    type: TraceType | str
     executionTime: float
     name: str
     input: dict
     output: dict
     status: TraceStatus
-    traces: List["TraceData"]
+    traces: list[TraceData]
 
 
 @dataclass
@@ -58,11 +63,9 @@ class GenericTrace(BaseTrace):
 
 TraceData = Union[LlmTrace, EmbeddingTrace, GenericTrace]
 
+
 class TraceManager:
-    def __init__(self) -> None:
-        ...
+    def __init__(self) -> None: ...
 
 
-
-def trace(event: Event) -> None:
-    ...
+def trace(event: Event) -> None: ...

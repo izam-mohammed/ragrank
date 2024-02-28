@@ -1,6 +1,6 @@
+import logging
 import os
 import sys
-import logging
 
 LOGGING_FORMAT = "[%(asctime)s: %(levelname)s: %(module)s: %(message)s]"
 LOG_DIR = "logs"
@@ -12,9 +12,9 @@ logging.basicConfig(
     level=logging.INFO,
     format=LOGGING_FORMAT,
     handlers=[
-        logging.FileHandler(LOG_FILEPATH), 
-        logging.StreamHandler(sys.stdout)
-        ],
+        logging.FileHandler(LOG_FILEPATH),
+        logging.StreamHandler(sys.stdout),
+    ],
 )
 
 logger = logging.getLogger("ragrank_logger")

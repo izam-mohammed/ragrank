@@ -1,6 +1,7 @@
 from dataclasses import dataclass
-from pathlib import Path
 from enum import Enum
+from pathlib import Path
+
 
 class PromptType(Enum):
     RAG = "rag"
@@ -10,17 +11,12 @@ class PromptType(Enum):
 
 @dataclass
 class Prompt:
-    prompt_type:PromptType = PromptType.RAG
-    
-    def get_json(self):
-        ...
+    prompt_type: PromptType = PromptType.RAG
 
-    def save(self):
-        ...
-    
-    def from_string(self, string:str):
-        ...
+    def get_json(self): ...
 
-    def from_file(self, file_path:Path):
-        ...
+    def save(self): ...
 
+    def from_string(self, string: str): ...
+
+    def from_file(self, file_path: Path): ...
