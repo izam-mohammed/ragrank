@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "ragrank"
 version = "0.0.1"
-description = "An evaluation libarary for RAG models"
+description = "An evaluation library for RAG models"
 authors = ["Izam Mohammed <izamdeveloper1@gmail.com>"]
 license = "Apache-2.0"
 readme = "README.md"
@@ -42,6 +42,7 @@ isort = "^5.13.2"
 black = "^24.2.0"
 ruff = "0.0.47"
 codespell = "^2.2.6"
+bandit = "^1.7.7"
 
 [build-system]
 requires = ["poetry-core"]
