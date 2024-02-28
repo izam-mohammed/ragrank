@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import Union
 
 
 class TraceType(Enum):
@@ -61,7 +60,7 @@ class GenericTrace(BaseTrace):
     type: str
 
 
-TraceData = Union[LlmTrace, EmbeddingTrace, GenericTrace]
+TraceData = LlmTrace | EmbeddingTrace | GenericTrace
 
 
 class TraceManager:

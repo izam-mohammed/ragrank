@@ -1,6 +1,6 @@
 # Context related
 
-Here are the metrics for evaluate the context realted attributes in your RAG model
+Here are the metrics for evaluate the context related attributes in your RAG model
 
 - Context f1
 - Context Relevancy

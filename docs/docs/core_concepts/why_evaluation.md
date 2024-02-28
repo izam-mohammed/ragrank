@@ -1,7 +1,7 @@
 (why-evaluation)=
 # Why Evaluation
 
-Evaluation is the only way to improve the performance of a system. In RAG is it crutial to improve the system with the help of predefined evaluation metrics
+Evaluation is the only way to improve the performance of a system. In RAG is it crucial to improve the system with the help of predefined evaluation metrics
 
 Here are some of the reasons
 - tells us  how well the RAG model does the thing it was designed to do.

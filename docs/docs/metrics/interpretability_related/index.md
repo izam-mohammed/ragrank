@@ -3,11 +3,11 @@
 Here are the metrics for know the interpretability of your RAG model
 
 - Explainability
-- Transparancy
+- Transparency
 
 ```{toctree}
 :hidden:
 
 explainability
-transparancy
+transparency
 ```

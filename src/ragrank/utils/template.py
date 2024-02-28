@@ -24,7 +24,7 @@ metrics = [
     "efficiency_related/response_time",
     "novelty_related/creativity",
     "coverage_related/domain_coverage",
-    "interpretebility_related/transparancy",
+    "interpretebility_related/transparency",
     "robustness_related/Adversarial_robustness",
     "chat_related/satisfaction",
     "language_related/grammar",

@@ -22,9 +22,19 @@ jobs:
         uses: abatilo/actions-poetry@v2.0.0
         with:
           poetry-version: ${{ matrix.poetry-version }}
-      - name: Publish
+      - name: Publish PyPi
         env:
           PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
         run: |
           poetry config pypi-token.pypi $PYPI_TOKEN
           poetry publish --build
+      - name: Documentation build
+        uses: johannes-huther/webhook.sh@v1.0.0
+        with:
+          webhook_url: https://readthedocs.org/api/v2/webhook/ragrank/263828/
+          webhook_secret: ${{ secrets.DOC_TOKEN }}
+      - name: API ref build
+        uses: johannes-huther/webhook.sh@v1.0.0
+        with:
+          webhook_url: https://readthedocs.org/api/v2/webhook/api-ragrank/263829/
+          webhook_secret: ${{ secrets.APIREF_TOKEN }}
