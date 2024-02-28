@@ -6,7 +6,7 @@ build:
     python: "3.11"
 
 sphinx:
-  configuration: conf.py
+  configuration: docs/docs/conf.py
 
 # Optionally build your docs in additional formats such as PDF and ePub
 # formats:
