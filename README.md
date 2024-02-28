@@ -1,6 +1,26 @@
-# LLM Evaluation Toolkit 🎯
+<p align="center">
+    <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Auto-Playground/Ragrank/main/docs/docs/_static/imgs/ragrank_dark.png">
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/Auto-Playground/Ragrank/main/docs/docs/_static/imgs/ragrank_light.png">
+    <img alt="Hashnode logo" src="https://raw.githubusercontent.com/Auto-Playground/Ragrank/main/docs/docs/_static/imgs/ragrank_light.png" height="130">
+    </picture>
+    <br/>
+    <br/>
+</p>
 
-Welcome to the LLM (Large Language Model) Evaluation Toolkit! This toolkit is designed to assist you in evaluating the performance of your LLM applications. Whether you're working on chatbots, text generators, or any other natural language processing (NLP) task, our toolkit can help you assess various aspects of your model's performance.
+<p align="center">
+    <a href="https://circleci.com/gh/huggingface/transformers">
+        <img alt="Build" src="https://img.shields.io/badge/PyPI-v0.1.2-blue.svg">
+    </a>
+    <a href="https://github.com/huggingface/transformers/blob/main/LICENSE">
+        <img alt="GitHub" src="https://img.shields.io/badge/Build-passing-green.svg">
+    </a>
+    <a href="https://github.com/huggingface/transformers/blob/main/LICENSE">
+        <img alt="GitHub" src="https://img.shields.io/badge/Build with-Python-yellow.svg">
+    </a>
+</p>
+
+Welcome to Ragrank! This toolkit is designed to assist you in evaluating the performance of your LLM applications. Whether you're working on chatbots, text generators, or any other natural language processing (NLP) task, our toolkit can help you assess various aspects of your model's performance.
 
 ## What does it do?
 
