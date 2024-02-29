@@ -9,13 +9,13 @@
 </p>
 
 <p align="center">
-    <a href="https://circleci.com/gh/huggingface/transformers">
+    <a href="https://ragrank.readthedocs.io/">
         <img alt="Build" src="https://img.shields.io/badge/PyPI-v0.1.2-blue.svg">
     </a>
-    <a href="https://github.com/huggingface/transformers/blob/main/LICENSE">
+    <a href="https://ragrank.readthedocs.io/">
         <img alt="GitHub" src="https://img.shields.io/badge/Build-passing-green.svg">
     </a>
-    <a href="https://github.com/huggingface/transformers/blob/main/LICENSE">
+    <a href="https://ragrank.readthedocs.io/">
         <img alt="GitHub" src="https://img.shields.io/badge/Build with-Python-yellow.svg">
     </a>
 </p>
