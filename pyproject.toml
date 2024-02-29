@@ -40,7 +40,6 @@ optional = true
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0.1"
 isort = "^5.13.2"
-black = "^24.2.0"
 ruff = "0.2.2"
 codespell = "^2.2.6"
 bandit = "^1.7.7"
