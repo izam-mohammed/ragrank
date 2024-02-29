@@ -6,7 +6,7 @@ on:
 
 jobs:
   build_docs:
-      strategy:
+    strategy:
       fail-fast: false
       matrix:
         python-version: [3.11]
