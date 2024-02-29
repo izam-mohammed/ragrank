@@ -32,6 +32,7 @@ sphinx-design = "^0.5.0"
 linkify-it-py = "^2.0.3"
 sphinxext-opengraph = "^0.9.1"
 sphinx-copybutton = "^0.5.2"
+sphinx-rtd-theme = "^2.0.0"
 
 [tool.poetry.group.dev]
 optional = true
@@ -45,11 +46,11 @@ codespell = "^2.2.6"
 bandit = "^1.7.7"
 flake8 = "^7.0.0"
 safety = "^3.0.1"
+pytest-cov = "^4.1.0"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-
 
 
 [tool.ruff]
@@ -57,19 +58,58 @@ line-length = 79
 
 [tool.ruff.lint]
 select = [
+    # pep8 naming
+    "N",
+    # isort
+    "I",
     # pycodestyle
     "E",
+    "W",
     # Pyflakes
     "F",
     # pyupgrade
     "UP",
+    # pydocstyle
+    "D",
+    # flake8-bandit
+    "S",
     # flake8-bugbear
     "B",
     # flake8-simplify
     "SIM",
-    # isort
-    "I",
+    # flake8 annotations
+    "ANN",
+    # flake8 commas
+    "COM",
+    # flake8-future-annotations
+    "FA",
+    # flake8-print
+    "T20",
+    # flake8-self
+    "SLF",
+    # flake8-raise
+    "RSE",
+    # flake8-pyi
+    "PYI",
+    # flake8-no-pep420
+    "INP",
+    # flake8-import-conventions
+    "ICN",
+    # flake8-implicit-str-concat 
+    "ISC",
+    # flake8-errmsg
+    "EM",
+    # flake8-comprehensions
+    "CPY",
+    # flake8-builtins
+    "A",
+    # flake8-boolean-trap
+    "FBT",
+    # flake8-blind-except
+    "BLE",
 ]
 
-[tool.black]
-line-length = 79
+[tool.ruff.format]
+docstring-code-format = true
+docstring-code-line-length = 79
+indent-style = "tab"
