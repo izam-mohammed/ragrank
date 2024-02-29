@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [3.9]
+        python-version: [3.11]
         poetry-version: [1.6.1]
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
@@ -28,13 +28,23 @@ jobs:
         run: |
           poetry config pypi-token.pypi $PYPI_TOKEN
           poetry publish --build
+
+  build_docs:
+      strategy:
+      fail-fast: false
+      matrix:
+        python-version: [3.11]
+        poetry-version: [1.6.1]
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
       - name: Documentation build
         uses: johannes-huther/webhook.sh@v1.0.0
         with:
-          webhook_url: https://readthedocs.org/api/v2/webhook/ragrank/263828/
+          webhook_url: ${{ secrets.DOC_WEBHOOK_URL }}
           webhook_secret: ${{ secrets.DOC_TOKEN }}
       - name: API ref build
         uses: johannes-huther/webhook.sh@v1.0.0
         with:
-          webhook_url: https://readthedocs.org/api/v2/webhook/api-ragrank/263829/
+          webhook_url: ${{ secrets.APIREF_WEBHOOK_URL }}
           webhook_secret: ${{ secrets.APIREF_TOKEN }}
