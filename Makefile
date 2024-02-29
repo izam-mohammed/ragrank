@@ -43,11 +43,11 @@ install_deps: ## Install dependencies
 	@$(POETRY_CMD) install
 	@if [ "$(INSTALL_DEV)" = true ]; then \
 		echo "Installing development dependencies..."; \
-		$(POETRY_CMD) install --extras="dev"; \
+		$(POETRY_CMD) install --with dev; \
 	fi
 	@if [ "$(INSTALL_DOCS)" = true ]; then \
 		echo "Installing documentation dependencies..."; \
-		$(POETRY_CMD) install --extras="docs"; \
+		$(POETRY_CMD) install --with docs; \
 	fi
 
 dependency_check: ## Check for outdated dependencies
