@@ -1,24 +1,66 @@
 GIT_ROOT ?= $(shell git rev-parse --show-toplevel)
 
-help: ## Show all Makefile targets
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[33m%-30s\033[0m %s\n", $$1, $$2}'
+PYTHON_EXEC ?= poetry run
+RUFF_CMD ?= ruff
+PYTEST_CMD ?= pytest
+POETRY_CMD ?= poetry
 
-format: ## Running code formatter: black and isort
-	@echo "(isort) Ordering imports..."
-	@poetry run isort .
-	@echo "(black) Formatting codebase..."
-	@poetry run black .
-	@echo "(ruff) Linting development project..."
-	@poetry run ruff .
+SRC_DIR ?= src
+DOCS_DIR ?= docs
+TESTS_DIR ?= tests
+
+PACKAGE_NAME ?= ragrank
+
+.PHONY: help format lint clean test code_coverage install_deps dependency_check build_dist build_docs
+
+help: ## Show all Makefile targets
+	@echo "Usage: make [target]"
+	@echo "Available targets:"
+	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "  %-20s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
+
+format: ## Running code formatter: ruff
+	@echo "(ruff) Formatting the project..."
+	@$(PYTHON_EXEC) $(RUFF_CMD) format $(SRC_DIR) $(DOCS_DIR) $(TESTS_DIR)
+
+lint: ## Running the linter: ruff
+	@echo "(ruff) Linting the project ..."
+	@$(PYTHON_EXEC) $(RUFF_CMD) check $(SRC_DIR) $(DOCS_DIR)
 
 clean: ## Clean all generated files
-	@echo "Cleaning all generated files..."
-	@cd $(GIT_ROOT)/docs && make clean
-	@cd $(GIT_ROOT) || exit 1
-	@find . -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete
+	@echo "Cleaning all temporary files..."
+	@git clean -xdf
 
 test: ## Run tests
-	@echo "Running tests..."
-	@poetry run pytest tests/ $(shell if [ -n "$(k)" ]; then echo "-k $(k)"; fi)
+	@echo "(pytest) Running tests..."
+	@$(PYTHON_EXEC) $(PYTEST_CMD) -v $(TESTS_DIR)
 
+code_coverage: ## Run code coverage analysis
+	@echo "Running code coverage analysis..."
+	@$(PYTHON_EXEC) $(PYTEST_CMD) --cov=$(PACKAGE_NAME) $(TESTS_DIR)/
 
+install_deps: ## Install dependencies
+	@echo "Installing project dependencies..."
+	@$(POETRY_CMD) install
+	@if [ "$(INSTALL_DEV)" = true ]; then \
+		echo "Installing development dependencies..."; \
+		$(POETRY_CMD) install --extras="dev"; \
+	fi
+	@if [ "$(INSTALL_DOCS)" = true ]; then \
+		echo "Installing documentation dependencies..."; \
+		$(POETRY_CMD) install --extras="docs"; \
+	fi
+
+dependency_check: ## Check for outdated dependencies
+	@echo "Checking for outdated dependencies..."
+	@$(POETRY_CMD) show --outdated
+
+build_dist: ## Build distribution packages
+	@echo "Building distribution packages..."
+	@$(POETRY_CMD) build
+
+build_docs: ## Build the documentation 
+	@$(POETRY_CMD) export --with docs -f requirements.txt --without-hashes --output $(DOCS_DIR)/requirements.txt 
+	@echo "Building the documentation ..."
+	@$(PYTHON_EXEC) sphinx-build -M html $(DOCS_DIR)/docs $(DOCS_DIR)/docs/_build/
+	@echo "Building the API reference..."
+	@$(PYTHON_EXEC) sphinx-build -M html $(DOCS_DIR)/api_reference $(DOCS_DIR)/api_reference/_build/

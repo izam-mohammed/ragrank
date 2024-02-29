@@ -1,0 +1,16 @@
+# Set text files to use LF (Unix) line endings
+*.txt        text eol=lf
+*.md         text eol=lf
+*.rst        text eol=lf
+*.py         text eol=lf
+
+# Set binary files to use git's default handling
+*.png        binary
+*.jpg        binary
+*.gif        binary
+*.pkl        binary
+
+# Set Python compiled files to be treated as binary
+*.pyc        binary
+*.pyo        binary
+__pycache__  binary
