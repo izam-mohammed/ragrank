@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ragrank"
-version = "0.0.1"
+version = "0.0.2"
 description = "An evaluation library for RAG models"
 authors = ["Izam Mohammed <izamdeveloper1@gmail.com>"]
 license = "Apache-2.0"
