@@ -59,6 +59,7 @@ build_dist: ## Build distribution packages
 	@$(POETRY_CMD) build
 
 build_docs: ## Build the documentation 
+	@$(POETRY_CMD) export --with docs -f requirements.txt --without-hashes --output $(DOCS_DIR)/requirements.txt 
 	@echo "Building the documentation ..."
 	@$(PYTHON_EXEC) sphinx-build -M html $(DOCS_DIR)/docs $(DOCS_DIR)/docs/_build/
 	@echo "Building the API reference..."
