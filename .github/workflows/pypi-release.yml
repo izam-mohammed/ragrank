@@ -26,6 +26,7 @@ jobs:
         env:
           PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
         run: |
+          poetry install
           poetry config pypi-token.pypi $PYPI_TOKEN
           poetry publish --build
       - name: Documentation build
