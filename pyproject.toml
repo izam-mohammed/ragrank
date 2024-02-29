@@ -70,7 +70,11 @@ select = [
     # pyupgrade
     "UP",
     # pydocstyle
-    "D",
+    "D100",
+    "D101",
+    "D102",
+    "D103",
+    "D104",
     # flake8-bandit
     "S",
     # flake8-bugbear
@@ -80,7 +84,7 @@ select = [
     # flake8 annotations
     "ANN",
     # flake8 commas
-    "COM",
+    "COM818",
     # flake8-future-annotations
     "FA",
     # flake8-print
@@ -96,11 +100,10 @@ select = [
     # flake8-import-conventions
     "ICN",
     # flake8-implicit-str-concat 
-    "ISC",
+    "ISC002",
+    "ISC003",
     # flake8-errmsg
     "EM",
-    # flake8-comprehensions
-    "CPY",
     # flake8-builtins
     "A",
     # flake8-boolean-trap
@@ -112,4 +115,4 @@ select = [
 [tool.ruff.format]
 docstring-code-format = true
 docstring-code-line-length = 79
-indent-style = "tab"
+preview = true
