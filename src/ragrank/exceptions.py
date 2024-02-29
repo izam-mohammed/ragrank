@@ -1,4 +1,5 @@
-class RagRankError(Exception): ...
+class RagRankError(Exception):
+    ...
 
 
 class ModelInitializationError(RagRankError):

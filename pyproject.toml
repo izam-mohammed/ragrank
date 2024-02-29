@@ -40,7 +40,7 @@ optional = true
 pytest = "^8.0.1"
 isort = "^5.13.2"
 black = "^24.2.0"
-ruff = "0.0.47"
+ruff = "0.2.2"
 codespell = "^2.2.6"
 bandit = "^1.7.7"
 flake8 = "^7.0.0"
@@ -54,6 +54,22 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.ruff]
 line-length = 79
+
+[tool.ruff.lint]
+select = [
+    # pycodestyle
+    "E",
+    # Pyflakes
+    "F",
+    # pyupgrade
+    "UP",
+    # flake8-bugbear
+    "B",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I",
+]
 
 [tool.black]
 line-length = 79
