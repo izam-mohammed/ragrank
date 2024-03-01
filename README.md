@@ -9,16 +9,31 @@
 </p>
 
 <p align="center">
-    <a href="https://ragrank.readthedocs.io/">
-        <img alt="Build" src="https://img.shields.io/badge/PyPI-v0.1.2-blue.svg">
+    <a href="">
+        <img alt="GitHub" src="https://img.shields.io/github/license/Auto-Playground/ragrank">
     </a>
-    <a href="https://ragrank.readthedocs.io/">
-        <img alt="GitHub" src="https://img.shields.io/badge/Build-passing-green.svg">
+    <a href="https://pypi.org/project/ragrank/">
+        <img alt="Build" src="https://img.shields.io/pypi/pyversions/ragrank">
     </a>
-    <a href="https://ragrank.readthedocs.io/">
-        <img alt="GitHub" src="https://img.shields.io/badge/Build with-Python-yellow.svg">
+    <a href="https://ragrank.readthedocs.io/latest/">
+        <img alt="GitHub" src="https://img.shields.io/readthedocs/ragrank">
+    </a>
+    <a href="https://pypi.org/project/ragrank/">
+        <img alt="GitHub" src="https://img.shields.io/github/v/release/Auto-Playground/Ragrank?color=orange">
+    </a>
+    <a href="https://github.com/Auto-Playground/Ragrank/actions">
+        <img alt="GitHub" src="https://img.shields.io/github/actions/workflow/status/Auto-Playground/ragrank/.github%2Fworkflows%2Ftests.yml">
     </a>
 </p>
+
+<h4 align="center">
+    <p>
+        <a href="https://ragrank.readthedocs.io/latest/">Documentation</a> |
+        <a href="https://api-ragrank.readthedocs.io/">API reference</a> |
+        <a href="https://ragrank.readthedocs.io/latest/get_started/basic_evaluation.html">Quickstart</a> |
+        <a href="https://discord.gg/yaFRx6ja">Join the Community</a>
+    <p>
+</h4>
 
 Welcome to Ragrank! This toolkit is designed to assist you in evaluating the performance of your LLM applications. Whether you're working on chatbots, text generators, or any other natural language processing (NLP) task, our toolkit can help you assess various aspects of your model's performance.
 
@@ -52,7 +67,7 @@ If you'd like to contribute to the LLM Evaluation Toolkit, please follow these s
 
 ## License
 
-This project is licensed under the [Apatche Licence](LICENSE).
+This project is licensed under the [Apatche Licence](https://github.com/Auto-Playground/Ragrank/blob/main/LICENSE).
 
 ## Feedback and Support
 
