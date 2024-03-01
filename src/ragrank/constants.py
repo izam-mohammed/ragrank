@@ -1,3 +1,5 @@
+"""All of the contants for ragrank"""
+
 from typing import Final
 
 KEYFILE: Final[str] = ".ragrank"
