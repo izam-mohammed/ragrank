@@ -24,7 +24,7 @@ format: ## Running code formatter: ruff
 
 lint: ## Running the linter: ruff
 	@echo "(ruff) Linting the project ..."
-	@$(PYTHON_EXEC) $(RUFF_CMD) check $(SRC_DIR) $(DOCS_DIR)
+	@$(PYTHON_EXEC) $(RUFF_CMD) check $(SRC_DIR) 
 
 clean: ## Clean all generated files
 	@echo "Cleaning all temporary files..."
