@@ -4,8 +4,7 @@
     <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/Auto-Playground/Ragrank/main/docs/docs/_static/imgs/ragrank_light.png">
     <img alt="Hashnode logo" src="https://raw.githubusercontent.com/Auto-Playground/Ragrank/main/docs/docs/_static/imgs/ragrank_light.png" height="130">
     </picture>
-    <br/>
-    <br/>
+
 </p>
 
 <p align="center">
