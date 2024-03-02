@@ -9,9 +9,9 @@ DEFAULT_METRIC: Final[str] = "relevancy"
 
 QUESTION_FIELD: str = "question"
 CONTEXT_FIELD: str = "context"
-ANSWER_FIELD: str = "answer"
+RESPONSE_FIELD: str = "response"
 DATA_FIELDS: List[str] = [
     QUESTION_FIELD,
     CONTEXT_FIELD,
-    ANSWER_FIELD,
+    RESPONSE_FIELD,
 ]
