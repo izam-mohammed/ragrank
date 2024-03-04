@@ -1,9 +1,15 @@
-from abc import ABC, abstractmethod
+"""Contain all of the base classes for dataset"""
+
+from __future__ import annotations
+
+from typing import List
+
+from ragrank.bridge.pydantic import BaseModel
 
 
-class RagrankBaseDataset(ABC):
-    def __init__(self) -> None:
-        super().__init__()
+class Dataset(BaseModel):
+    """A dataclass that hold one datapoint"""
 
-    @abstractmethod
-    def upload(self, data): ...
+    question: str
+    context: List[str]
+    response: str

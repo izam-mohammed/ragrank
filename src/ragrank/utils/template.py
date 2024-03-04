@@ -1,18 +1,8 @@
+"""A template file to create all of the files in the first place"""
+
 import logging
 import os
 from pathlib import Path
-
-print(f"current working dir - {os.getcwd()}")
-input_val = input("press ENTER to proceed, 'q' to exit, 'up' to go root: ")
-input_val = input_val.lower()
-while input_val:
-    if input_val == "up":
-        os.chdir("../")
-    elif not input_val:
-        break
-    else:
-        exit()
-
 
 logging.basicConfig(level=logging.INFO, format="[%(asctime)s]: %(message)s:")
 

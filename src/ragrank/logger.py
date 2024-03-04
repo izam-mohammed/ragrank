@@ -1,3 +1,5 @@
+"""logger module for ragrank"""
+
 import logging
 import os
 import sys

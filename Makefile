@@ -20,11 +20,12 @@ help: ## Show all Makefile targets
 
 format: ## Running code formatter: ruff
 	@echo "(ruff) Formatting the project..."
+	@$(PYTHON_EXEC) $(RUFF_CMD) check --select I --fix .
 	@$(PYTHON_EXEC) $(RUFF_CMD) format $(SRC_DIR) $(DOCS_DIR) $(TESTS_DIR)
 
 lint: ## Running the linter: ruff
 	@echo "(ruff) Linting the project ..."
-	@$(PYTHON_EXEC) $(RUFF_CMD) check $(SRC_DIR) $(DOCS_DIR)
+	@$(PYTHON_EXEC) $(RUFF_CMD) check $(SRC_DIR) 
 
 clean: ## Clean all generated files
 	@echo "Cleaning all temporary files..."
