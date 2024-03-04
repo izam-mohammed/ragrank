@@ -101,8 +101,6 @@ select = [
     # flake8-implicit-str-concat 
     "ISC002",
     "ISC003",
-    # flake8-errmsg
-    "EM",
     # flake8-builtins
     "A",
     # flake8-boolean-trap
