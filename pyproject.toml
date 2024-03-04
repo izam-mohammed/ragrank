@@ -20,6 +20,7 @@ pathlib = "^1.0.1"
 urllib3 = "^2.2.1"
 requests-toolbelt = "^1.0.0"
 requests = "^2.28.2, !=2.30.0"
+pydantic = "^2.6.3"
 
 [tool.poetry.group.docs]
 optional = true
@@ -44,7 +45,6 @@ ruff = "0.2.2"
 codespell = "^2.2.6"
 bandit = "^1.7.7"
 flake8 = "^7.0.0"
-safety = "^3.0.1"
 pytest-cov = "^4.1.0"
 
 [build-system]
@@ -110,6 +110,11 @@ select = [
     # flake8-blind-except
     "BLE",
 ]
+
+ignore = [
+    "ANN101",
+]
+pyupgrade.keep-runtime-typing = true
 
 [tool.ruff.format]
 docstring-code-format = true
