@@ -15,4 +15,4 @@ def from_dict(data: Dict[str, List[str] | str]) -> Dataset:
     try:
         return Dataset(**data)
     except ValidationError as e:
-        raise RagrankValidationError(str(e)) from ValidationError
+        raise RagrankValidationError(str(e)) from None
