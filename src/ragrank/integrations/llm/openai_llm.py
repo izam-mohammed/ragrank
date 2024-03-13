@@ -2,8 +2,7 @@
 
 from time import time
 
-from ragrank.llm import LLMResult
-from ragrank.llm.BaseLLM import BaseLLM
+from ragrank.llm import BaseLLM, LLMResult
 from ragrank.utils.llm import get_env_var
 
 try:

@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 from enum import Enum
 from typing import Optional, Union
 
-from ragrank.bridge.pydantic import BaseModel, Field, model_validator
+from ragrank.bridge.pydantic import BaseModel, Field
 from ragrank.dataset import DataNode
 from ragrank.llm import BaseLLM
 from ragrank.prompt import Prompt
@@ -91,18 +91,7 @@ class MetricResult(BaseModel):
     """
 
     datanode: DataNode
-    metrics: BaseMetric
-    scores: Union[float, int]
-    reasons: str
+    metric: BaseMetric
+    score: Union[float, int]
+    reason: Optional[str]
     process_time: Optional[float] = Field(default=None, repr=False)
-
-    @model_validator(mode="after")
-    def valiation(self) -> None:
-        """Validator to ensure consistency of metric result.
-
-        Raises:
-            ValueError: If the number of metrics, scores,
-                and reasons are not equal.
-        """
-        if not len(self.metrics) == len(self.scores) == len(self.reasons):
-            raise ValueError("Number of datapoints should be stable")
