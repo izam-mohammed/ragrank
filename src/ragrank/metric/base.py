@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 from enum import Enum
 from typing import Optional, Union
 
-from ragrank.bridge.pydantic import BaseModel, Field
+from ragrank.bridge.pydantic import BaseModel, ConfigDict, Field
 from ragrank.dataset import DataNode
 from ragrank.llm import BaseLLM
 from ragrank.prompt import Prompt
@@ -26,10 +26,7 @@ class BaseMetric(BaseModel, ABC):
         prompt (Prompt): The prompt associated with the metric.
     """
 
-    class Config:
-        """Pydantic configuration for BaseMetric."""
-
-        arbitrary_types_allowed = True
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
     metric_type: MetricType
     llm: BaseLLM

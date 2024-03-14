@@ -80,16 +80,12 @@ class ResponseRelevancy(BaseMetric):
             raise ValueError(
                 "Got unexpected response from the LLM"
             ) from ValueError
-        reason = self._reason(
-            data=data,
-            score=response,
-        )
         delta = tm - time()
         return MetricResult(
             datanode=data,
             metric=self,
             score=response,
-            reason=reason,
+            reason=None,
             process_time=delta,
         )
 
