@@ -21,6 +21,7 @@ urllib3 = "^2.2.1"
 requests-toolbelt = "^1.0.0"
 requests = "^2.28.2, !=2.30.0"
 pydantic = "^2.6.3"
+pandas = "^2.2.1"
 
 [tool.poetry.group.docs]
 optional = true
