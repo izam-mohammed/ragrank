@@ -1,54 +1,19 @@
-"""evaluation: the main module"""
+"""Contains the ouputs of evaluation"""
 
-from time import time
-from typing import Annotated, List, Optional, Union
+from typing import Annotated, List
 
 from pandas import DataFrame
 
-from ragrank.bridge.pydantic import BaseModel, model_validator
-from ragrank.dataset import DataNode, Dataset, from_dict
-from ragrank.llm import BaseLLM, default_llm
-from ragrank.metric import BaseMetric, response_relevancy
-
-
-def evaluate(
-    dataset: Union[Dataset, DataNode, dict],
-    llm: Optional[BaseLLM] = None,
-    metrics: Optional[Union[BaseMetric, List[BaseMetric]]] = None,
-) -> str:
-    """The main evaluation function"""
-    if isinstance(dataset, dict):
-        dataset = from_dict(dataset)
-    if isinstance(dataset, DataNode):
-        dataset = dataset.to_dataset()
-    if llm is None:
-        llm = default_llm()
-    if metrics is None:
-        metrics = [response_relevancy]
-    if isinstance(metrics, BaseMetric):
-        metrics = [metrics]
-
-    dt = time()
-    scores = [
-        [metric.score(datanode).score for datanode in dataset]
-        for metric in metrics
-    ]
-    delta = dt - time()
-
-    return EvalResult(
-        llm=llm,
-        metrics=metrics,
-        dataset=dataset,
-        response_time=delta,
-        scores=scores,
-    )
+from ragrank.bridge.pydantic import BaseModel, ConfigDict, model_validator
+from ragrank.dataset import Dataset
+from ragrank.llm import BaseLLM
+from ragrank.metric import BaseMetric
 
 
 class EvalResult(BaseModel):
     """The result set for evaluation result"""
 
-    class Config:
-        arbitrary_types_allowed = True
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
     llm: BaseLLM
     metrics: List[BaseMetric]
