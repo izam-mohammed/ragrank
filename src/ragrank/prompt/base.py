@@ -1,10 +1,10 @@
 """base fo the the prompt module"""
 
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 from ragrank.bridge.pydantic import BaseModel, model_validator
 
-Example = Dict[str, str]
+Example = Dict[str, Any]
 
 
 class Prompt(BaseModel):
@@ -20,10 +20,13 @@ class Prompt(BaseModel):
     def validate_prompt(self) -> "Prompt":
         """Pydantic validation function"""
 
-        if not self.examples:
-            raise ValueError("Examples Cannot be empty")
         if not self.input_keys:
             raise ValueError("Input keys Cannot be empty")
+
+        keys = self.input_keys + [self.output_key]
+        for example in self.examples:
+            if [*example] != keys:
+                raise ValueError("The keys should match with the example")
         return self
 
     def to_string(self) -> str:
@@ -43,7 +46,7 @@ class Prompt(BaseModel):
             )
 
         if self.output_key:
-            prompt_str += f"\n{self.output_key}\n"
+            prompt_str += f"\n{self.output_key}:\n"
 
         return prompt_str
 
