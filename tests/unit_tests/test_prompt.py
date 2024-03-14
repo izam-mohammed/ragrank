@@ -1,108 +1,93 @@
+from typing import List
+
 import pytest
 from ragrank.prompt import Prompt
 
 
 @pytest.fixture
-def example_data():
-    return [
-        {"input": "How are you?", "output": "I'm fine, thank you!"},
-        {"input": "What is your name?", "output": "My name is ChatGPT."},
-    ]
-
-
-@pytest.fixture
-def valid_prompt_data(example_data):
+def valid_prompt_dict():
     return {
-        "name": "Example Prompt",
-        "instructions": "Please answer the following questions.",
-        "examples": example_data,
+        "name": "Valid Prompt",
+        "instructions": "Valid instructions",
+        "examples": [{"input": "valid input", "output": "valid output"}],
         "input_keys": ["input"],
         "output_key": "output",
     }
 
 
 @pytest.fixture
-def invalid_prompt_data():
+def invalid_prompt_empty_input_keys_dict():
     return {
         "name": "Invalid Prompt",
-        "instructions": "This prompt has missing keys.",
+        "instructions": "Invalid instructions",
+        "examples": [{"input": "invalid input", "output": "invalid output"}],
         "input_keys": [],
-        "output_key": "",
+        "output_key": "output",
     }
 
 
-def test_valid_prompt_creation(valid_prompt_data):
-    """Test creation of a valid Prompt object."""
-
-    prompt = Prompt(**valid_prompt_data)
-    assert prompt.name == valid_prompt_data["name"]
-    assert prompt.instructions == valid_prompt_data["instructions"]
-    assert prompt.examples == valid_prompt_data["examples"]
-    assert prompt.input_keys == valid_prompt_data["input_keys"]
-    assert prompt.output_key == valid_prompt_data["output_key"]
-
-
-def test_invalid_prompt_creation(invalid_prompt_data):
-    """Test creation of an invalid Prompt object."""
-
-    with pytest.raises(ValueError):
-        prompt = Prompt(**invalid_prompt_data)
+@pytest.fixture
+def invalid_prompt_mismatched_keys_dict():
+    return {
+        "name": "Mismatched Keys Prompt",
+        "instructions": "Mismatched keys instructions",
+        "examples": [{"input_1": "input 1", "output": "output 1"}],
+        "input_keys": ["input_2"],
+        "output_key": "output",
+    }
 
 
-def test_validate_prompt_missing_examples():
-    """Test validation for a prompt with missing examples."""
-
-    invalid_prompt_data = {
-        "name": "Missing Examples",
-        "instructions": "This prompt has no examples.",
+@pytest.fixture
+def example_prompt_dict():
+    return {
+        "name": "Test Prompt",
+        "instructions": "Testing instructions",
+        "examples": [
+            {"input": "example input 1", "output": "example output 1"},
+            {"input": "example input 2", "output": "example output 2"},
+        ],
         "input_keys": ["input"],
         "output_key": "output",
     }
+
+
+def test_validate_prompt(
+    valid_prompt_dict,
+    invalid_prompt_empty_input_keys_dict,
+    invalid_prompt_mismatched_keys_dict,
+):
+    valid_prompt = Prompt(**valid_prompt_dict)
+    assert valid_prompt.validate_prompt() == valid_prompt
+
     with pytest.raises(ValueError):
-        prompt = Prompt(**invalid_prompt_data)
+        invalid_prompt_empty_input_keys = Prompt(
+            **invalid_prompt_empty_input_keys_dict
+        )
+        invalid_prompt_empty_input_keys.validate_prompt()
 
-
-def test_validate_prompt_missing_input_keys():
-    """Test validation for a prompt with missing input keys."""
-
-    invalid_prompt_data = {
-        "name": "Missing Input Keys",
-        "instructions": "This prompt has no input keys.",
-        "examples": [{"input": "Some input", "output": "Some output"}],
-        "output_key": "output",
-    }
     with pytest.raises(ValueError):
-        prompt = Prompt(**invalid_prompt_data)
+        invalid_prompt_mismatched_keys = Prompt(
+            **invalid_prompt_mismatched_keys_dict
+        )
+        invalid_prompt_mismatched_keys.validate_prompt()
 
 
-def test_to_string(valid_prompt_data):
-    """Test the to_string method of the Prompt class."""
-
-    prompt = Prompt(**valid_prompt_data)
-    prompt_str = prompt.to_string()
-    assert isinstance(prompt_str, str)
-    assert valid_prompt_data["name"] in prompt_str
-    assert valid_prompt_data["instructions"] in prompt_str
-    for example in valid_prompt_data["examples"]:
-        assert example["input"] in prompt_str
-        assert example["output"] in prompt_str
-    for key in valid_prompt_data["input_keys"]:
-        assert "{" + key + "}" in prompt_str
-    assert valid_prompt_data["output_key"] in prompt_str
-
-
-def test_get_examples(example_data):
-    """Test the get_examples method of the Prompt class."""
-
-    prompt = Prompt(
-        name="Test Prompt",
-        instructions="Test instructions",
-        examples=example_data,
-        input_keys=["input"],
-        output_key="output",
+def test_to_string(example_prompt_dict):
+    example_prompt = Prompt(**example_prompt_dict)
+    expected_output = (
+        "Test Prompt\n\nTesting instructions\n\n"
+        "input: example input 1\noutput: example output 1\n\n"
+        "input: example input 2\noutput: example output 2\n\n"
+        "input: {input}\n"
+        "output:\n"
     )
-    assert prompt.get_examples() == example_data
-    assert prompt.get_examples(1) == example_data[:1]
-    assert prompt.get_examples(2) == example_data[:2]
+    assert example_prompt.to_string() == expected_output
+
+
+def test_get_examples(example_prompt_dict):
+    example_prompt = Prompt(**example_prompt_dict)
+
+    assert example_prompt.get_examples() == example_prompt.examples
+    assert example_prompt.get_examples(1) == example_prompt.examples[:1]
     with pytest.raises(IndexError):
-        prompt.get_examples(3)
+        example_prompt.get_examples(5)
