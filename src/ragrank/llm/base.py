@@ -5,7 +5,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import List, Optional, Sequence
 
-from ragrank.bridge.pydantic import BaseModel, Field
+from ragrank.bridge.pydantic import BaseModel, ConfigDict, Field, validate_call
 
 
 class LLMConfig(BaseModel):
@@ -47,8 +47,7 @@ class LLMResult(BaseModel):
             used for generation.
     """
 
-    class Config:
-        arbitrary_types_allowed = True
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
     response: str
     response_time: Optional[float] = None
@@ -58,7 +57,7 @@ class LLMResult(BaseModel):
     llm_config: Optional[LLMConfig] = None
 
 
-class BaseLLM(ABC):
+class BaseLLM(BaseModel, ABC):
     """
     Abstract base class for Language Model (LLM).
 
@@ -73,10 +72,9 @@ class BaseLLM(ABC):
         generate: Generate responses for a sequence of input texts.
     """
 
-    def __init__(self) -> BaseLLM:
-        """Initialise the the base LLM class with config"""
-        self.llm_config: LLMConfig = LLMConfig()
+    llm_config: LLMConfig = Field(repr=False, default_factory=LLMConfig)
 
+    @validate_call
     def set_config(self, config: LLMConfig) -> None:
         """
         Set the configuration for the base LLM.
