@@ -59,7 +59,7 @@ class Dataset(BaseModel):
             ValueError: If the number of data points is not consistent
                 across question, context, and response.
         """
-        if not len(self.question) == len(self.context) == len(self.context):
+        if not len(self.question) == len(self.context) == len(self.response):
             raise ValueError("Number of datapoints should be stable")
 
         return self
