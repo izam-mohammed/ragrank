@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from typing import Iterator, List
 
+from pandas import DataFrame
+
 from ragrank.bridge.pydantic import BaseModel, model_validator
 
 
@@ -21,6 +23,14 @@ class DataNode(BaseModel):
     question: str
     context: List[str]
     response: str
+
+    def to_dataset(self) -> Dataset:
+        """Convert the data node to dataset"""
+        return Dataset(
+            question=[self.question],
+            context=[self.context],
+            response=[self.response],
+        )
 
 
 class Dataset(BaseModel):
@@ -41,7 +51,7 @@ class Dataset(BaseModel):
     response: List[str]
 
     @model_validator(mode="after")
-    def validator(self) -> None:
+    def validator(self) -> Dataset:
         """
         Validate the dataset after instantiation.
 
@@ -51,6 +61,8 @@ class Dataset(BaseModel):
         """
         if not len(self.question) == len(self.context) == len(self.context):
             raise ValueError("Number of datapoints should be stable")
+
+        return self
 
     def __len__(self) -> int:
         """
@@ -114,3 +126,18 @@ class Dataset(BaseModel):
             response=self.response + other.response,
         )
         return combined_dataset
+
+    def to_pandas(self) -> DataFrame:
+        """Return a pandas dataframe of the data
+
+        Args:
+            None
+
+        Returns:
+            DataFrame: data representation
+        """
+        return DataFrame({
+            "question": self.question,
+            "context": self.context,
+            "response": self.response,
+        })

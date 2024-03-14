@@ -14,6 +14,8 @@ DATASET_TYPE = Dict[str, Union[List[str], List[List[str]]]]
 
 def from_dict(
     data: Union[DATANODE_TYPE, DATASET_TYPE],
+    *,
+    return_as_dataset: bool = False,
 ) -> Union[Dataset, DataNode]:
     """
     Create a Dataset or DataNode object from a dictionary representation.
@@ -32,6 +34,8 @@ def from_dict(
 
     try:
         if any(isinstance(i, str) for i in data.values()):
+            if return_as_dataset:
+                return Dataset(**{i: [data[i]] for i in data})
             return DataNode(**data)
         return Dataset(**data)
     except ValidationError as e:
