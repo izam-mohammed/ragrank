@@ -21,6 +21,9 @@ jobs:
           poetry-version: ${{ matrix.poetry-version }}
       - name: Install dependencies
         run: make install_deps INSTALL_DEV=true
+      - name: Set OpenAI API Key
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
       - name: Run tests
         run: make test
