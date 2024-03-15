@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
-from typing import Iterator, List
+from typing import Any, Iterator, List
 
 from pandas import DataFrame
 
+from ragrank._trace import DataGenerationEvent, trace
 from ragrank.bridge.pydantic import BaseModel, model_validator
 
 
@@ -63,6 +64,15 @@ class Dataset(BaseModel):
             raise ValueError("Number of datapoints should be stable")
 
         return self
+
+    def model_post_init(self, __context: Any) -> None:  # noqa: ANN401
+        """Tracking function for post initialization of the model"""
+        event = DataGenerationEvent(
+            time_cost=0.00001,
+            data_size=len(self.question),
+            source=None,
+        )
+        trace(event)
 
     def __len__(self) -> int:
         """

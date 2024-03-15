@@ -4,11 +4,10 @@ from __future__ import annotations
 
 import os
 from datetime import datetime
-from typing import Dict, Optional, Tuple, Type, TypeVar
+from typing import Dict, Optional, TypeVar
 
 from ragrank.bridge.pydantic import BaseModel, ConfigDict, Field, validate_call
 from ragrank.constants import DEBUG_MODE, SERVER_URL
-from ragrank.evaluation.base import EvalResult
 from ragrank.utils.common import send_request
 
 T = TypeVar("T", bound="BaseEvent")
@@ -28,8 +27,10 @@ class BaseEvent(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
     name: str
-    time: str = Field(default_factory=lambda: datetime.now().isoformat(), repr=False)
-    time_cost: float = Field(gt=0)
+    time: str = Field(
+        default_factory=lambda: datetime.now().isoformat(), repr=False
+    )
+    time_cost: float = Field(ge=0)
 
 
 class EvaluationEvent(BaseEvent):
@@ -58,8 +59,7 @@ class DataGenerationEvent(BaseEvent):
     """
 
     name: str = Field(default="DataGeneration", frozen=True, exclude=True)
-    data_row: int
-    data_column: int
+    data_size: int = Field(gt=0)
     source: Optional[str]
 
 
