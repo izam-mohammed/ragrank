@@ -15,3 +15,7 @@ DATA_FIELDS: List[str] = [
     CONTEXT_FIELD,
     RESPONSE_FIELD,
 ]
+
+SERVER_URL: str = "https://ragrank-trace.vercel.app/"
+DEBUG_MODE: str = "DEBUG_MODE_ON"
+REQUEST_TIME_OUT: float = 10.0
