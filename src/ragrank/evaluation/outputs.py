@@ -4,7 +4,12 @@ from typing import Annotated, List
 
 from pandas import DataFrame
 
-from ragrank.bridge.pydantic import BaseModel, ConfigDict, model_validator
+from ragrank.bridge.pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    model_validator,
+)
 from ragrank.dataset import Dataset
 from ragrank.llm import BaseLLM
 from ragrank.metric import BaseMetric
@@ -19,7 +24,7 @@ class EvalResult(BaseModel):
     metrics: List[BaseMetric]
     dataset: Dataset
     scores: List[Annotated[List[float], "each metric"]]
-    response_time: float
+    response_time: float = Field(gt=0)
 
     @model_validator(mode="after")
     def validator(self) -> "EvalResult":
@@ -39,7 +44,7 @@ class EvalResult(BaseModel):
 
         return self
 
-    def to_pandas(self) -> DataFrame:
+    def to_dataframe(self) -> DataFrame:
         """convert the result to a pandas dataframe"""
 
         df = self.dataset.to_pandas()

@@ -1,7 +1,7 @@
 """The main module for ragrank"""
 
 from ragrank.evaluation.base import evaluate
-from ragrank.evaluation.ouputs import EvalResult
+from ragrank.evaluation.outputs import EvalResult
 
 __all__ = [
     "evaluate",
