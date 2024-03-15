@@ -35,15 +35,17 @@ def sample_data_dict():
     }
 
 
-def test_evaluate_with_different_input_types(
-    sample_dataset, sample_datanode, sample_data_dict
-):
+def test_evaluate_with_dataset(sample_dataset):
     result = evaluate(sample_dataset)
     assert isinstance(result, EvalResult)
 
+
+def test_evaluate_with_datanode(sample_datanode):
     result = evaluate(sample_datanode)
     assert isinstance(result, EvalResult)
 
+
+def test_evaluate_with_datadict(sample_data_dict):
     result = evaluate(sample_data_dict)
     assert isinstance(result, EvalResult)
 
@@ -69,13 +71,16 @@ def test_EvalResult_methods(sample_dataset):
         response_time=response_time,
     )
 
-    df = eval_result.to_pandas()
+    df = eval_result.to_dataframe()
     assert isinstance(df, DataFrame)
 
 
-def test_evaluate_invalid_data(sample_dataset):
+def test_evaluate_invalid_data_number():
     with pytest.raises(ValidationError):
         evaluate(123)
+
+
+def test_evaluate_invalid_data():
     with pytest.raises(ValidationError):
         evaluate({"invalid_key": "invalid_value"})
 
