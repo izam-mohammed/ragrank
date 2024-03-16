@@ -25,7 +25,7 @@ def send_request(
         bool: True if the request was successful, False otherwise.
     """
     response = requests.post(
-        url=url+url_sufix,
+        url=url + url_sufix,
         json=json,
         timeout=timeout,
     )

@@ -16,9 +16,19 @@ from ragrank.metric import BaseMetric
 
 
 class EvalResult(BaseModel):
-    """The result set for evaluation result"""
+    """
+    Represents the result of an evaluation.
 
-    model_config = ConfigDict(arbitrary_types_allowed=True)
+    Attributes:
+        model_config (ConfigDict): Configuration dictionary for the model.
+        llm (BaseLLM): The language model used for evaluation.
+        metrics (List[BaseMetric]): List of metrics used for evaluation.
+        dataset (Dataset): The dataset used for evaluation.
+        scores (List[Annotated[List[float], "each metric"]]): List of scores for each metric.
+        response_time (float): Response time for the evaluation process.
+    """
+
+    model_config: ConfigDict = ConfigDict(arbitrary_types_allowed=True)
 
     llm: BaseLLM
     metrics: List[BaseMetric]
@@ -28,33 +38,48 @@ class EvalResult(BaseModel):
 
     @model_validator(mode="after")
     def validator(self) -> "EvalResult":
-        """Validation for the eval result"""
+        """
+        Validate the evaluation result after instantiation.
 
+        Raises:
+            ValueError: If the number of metrics and scores are not equal,
+                or if the number of datapoints and scores are not balanced.
+        """
         if len(self.metrics) != len(self.scores):
             raise ValueError(
-                "The number of metrics and number of scores is not equal"
+                "The number of metrics and number of scores is not equal. \n"
+                "Ensure that each metric has a corresponding score."
             ) from ValueError
 
         dataset_size = len(self.dataset)
         for score in self.scores:
             if len(score) != dataset_size:
                 raise ValueError(
-                    "The number of datapoints and scores are not balanced"
+                    "The number of datapoints and scores are not balanced. \n"
+                    "Ensure that each score list has the same length as dataset."
                 ) from ValueError
 
         return self
 
     def to_dataframe(self) -> DataFrame:
-        """convert the result to a pandas dataframe"""
+        """
+        Convert the evaluation result to a pandas DataFrame.
 
+        Returns:
+            DataFrame: A DataFrame containing the evaluation results.
+        """
         df = self.dataset.to_pandas()
         for i in range(len(self.metrics)):
             df[self.metrics[i].name] = self.scores[i]
-
         return df
 
     def __repr__(self) -> str:
-        """representation of the eval result"""
+        """
+        Return a string representation of the evaluation result.
+
+        Returns:
+            str: A string representation of the evaluation result.
+        """
         data = [
             {
                 self.metrics[k].name: self.scores[k][i]
@@ -65,5 +90,10 @@ class EvalResult(BaseModel):
         return str(data)
 
     def __str__(self) -> str:
-        """str representation of the model"""
+        """
+        Return a string representation of the evaluation result.
+
+        Returns:
+            str: A string representation of the evaluation result.
+        """
         return self.__repr__()

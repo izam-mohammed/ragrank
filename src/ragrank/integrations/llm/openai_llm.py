@@ -10,7 +10,7 @@ try:
 except ModuleNotFoundError:
     raise ModuleNotFoundError(
         "Please install `openai` module by `pip install openai`"
-    ) from None
+    ) from ModuleNotFoundError
 
 
 class OpenaiLLM(BaseLLM):
@@ -29,7 +29,12 @@ class OpenaiLLM(BaseLLM):
 
     @property
     def name(self) -> str:
-        """Get the name of the language model"""
+        """
+        Get the name of the language model.
+
+        Returns:
+            str: The name of the language model.
+        """
         return "OpenAI LLM"
 
     def generate_text(

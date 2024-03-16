@@ -13,7 +13,7 @@ from ragrank.prompt import Prompt
 class MetricType(Enum):
     """Enumeration of metric types."""
 
-    BINATY = "binary"
+    BINARY = "binary"
     NON_BINARY = "non_binary"
 
 
