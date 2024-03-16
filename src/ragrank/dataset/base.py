@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Any, Iterator, List
 
 from pandas import DataFrame
+from tqdm import tqdm
 
 from ragrank._trace import DataGenerationEvent, trace
 from ragrank.bridge.pydantic import BaseModel, model_validator
@@ -26,7 +27,12 @@ class DataNode(BaseModel):
     response: str
 
     def to_dataset(self) -> Dataset:
-        """Convert the data node to dataset"""
+        """
+        Convert the data node to a Dataset instance.
+
+        Returns:
+            Dataset: A Dataset instance containing the current data node.
+        """
         return Dataset(
             question=[self.question],
             context=[self.context],
@@ -61,12 +67,21 @@ class Dataset(BaseModel):
                 across question, context, and response.
         """
         if not len(self.question) == len(self.context) == len(self.response):
-            raise ValueError("Number of datapoints should be stable")
+            raise ValueError(
+                "The number of datapoints in question, context, "
+                "and response should be equal. \n"
+                "Ensure that all lists contain the same number of datapoints."
+            )
 
         return self
 
     def model_post_init(self, __context: Any) -> None:  # noqa: ANN401
-        """Tracking function for post initialization of the model"""
+        """
+        Perform post-initialization tasks for the model.
+
+        Args:
+            __context (Any): The context passed during model initialization.
+        """
         event = DataGenerationEvent(
             time_cost=0.00001,
             data_size=len(self.question),
@@ -151,3 +166,25 @@ class Dataset(BaseModel):
             "context": self.context,
             "response": self.response,
         })
+
+    def with_progress(self, purpose: str) -> tqdm:
+        """
+        Return a tqdm progress bar for iterating over the dataset.
+
+        Args:
+            purpose (str): The purpose for iterating over the dataset.
+
+        Returns:
+            tqdm: A tqdm progress bar.
+        """
+        return tqdm(
+            self,
+            ncols=100,
+            desc=purpose + " ",
+            bar_format=(
+                "{l_bar}{bar}| {n_fmt}/{total_fmt}   "
+                "remain: {remaining}s, {rate_fmt}"
+            ),
+            colour="green",
+            leave=True,
+        )
