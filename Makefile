@@ -24,7 +24,6 @@ format: ## Running code formatter: ruff
 	@$(PYTHON_EXEC) $(RUFF_CMD) format $(SRC_DIR) $(DOCS_DIR) $(TESTS_DIR)
 
 lint: ## Running the linter: ruff
-	@make format
 	@echo "(ruff) Linting the project ..."
 	@$(PYTHON_EXEC) $(RUFF_CMD) check $(SRC_DIR) 
 
