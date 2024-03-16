@@ -34,7 +34,10 @@ def evaluate(
 
     dt = time()
     scores = [
-        [metric.score(datanode).score for datanode in dataset]
+        [
+            metric.score(datanode).score
+            for datanode in dataset.with_progress("Evaluating")
+        ]
         for metric in metrics
     ]
     delta = time() - dt

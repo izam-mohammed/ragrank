@@ -8,7 +8,15 @@ Example = Dict[str, Any]
 
 
 class Prompt(BaseModel):
-    """Prompt for the LLM"""
+    """Represents a prompt for the Language Learning Model (LLM).
+
+    Attributes:
+        name (str): The name of the prompt.
+        instructions (str): The instructions for the prompt.
+        examples (List[Example]): List of example inputs and outputs.
+        input_keys (List[str]): List of input keys.
+        output_key (str): Key for the output.
+    """
 
     name: str
     instructions: str
@@ -18,19 +26,34 @@ class Prompt(BaseModel):
 
     @model_validator(mode="after")
     def validate_prompt(self) -> "Prompt":
-        """Pydantic validation function"""
+        """Validate the prompt using Pydantic.
 
+        Raises:
+            ValueError: If input keys are empty or
+                example keys do not match input and output keys.
+        """
         if not self.input_keys:
-            raise ValueError("Input keys Cannot be empty")
+            raise ValueError(
+                "Input keys cannot be empty. \n"
+                "Please provide non-empty input keys."
+            )
 
         keys = self.input_keys + [self.output_key]
         for example in self.examples:
             if [*example] != keys:
-                raise ValueError("The keys should match with the example")
+                raise ValueError(
+                    "The keys should match with the example. \n"
+                    "Please ensure the example keys match with"
+                    " the input and output keys."
+                )
         return self
 
     def to_string(self) -> str:
-        """Convert the Prompt to a string"""
+        """Convert the prompt to a string representation.
+
+        Returns:
+            str: String representation of the prompt.
+        """
 
         prompt_str = self.name + "\n\n"
         prompt_str += self.instructions + "\n"
@@ -51,7 +74,17 @@ class Prompt(BaseModel):
         return prompt_str
 
     def get_examples(self, example_no: Optional[int] = None) -> str:
-        """Return the examples in the class"""
+        """Retrieve examples from the prompt.
+
+        Args:
+            example_no (Optional[int]): The number of examples to retrieve.
+
+        Returns:
+            List[Example]: List of example inputs and outputs.
+
+        Raises:
+            IndexError: If example number is out of range.
+        """
 
         if example_no is None:
             return self.examples

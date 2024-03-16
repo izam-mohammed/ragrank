@@ -6,6 +6,7 @@ from ragrank.prompt import Prompt
 
 @pytest.fixture
 def valid_prompt_dict():
+    """Fixture to provide a valid prompt dictionary."""
     return {
         "name": "Valid Prompt",
         "instructions": "Valid instructions",
@@ -17,6 +18,7 @@ def valid_prompt_dict():
 
 @pytest.fixture
 def invalid_prompt_empty_input_keys_dict():
+    """Fixture to provide a prompt dictionary with empty input keys."""
     return {
         "name": "Invalid Prompt",
         "instructions": "Invalid instructions",
@@ -28,6 +30,7 @@ def invalid_prompt_empty_input_keys_dict():
 
 @pytest.fixture
 def invalid_prompt_mismatched_keys_dict():
+    """Fixture to provide a prompt dictionary with mismatched keys."""
     return {
         "name": "Mismatched Keys Prompt",
         "instructions": "Mismatched keys instructions",
@@ -39,6 +42,7 @@ def invalid_prompt_mismatched_keys_dict():
 
 @pytest.fixture
 def example_prompt_dict():
+    """Fixture to provide an example prompt dictionary."""
     return {
         "name": "Test Prompt",
         "instructions": "Testing instructions",
@@ -56,23 +60,22 @@ def test_validate_prompt(
     invalid_prompt_empty_input_keys_dict,
     invalid_prompt_mismatched_keys_dict,
 ):
+    """Test validation of prompts."""
     valid_prompt = Prompt(**valid_prompt_dict)
-    assert valid_prompt.validate_prompt() == valid_prompt
 
     with pytest.raises(ValueError):
         invalid_prompt_empty_input_keys = Prompt(
             **invalid_prompt_empty_input_keys_dict
         )
-        invalid_prompt_empty_input_keys.validate_prompt()
 
     with pytest.raises(ValueError):
         invalid_prompt_mismatched_keys = Prompt(
             **invalid_prompt_mismatched_keys_dict
         )
-        invalid_prompt_mismatched_keys.validate_prompt()
 
 
 def test_to_string(example_prompt_dict):
+    """Test conversion of prompt to string."""
     example_prompt = Prompt(**example_prompt_dict)
     expected_output = (
         "Test Prompt\n\nTesting instructions\n\n"
@@ -81,13 +84,20 @@ def test_to_string(example_prompt_dict):
         "input: {input}\n"
         "output:\n"
     )
-    assert example_prompt.to_string() == expected_output
+    assert (
+        example_prompt.to_string() == expected_output
+    ), "Incorrect string representation"
 
 
 def test_get_examples(example_prompt_dict):
+    """Test retrieval of examples from prompt."""
     example_prompt = Prompt(**example_prompt_dict)
 
-    assert example_prompt.get_examples() == example_prompt.examples
-    assert example_prompt.get_examples(1) == example_prompt.examples[:1]
+    assert (
+        example_prompt.get_examples() == example_prompt.examples
+    ), "Examples mismatch"
+    assert (
+        example_prompt.get_examples(1) == example_prompt.examples[:1]
+    ), "Limited examples mismatch"
     with pytest.raises(IndexError):
         example_prompt.get_examples(5)
