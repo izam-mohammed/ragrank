@@ -24,7 +24,8 @@ class EvalResult(BaseModel):
         llm (BaseLLM): The language model used for evaluation.
         metrics (List[BaseMetric]): List of metrics used for evaluation.
         dataset (Dataset): The dataset used for evaluation.
-        scores (List[Annotated[List[float], "each metric"]]): List of scores for each metric.
+        scores (List[Annotated[List[float], "each metric"]]):
+            List of scores for each metric.
         response_time (float): Response time for the evaluation process.
     """
 
@@ -56,7 +57,8 @@ class EvalResult(BaseModel):
             if len(score) != dataset_size:
                 raise ValueError(
                     "The number of datapoints and scores are not balanced. \n"
-                    "Ensure that each score list has the same length as dataset."
+                    "Ensure that each score list has the same "
+                    "length as dataset."
                 ) from ValueError
 
         return self
