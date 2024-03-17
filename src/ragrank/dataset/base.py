@@ -2,9 +2,8 @@
 
 from __future__ import annotations
 
-import csv
 from pathlib import Path
-from typing import Any, Dict, Iterator, List, Union
+from typing import Any, Dict, Iterator, List
 
 from pandas import DataFrame
 from tqdm import tqdm
@@ -12,8 +11,8 @@ from tqdm import tqdm
 from ragrank._trace import DataGenerationEvent, trace
 from ragrank.bridge.pydantic import BaseModel, model_validator
 
-DATANODE_DICT_TYPE = Dict[str, Union[List[str], str]]
-DATASET_DICT_TYPE = Dict[str, Union[List[str], List[List[str]]]]
+DATANODE_DICT_TYPE = Dict[str, List[str] | str]
+DATASET_DICT_TYPE = Dict[str, List[str] | List[List[str]]]
 
 
 class DataNode(BaseModel):
@@ -157,7 +156,7 @@ class Dataset(BaseModel):
         )
         return combined_dataset
 
-    def with_progress(self, purpose: str) -> tqdm:
+    def with_progress(self, purpose: str = "Iterating") -> tqdm:
         """
         Return a tqdm progress bar for iterating over the dataset.
 
@@ -201,7 +200,7 @@ class Dataset(BaseModel):
         """
         return DataFrame(self.to_dict())
 
-    def to_csv(self, path: Union[str, Path], *args, **kwargs) -> None:
+    def to_csv(self, path: str | Path, **kwargs: Any) -> None:  # noqa: ANN401
         """Save the data as a csv file
 
         Args:
@@ -211,4 +210,4 @@ class Dataset(BaseModel):
             None
         """
         dataframe = self.to_dataframe()
-        dataframe.to_csv(path_or_buf=path, *args, **kwargs)
+        dataframe.to_csv(path_or_buf=path, index=False, **kwargs)

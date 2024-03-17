@@ -1,5 +1,9 @@
 """Include the common util functions"""
 
+from __future__ import annotations
+
+from typing import List
+
 import requests
 
 from ragrank.constants import REQUEST_TIME_OUT, SERVER_URL
@@ -30,3 +34,18 @@ def send_request(
         timeout=timeout,
     )
     return response.ok
+
+
+def eval_cell(cell_value: str) -> str | List[str]:
+    """
+    Evaluate a cell value and return it as a string or a list of strings.
+
+    Args:
+        cell_value (str): The value of the cell.
+
+    Returns:
+        Union[str, List[str]]: The evaluated cell value.
+    """
+    if cell_value.startswith("[") and cell_value.endswith("]"):
+        return cell_value[2:-2].split("', '")
+    return cell_value
