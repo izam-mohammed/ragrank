@@ -1,12 +1,17 @@
-from typing import List
+"""Test cases for prompt module"""
+
+from __future__ import annotations
+
+from typing import Dict, List
 
 import pytest
 from ragrank.prompt import Prompt
 
 
 @pytest.fixture
-def valid_prompt_dict():
+def valid_prompt_dict() -> Dict[str, str | List[str] | List[Dict[str, str]]]:
     """Fixture to provide a valid prompt dictionary."""
+
     return {
         "name": "Valid Prompt",
         "instructions": "Valid instructions",
@@ -17,8 +22,11 @@ def valid_prompt_dict():
 
 
 @pytest.fixture
-def invalid_prompt_empty_input_keys_dict():
+def invalid_prompt_empty_input_keys_dict() -> (
+    Dict[str, str | List[str] | List[Dict[str, str]]]
+):
     """Fixture to provide a prompt dictionary with empty input keys."""
+
     return {
         "name": "Invalid Prompt",
         "instructions": "Invalid instructions",
@@ -29,8 +37,11 @@ def invalid_prompt_empty_input_keys_dict():
 
 
 @pytest.fixture
-def invalid_prompt_mismatched_keys_dict():
+def invalid_prompt_mismatched_keys_dict() -> (
+    Dict[str, str | List[str] | List[Dict[str, str]]]
+):
     """Fixture to provide a prompt dictionary with mismatched keys."""
+
     return {
         "name": "Mismatched Keys Prompt",
         "instructions": "Mismatched keys instructions",
@@ -41,8 +52,9 @@ def invalid_prompt_mismatched_keys_dict():
 
 
 @pytest.fixture
-def example_prompt_dict():
+def example_prompt_dict() -> Dict[str, str | List[str] | List[Dict[str, str]]]:
     """Fixture to provide an example prompt dictionary."""
+
     return {
         "name": "Test Prompt",
         "instructions": "Testing instructions",
@@ -56,26 +68,30 @@ def example_prompt_dict():
 
 
 def test_validate_prompt(
-    valid_prompt_dict,
-    invalid_prompt_empty_input_keys_dict,
-    invalid_prompt_mismatched_keys_dict,
-):
+    valid_prompt_dict: Dict[str, str | List[str] | List[Dict[str, str]]],
+    invalid_prompt_empty_input_keys_dict: Dict[
+        str, str | List[str] | List[Dict[str, str]]
+    ],
+    invalid_prompt_mismatched_keys_dict: Dict[
+        str, str | List[str] | List[Dict[str, str]]
+    ],
+) -> None:
     """Test validation of prompts."""
-    valid_prompt = Prompt(**valid_prompt_dict)
+
+    Prompt(**valid_prompt_dict)
 
     with pytest.raises(ValueError):
-        invalid_prompt_empty_input_keys = Prompt(
-            **invalid_prompt_empty_input_keys_dict
-        )
+        Prompt(**invalid_prompt_empty_input_keys_dict)
 
     with pytest.raises(ValueError):
-        invalid_prompt_mismatched_keys = Prompt(
-            **invalid_prompt_mismatched_keys_dict
-        )
+        Prompt(**invalid_prompt_mismatched_keys_dict)
 
 
-def test_to_string(example_prompt_dict):
+def test_to_string(
+    example_prompt_dict: Dict[str, str | List[str] | List[Dict[str, str]]],
+) -> None:
     """Test conversion of prompt to string."""
+
     example_prompt = Prompt(**example_prompt_dict)
     expected_output = (
         "Test Prompt\n\nTesting instructions\n\n"
@@ -89,8 +105,11 @@ def test_to_string(example_prompt_dict):
     ), "Incorrect string representation"
 
 
-def test_get_examples(example_prompt_dict):
+def test_get_examples(
+    example_prompt_dict: Dict[str, str | List[str] | List[Dict[str, str]]],
+) -> None:
     """Test retrieval of examples from prompt."""
+
     example_prompt = Prompt(**example_prompt_dict)
 
     assert (

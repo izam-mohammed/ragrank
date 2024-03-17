@@ -27,6 +27,10 @@ lint: ## Running the linter: ruff
 	@echo "(ruff) Linting the project ..."
 	@$(PYTHON_EXEC) $(RUFF_CMD) check $(SRC_DIR) 
 
+lint-test: ## Running the linter: ruff
+	@echo "(ruff) Linting the project with test files ..."
+	@$(PYTHON_EXEC) $(RUFF_CMD) check $(SRC_DIR) $(TESTS_DIR)
+
 clean: ## Clean all generated files
 	@echo "Cleaning all temporary files..."
 	@git clean -xdf

@@ -1,17 +1,25 @@
+"""Test cases for LLM module"""
+
+from __future__ import annotations
+
+from typing import Any, Dict, List
+
 import pytest
 from ragrank.llm import BaseLLM, LLMConfig, LLMResult, default_llm
 
 
 @pytest.fixture
-def base_llm():
+def base_llm() -> BaseLLM:
     """Fixture to create an instance of BaseLLM."""
+
     BaseLLM.__abstractmethods__ = set()
     return BaseLLM()
 
 
 @pytest.fixture
-def llm_config_valid_dict():
+def llm_config_valid_dict() -> Dict[str, float | List[str]]:
     """Fixture to return a valid LLMConfig dictionary."""
+
     return {
         "temperature": 0.8,
         "max_tokens": 200,
@@ -22,9 +30,10 @@ def llm_config_valid_dict():
 
 
 @pytest.fixture
-def llm_config_invalid_dict():
+def llm_config_invalid_dict() -> Dict[str, float | List[str]]:
     """Fixture to return an invalid LLMConfig dictionary
     with incorrect values."""
+
     return {
         "temperature": -0.5,
         "max_tokens": 500,
@@ -35,9 +44,10 @@ def llm_config_invalid_dict():
 
 
 @pytest.fixture
-def llm_config_invalid_type_dict():
+def llm_config_invalid_type_dict() -> Dict[str, Any]:
     """Fixture to return an invalid LLMConfig dictionary
     with incorrect data types."""
+
     return {
         "temperature": True,
         "max_tokens": "invalid",
@@ -48,8 +58,9 @@ def llm_config_invalid_type_dict():
 
 
 @pytest.fixture
-def llm_result_valid_dict():
+def llm_result_valid_dict() -> Dict[str, str | float | BaseLLM | LLMConfig]:
     """Fixture to return a valid LLMResult dictionary."""
+
     return {
         "response": "This is a valid response.",
         "response_time": 0.5,
@@ -61,9 +72,10 @@ def llm_result_valid_dict():
 
 
 @pytest.fixture
-def llm_result_invalid_dict():
+def llm_result_invalid_dict() -> Dict[str, int | str]:
     """Fixture to return an invalid LLMResult dictionary
     with incorrect values or types."""
+
     return {
         "response": 123,
         "response_time": "invalid",
@@ -74,9 +86,12 @@ def llm_result_invalid_dict():
     }
 
 
-def test_llm_config_initialization_valid(llm_config_valid_dict):
+def test_llm_config_initialization_valid(
+    llm_config_valid_dict: Dict[str, float | List[str]],
+) -> None:
     """Test case to validate the initialization of LLMConfig
     with valid parameters."""
+
     config = LLMConfig(**llm_config_valid_dict)
     assert config.temperature == 0.8, "Expected temperature to be 0.8"
     assert config.max_tokens == 200, "Expected max tokens to be 200"
@@ -86,10 +101,12 @@ def test_llm_config_initialization_valid(llm_config_valid_dict):
 
 
 def test_llm_config_initialization_invalid(
-    llm_config_invalid_dict, llm_config_invalid_type_dict
-):
-    """Test case to validate the initialization of LLMConfig
+    llm_config_invalid_dict: Dict[str, float | List[str]],
+    llm_config_invalid_type_dict: Dict[str, Any],
+) -> None:
+    """Test case to validate the initializationof LLMConfig
     with invalid parameters."""
+
     with pytest.raises(ValueError):
         LLMConfig(**llm_config_invalid_dict)
 
@@ -97,8 +114,9 @@ def test_llm_config_initialization_invalid(
         LLMConfig(**llm_config_invalid_type_dict)
 
 
-def test_llm_config_default_check():
+def test_llm_config_default_check() -> None:
     """Test case to check the default values of LLMConfig."""
+
     config = LLMConfig()
     assert config.temperature == 1.0, "Expected default temperature to be 1.0"
     assert config.max_tokens == 300, "Expected default max tokens to be 300"
@@ -107,9 +125,12 @@ def test_llm_config_default_check():
     assert config.stop is None, "Expected default stop tokens to be None"
 
 
-def test_llm_result_initialization_valid(llm_result_valid_dict):
+def test_llm_result_initialization_valid(
+    llm_result_valid_dict: Dict[str, str | float | BaseLLM | LLMConfig],
+) -> None:
     """Test case to validate the initialization of LLMResult
     with valid parameters."""
+
     result = LLMResult(**llm_result_valid_dict)
     assert (
         result.response == "This is a valid response."
@@ -125,15 +146,19 @@ def test_llm_result_initialization_valid(llm_result_valid_dict):
     ), "Expected an instance of LLMConfig"
 
 
-def test_llm_result_initialization_invalid(llm_result_invalid_dict):
+def test_llm_result_initialization_invalid(
+    llm_result_invalid_dict: Dict[str, int | str],
+) -> None:
     """Test case to validate the initialization of LLMResult
     with invalid parameters."""
+
     with pytest.raises(ValueError):
         LLMResult(**llm_result_invalid_dict)
 
 
-def test_llm_result_default_check():
+def test_llm_result_default_check() -> None:
     """Test case to check the default values of LLMResult."""
+
     result = LLMResult(response="Default response")
     assert result.response == "Default response", "Expected response to match"
     assert result.response_time is None, "Expected response time to be None"
@@ -145,8 +170,11 @@ def test_llm_result_default_check():
     assert result.llm_config is None, "Expected llm_config to be None"
 
 
-def test_base_llm_set_config(base_llm, llm_config_valid_dict):
+def test_base_llm_set_config(
+    base_llm: BaseLLM, llm_config_valid_dict: Dict[str, float | List[str]]
+) -> None:
     """Test case to set configuration for BaseLLM."""
+
     config = LLMConfig(**llm_config_valid_dict)
     base_llm.set_config(config)
     assert (
