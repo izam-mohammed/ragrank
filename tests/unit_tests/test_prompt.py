@@ -81,14 +81,10 @@ def test_validate_prompt(
     Prompt(**valid_prompt_dict)
 
     with pytest.raises(ValueError):
-        Prompt(
-            **invalid_prompt_empty_input_keys_dict
-        )
+        Prompt(**invalid_prompt_empty_input_keys_dict)
 
     with pytest.raises(ValueError):
-        Prompt(
-            **invalid_prompt_mismatched_keys_dict
-        )
+        Prompt(**invalid_prompt_mismatched_keys_dict)
 
 
 def test_to_string(

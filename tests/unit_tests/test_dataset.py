@@ -270,5 +270,6 @@ def test_from_csv(
     filename = "test.csv"
     data.to_csv(filename)
     data_input = from_csv(filename)
+    os.remove(filename)
     assert isinstance(data_input, Dataset), "Expected a Dataset instance."
     assert data == data_input, "Expected different content in the csv"

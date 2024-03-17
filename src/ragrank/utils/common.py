@@ -36,7 +36,7 @@ def send_request(
     return response.ok
 
 
-def eval_cell(cell_value: str) -> str | List[str]:
+def eval_cell(cell_value: str | List[str]) -> str | List[str]:
     """
     Evaluate a cell value and return it as a string or a list of strings.
 
@@ -46,6 +46,8 @@ def eval_cell(cell_value: str) -> str | List[str]:
     Returns:
         Union[str, List[str]]: The evaluated cell value.
     """
+    if isinstance(cell_value, list):
+        return cell_value
     if cell_value.startswith("[") and cell_value.endswith("]"):
         return cell_value[2:-2].split("', '")
     return cell_value
