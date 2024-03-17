@@ -70,7 +70,7 @@ class EvalResult(BaseModel):
         Returns:
             DataFrame: A DataFrame containing the evaluation results.
         """
-        df = self.dataset.to_pandas()
+        df = self.dataset.to_dataframe()
         for i in range(len(self.metrics)):
             df[self.metrics[i].name] = self.scores[i]
         return df

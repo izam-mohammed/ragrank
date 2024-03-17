@@ -2,13 +2,18 @@
 
 from __future__ import annotations
 
-from typing import Any, Iterator, List
+import csv
+from pathlib import Path
+from typing import Any, Dict, Iterator, List, Union
 
 from pandas import DataFrame
 from tqdm import tqdm
 
 from ragrank._trace import DataGenerationEvent, trace
 from ragrank.bridge.pydantic import BaseModel, model_validator
+
+DATANODE_DICT_TYPE = Dict[str, Union[List[str], str]]
+DATASET_DICT_TYPE = Dict[str, Union[List[str], List[List[str]]]]
 
 
 class DataNode(BaseModel):
@@ -66,9 +71,9 @@ class Dataset(BaseModel):
             ValueError: If the number of data points is not consistent
                 across question, context, and response.
         """
-        if not len(self.question) == len(self.context) == len(self.response):
+        if not len(self.question) == len(self.response):
             raise ValueError(
-                "The number of datapoints in question, context, "
+                "The number of datapoints in question "
                 "and response should be equal. \n"
                 "Ensure that all lists contain the same number of datapoints."
             )
@@ -152,21 +157,6 @@ class Dataset(BaseModel):
         )
         return combined_dataset
 
-    def to_pandas(self) -> DataFrame:
-        """Return a pandas dataframe of the data
-
-        Args:
-            None
-
-        Returns:
-            DataFrame: data representation
-        """
-        return DataFrame({
-            "question": self.question,
-            "context": self.context,
-            "response": self.response,
-        })
-
     def with_progress(self, purpose: str) -> tqdm:
         """
         Return a tqdm progress bar for iterating over the dataset.
@@ -188,3 +178,37 @@ class Dataset(BaseModel):
             colour="green",
             leave=True,
         )
+
+    def to_dict(self) -> DATASET_DICT_TYPE:
+        """Return a dict of the data
+
+        Args:
+            None
+
+        Returns:
+            dict: data representation
+        """
+        return self.model_dump()
+
+    def to_dataframe(self) -> DataFrame:
+        """Return a pandas dataframe of the data
+
+        Args:
+            None
+
+        Returns:
+            DataFrame: data representation
+        """
+        return DataFrame(self.to_dict())
+
+    def to_csv(self, path: Union[str, Path], *args, **kwargs) -> None:
+        """Save the data as a csv file
+
+        Args:
+            path (str | Path): path to the csv file
+
+        Returns:
+            None
+        """
+        dataframe = self.to_dataframe()
+        dataframe.to_csv(path_or_buf=path, *args, **kwargs)
