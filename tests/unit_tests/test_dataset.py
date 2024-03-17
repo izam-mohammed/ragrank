@@ -1,9 +1,22 @@
-from typing import Dict, List, Union
+"""Test cases for dataset module"""
 
+from __future__ import annotations
+
+import os
+from typing import Dict, List
+
+import pandas as pd
 import pytest
-from pandas import DataFrame
 from ragrank.bridge.pydantic import ValidationError
-from ragrank.dataset import DataNode, Dataset, from_dict
+from ragrank.dataset import (
+    DataNode,
+    Dataset,
+    from_csv,
+    from_dataframe,
+    from_dict,
+)
+from ragrank.utils.common import eval_cell
+from tqdm import tqdm
 
 
 @pytest.fixture
@@ -57,14 +70,18 @@ def test_valid_datanode(valid_datanode: Dict[str, str | List[str]]) -> None:
     assert isinstance(data_node, DataNode), "Expected instance of DataNode."
 
 
-def test_invalid_datanode(invalid_datanode: Dict[str, str | List[str]]) -> None:
+def test_invalid_datanode(
+    invalid_datanode: Dict[str, str | List[str]],
+) -> None:
     """Test case for an invalid data node."""
 
-    with pytest.raises(Exception):
+    with pytest.raises(ValidationError):
         DataNode(**invalid_datanode)
 
 
-def test_valid_dataset(valid_dataset: Dict[str, List[str] | List[List[str]]]) -> None:
+def test_valid_dataset(
+    valid_dataset: Dict[str, List[str] | List[List[str]]],
+) -> None:
     """Test case for a valid dataset."""
 
     dataset = Dataset(**valid_dataset)
@@ -80,7 +97,26 @@ def test_invalid_dataset(
         Dataset(**invalid_dataset)
 
 
-def test_datanode_to_dataset(valid_datanode: Dict[str, str | List[str]]) -> None:
+def test_empty_input_data_node() -> None:
+    """Test case for creating an empty data node."""
+
+    with pytest.raises(ValidationError):
+        DataNode()
+
+
+def test_empty_input_dataset() -> None:
+    """Test case for creating an empty dataset."""
+
+    with pytest.raises(ValidationError):
+        Dataset()
+
+
+# datanode methods
+
+
+def test_datanode_to_dataset(
+    valid_datanode: Dict[str, str | List[str]],
+) -> None:
     """Test case for converting a data node to a dataset."""
 
     data_node = DataNode(**valid_datanode)
@@ -88,7 +124,12 @@ def test_datanode_to_dataset(valid_datanode: Dict[str, str | List[str]]) -> None
     assert isinstance(dataset, Dataset), "Expected instance of Dataset."
 
 
-def test_dataset_len(valid_dataset: Dict[str, List[str] | List[List[str]]]) -> None:
+# dataset methods
+
+
+def test_dataset_len(
+    valid_dataset: Dict[str, List[str] | List[List[str]]],
+) -> None:
     """Test case for getting the length of a dataset."""
 
     dataset = Dataset(**valid_dataset)
@@ -130,6 +171,28 @@ def test_dataset_addition(
     ), "Expected length of combined dataset to be 3."
 
 
+def test_dataset_with_progress(
+    valid_dataset: Dict[str, List[str] | List[List[str]]],
+) -> None:
+    """Test case for check the progress bar in the dataset iteration"""
+
+    dataset = Dataset(**valid_dataset)
+    dataset_with_progress = dataset.with_progress()
+    assert isinstance(dataset_with_progress, tqdm), "Expected a tqdm object."
+
+
+def test_dataset_to_dict(
+    valid_dataset: Dict[str, List[str] | List[List[str]]],
+) -> None:
+    """Test case for check the to_dict function is working or not"""
+    dataset = Dataset(**valid_dataset)
+    dataset_dict = dataset.to_dict()
+    assert isinstance(dataset_dict, dict), "Expected a dict object."
+    assert (
+        dataset_dict == valid_dataset
+    ), "Mismatch in the expected dict object."
+
+
 def test_dataset_to_dataframe(
     valid_dataset: Dict[str, List[str] | List[List[str]]],
 ) -> None:
@@ -137,11 +200,34 @@ def test_dataset_to_dataframe(
 
     dataset = Dataset(**valid_dataset)
     df = dataset.to_dataframe()
-    assert isinstance(df, DataFrame), "Expected instance of DataFrame."
+    assert isinstance(df, pd.DataFrame), "Expected instance of DataFrame."
     assert df.shape == (2, 3), "Expected DataFrame shape to be (2, 3)."
 
 
-def test_from_dict_datanode(valid_datanode: Dict[str, str | List[str]]) -> None:
+def test_dataset_to_csv(
+    valid_dataset: Dict[str, List[str] | List[List[str]]],
+) -> None:
+    """Check the to_csv function with some data"""
+    dataset = Dataset(**valid_dataset)
+    filename = "testdata.csv"
+    dataset.to_csv(path=filename)
+    assert os.path.exists(
+        filename
+    ), "Expected a csv file 'testdata.csv' in the system."
+    assert (
+        (pd.read_csv(filename).map(eval_cell) == dataset.to_dataframe())
+        .all()
+        .all()
+    ), "Expected content mismatch in the csv file."
+    os.remove(filename)
+
+
+# data reader
+
+
+def test_from_dict_datanode(
+    valid_datanode: Dict[str, str | List[str]],
+) -> None:
     """Test case for creating a data node from a dictionary."""
 
     data_node = from_dict(valid_datanode)
@@ -157,15 +243,32 @@ def test_from_dict_dataset(
     assert isinstance(dataset, Dataset), "Expected instance of Dataset."
 
 
-def test_empty_input_data_node() -> None:
-    """Test case for creating an empty data node."""
+@pytest.fixture
+def valid_dataframe(
+    valid_dataset: Dict[str, List[str] | List[List[str]]],
+) -> pd.DataFrame:
+    """Returns a valid dataframe"""
 
-    with pytest.raises(ValidationError):
-        DataNode()
+    return pd.DataFrame(valid_dataset)
 
 
-def test_empty_input_dataset() -> None:
-    """Test case for creating an empty dataset."""
+def test_from_dataframe(
+    valid_dataframe: pd.DataFrame,
+) -> None:
+    """check the from_df with valid dataset df"""
 
-    with pytest.raises(ValidationError):
-        Dataset()
+    dataset = from_dataframe(data=valid_dataframe)
+    assert isinstance(dataset, Dataset), "Expected a Dataset instance."
+
+
+def test_from_csv(
+    valid_dataset: Dict[str, List[str] | List[List[str]]],
+) -> None:
+    """Check the from csv method"""
+
+    data = from_dict(valid_dataset)
+    filename = "test.csv"
+    data.to_csv(filename)
+    data_input = from_csv(filename)
+    assert isinstance(data_input, Dataset), "Expected a Dataset instance."
+    assert data == data_input, "Expected different content in the csv"
