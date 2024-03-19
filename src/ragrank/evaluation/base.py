@@ -26,8 +26,8 @@ def evaluate(
     Parameters
     ----------
         dataset (Union[Dataset, DataNode, dict]): The dataset to be evaluated.
-            It can be provided either as a `Dataset` object,a 
-            `DataNode` object, or a dictionary representing the dataset.
+            It can be provided either as a `Dataset` object, `DataNode` object,
+            or a `dict` representing the dataset.
         llm (Optional[BaseLLM]): The LLM (Language Model) used for evaluation.
             If None, a default LLM will be used.
         metrics (Optional[Union[BaseMetric, List[BaseMetric]]]): The metric or

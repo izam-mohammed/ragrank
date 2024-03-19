@@ -78,28 +78,6 @@ class EvaluationEvent(BaseEvent):
     )
 
 
-class DataGenerationEvent(BaseEvent):
-    """
-    Event class for data generation.
-
-    Attributes:
-        data_shape (Tuple[int]): Shape of the generated data.
-        source (Optional[str]): Source of the data.
-    """
-
-    name: str = Field(
-        default="DataGeneration",
-        exclude=True,
-        description="Name of the event.",
-    )
-    data_size: int = Field(
-        gt=0, repr=False, description="Size of the data."
-    )
-    source: Optional[str] = Field(
-        default=None, repr=False, description="Source of the data"
-    )
-
-
 @validate_call(config=ConfigDict(arbitrary_types_allowed=True))
 def trace(
     event: BaseEvent,
@@ -119,8 +97,6 @@ def trace(
     sufix = ""
     if event.name == "Evaluation":
         sufix = "evaluation"
-    elif event.name == "DataGeneration":
-        sufix = "data-generation"
 
     payload = event.model_dump()
     return send_request(

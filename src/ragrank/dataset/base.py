@@ -8,7 +8,6 @@ from typing import Any, Dict, Iterator, List
 from pandas import DataFrame
 from tqdm import tqdm
 
-from ragrank._trace import DataGenerationEvent, trace
 from ragrank.bridge.pydantic import BaseModel, Field, model_validator
 
 DATANODE_DICT_TYPE = Dict[str, List[str] | str]
@@ -90,20 +89,6 @@ class Dataset(BaseModel):
             )
 
         return self
-
-    def model_post_init(self, __context: Any) -> None:  # noqa: ANN401
-        """
-        Perform post-initialization tasks for the model.
-
-        Args:
-            __context (Any): The context passed during model initialization.
-        """
-        event = DataGenerationEvent(
-            time_cost=0.00001,
-            data_size=len(self.question),
-            source=None,
-        )
-        trace(event)
 
     def __len__(self) -> int:
         """
