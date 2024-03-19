@@ -58,7 +58,7 @@ build-backend = "poetry.core.masonry.api"
 
 
 [tool.ruff]
-line-length = 79
+line-length = 69
 
 [tool.ruff.lint]
 select = [
@@ -118,6 +118,9 @@ ignore = [
     "ANN101",
 ]
 pyupgrade.keep-runtime-typing = true
+
+[tool.ruff.lint.pycodestyle]
+max-line-length = 79
 
 [tool.ruff.format]
 docstring-code-format = true
