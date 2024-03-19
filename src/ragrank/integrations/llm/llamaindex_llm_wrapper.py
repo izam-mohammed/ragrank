@@ -54,12 +54,12 @@ class LlamaindexLLMWrapper(BaseLLM):
             TypeError: If the type of the llamaindex llm is not correct.
         """
         if not isinstance(v, LlamaindexBaseLLM):
-            raise ValueError(
+            raise TypeError(
                 "the type of the Llamaindex llm is not valid\n\n"
                 "Example:\n\nfrom llama_index.llms.openai import OpenAI\n"
                 "### set your openai key as environment variable\n"
                 "llm = LlamaindexLLMWrapper(llamaindex_llm=OpenAI())\n\n"
-            ) from ValueError
+            ) from TypeError
         return v
 
     @property
