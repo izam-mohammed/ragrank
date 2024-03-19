@@ -4,6 +4,7 @@ from pydantic import (
     BaseModel,
     ConfigDict,
     Field,
+    SkipValidation,
     ValidationError,
     field_validator,
     model_validator,
@@ -18,4 +19,5 @@ __all__ = [
     "model_validator",
     "validate_call",
     "field_validator",
+    "SkipValidation",
 ]
