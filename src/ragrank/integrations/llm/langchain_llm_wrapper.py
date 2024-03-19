@@ -3,9 +3,12 @@
 from __future__ import annotations
 
 from time import time
-from typing import Any, List
+from typing import Annotated, List, Type
 
-from ragrank.bridge.pydantic import model_validator
+from ragrank.bridge.pydantic import (
+    SkipValidation,
+    field_validator,
+)
 from ragrank.llm import BaseLLM, LLMResult
 
 try:
@@ -13,32 +16,15 @@ try:
         BaseLanguageModel as LangchainBaseLanguageModel,
     )
     from langchain_core.messages import BaseMessage, HumanMessage
+    from langchain_core.outputs.llm_result import (
+        LLMResult as LangchainLLMResult,
+    )
     from langchain_core.prompt_values import PromptValue
 except ModuleNotFoundError:
     raise ModuleNotFoundError(
         "Please install `langchain-core` module by "
         "`pip install langchain-core`"
     ) from ModuleNotFoundError
-
-
-class RagrankPromptValue(PromptValue):
-    """Wrapper class for prompts used with Ragrank.
-
-    Attributes:
-        prompt_str (str): The prompt string.
-    """
-
-    prompt_str: str
-
-    def to_messages(self) -> List[BaseMessage]:
-        """Convert the prompt to a list of BaseMessage objects."""
-
-        return [HumanMessage(content=self.to_string())]
-
-    def to_string(self) -> str:
-        """Convert the prompt to a string."""
-
-        return self.prompt_str
 
 
 class LangchainLLMWrapper(BaseLLM):
@@ -55,17 +41,28 @@ class LangchainLLMWrapper(BaseLLM):
         generate_text(): Generate text using the Langchain LLM.
     """
 
-    langchain_llm: Any  # noqa: ANN401
+    langchain_llm: Annotated[LangchainBaseLanguageModel, SkipValidation]
 
-    @model_validator(mode="after")
-    def validator(self) -> LangchainLLMWrapper:
-        """Validate the Langchain LLM attribute"""
+    @field_validator("langchain_llm")
+    @classmethod
+    def validator(
+        cls: Type[LangchainLLMWrapper], v: LangchainBaseLanguageModel
+    ) -> LangchainBaseLanguageModel:
+        """Validating the langchain base language seperately
+        Doing this because of the conflict in the v1 pydantic module.
 
-        if not isinstance(self.langchain_llm, LangchainBaseLanguageModel):
+        Raises:
+            TypeError: If the type of the langchain llm is not valid
+        """
+
+        if not isinstance(v, LangchainBaseLanguageModel):
             raise TypeError(
-                "type of the langchain llm is not currect"
+                "the type of the langchain llm is not valid\n\n"
+                "Example:\n\nfrom langchain_openai.llms import OpenAI\n"
+                "### set your openai key as environment variable\n"
+                "llm = LangchainLLMWrapper(langchain_llm=OpenAI())\n\n"
             ) from TypeError
-        return self
+        return v
 
     @property
     def name(self) -> str:
@@ -90,17 +87,19 @@ class LangchainLLMWrapper(BaseLLM):
 
         Returns:
             LLMResult: The generated text result.
-
         """
 
         start_time = time()
         prompt = RagrankPromptValue(prompt_str=text)
-        langchain_result = self.langchain_llm.generate_prompt(prompts=[prompt])
+        langchain_result: LangchainLLMResult = (
+            self.langchain_llm.generate_prompt(prompts=[prompt])
+        )
         message = langchain_result.generations[0][0].text
         response_tokens = langchain_result.llm_output["token_usage"][
             "completion_tokens"
         ]
         response_time = time() - start_time
+
         result = LLMResult(
             response=message,
             response_time=response_time,
@@ -108,5 +107,24 @@ class LangchainLLMWrapper(BaseLLM):
             llm=self,
             llm_config=self.llm_config,
         )
-
         return result
+
+
+class RagrankPromptValue(PromptValue):
+    """Wrapper class for prompts used with Ragrank.
+
+    Attributes:
+        prompt_str (str): The prompt string.
+    """
+
+    prompt_str: str
+
+    def to_messages(self) -> List[BaseMessage]:
+        """Convert the prompt to a list of BaseMessage objects."""
+
+        return [HumanMessage(content=self.to_string())]
+
+    def to_string(self) -> str:
+        """Convert the prompt to a string."""
+
+        return self.prompt_str
