@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from time import time
-from typing import Annotated, Type
+from typing import Any, Type, cast
 
 try:
     from llama_index.core.base.llms.types import CompletionResponse
@@ -17,7 +17,7 @@ except ModuleNotFoundError:
     ) from ModuleNotFoundError
 
 from ragrank.bridge.pydantic import (
-    SkipValidation,
+    Field,
     field_validator,
 )
 from ragrank.llm import BaseLLM, LLMResult
@@ -27,7 +27,7 @@ class LlamaindexLLMWrapper(BaseLLM):
     """Wrapper class for Llamaindex Language Models.
 
     Attributes:
-        Llamaindex_llm (LLM): The Llamaindex Language Model.
+        llm (LLM): The Llamaindex Language Model.
 
     Properties:
         name (str): Get the name of the Llamaindex LLM Wrapper.
@@ -37,9 +37,11 @@ class LlamaindexLLMWrapper(BaseLLM):
         generate_text(): Generate text using the Llamaindex LLM.
     """
 
-    llamaindex_llm: Annotated[LlamaindexBaseLLM, SkipValidation]
+    llm: cast(LlamaindexBaseLLM, Any) = Field(  # type: ignore
+        description="The Llamaindex Language Model."
+    )
 
-    @field_validator("llamaindex_llm")
+    @field_validator("llm")
     @classmethod
     def validator(
         cls: Type[LlamaindexLLMWrapper], v: LlamaindexBaseLLM
@@ -52,12 +54,12 @@ class LlamaindexLLMWrapper(BaseLLM):
             TypeError: If the type of the llamaindex llm is not correct.
         """
         if not isinstance(v, LlamaindexBaseLLM):
-            raise ValueError(
+            raise TypeError(
                 "the type of the Llamaindex llm is not valid\n\n"
                 "Example:\n\nfrom llama_index.llms.openai import OpenAI\n"
                 "### set your openai key as environment variable\n"
                 "llm = LlamaindexLLMWrapper(llamaindex_llm=OpenAI())\n\n"
-            ) from ValueError
+            ) from TypeError
         return v
 
     @property
@@ -70,7 +72,7 @@ class LlamaindexLLMWrapper(BaseLLM):
     def llm_name(self) -> str:
         """Get the name of the wrapped Llamaindex LLM."""
 
-        return self.llamaindex_llm.metadata.model_name
+        return self.llm.metadata.model_name
 
     def generate_text(
         self,
@@ -86,8 +88,8 @@ class LlamaindexLLMWrapper(BaseLLM):
         """
 
         start_time = time()
-        llamaindex_result: CompletionResponse = (
-            self.llamaindex_llm.complete(text)
+        llamaindex_result: CompletionResponse = self.llm.complete(
+            text
         )
         message = llamaindex_result.text
         response_time = time() - start_time

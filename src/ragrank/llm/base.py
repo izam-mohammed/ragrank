@@ -69,6 +69,10 @@ class BaseLLM(BaseModel, ABC):
         generate: Generate responses for a sequence of input texts.
     """
 
+    model_config: ConfigDict = ConfigDict(
+        arbitrary_types_allowed=True
+    )
+
     llm_config: LLMConfig = Field(
         repr=False, default_factory=LLMConfig
     )
