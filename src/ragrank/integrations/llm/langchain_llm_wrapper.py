@@ -22,7 +22,7 @@ try:
     from langchain_core.prompt_values import PromptValue
 except ModuleNotFoundError:
     raise ModuleNotFoundError(
-        "Please install `langchain-core` module by "
+        "Please install `langchain-core` module by \n"
         "`pip install langchain-core`"
     ) from ModuleNotFoundError
 
@@ -41,7 +41,9 @@ class LangchainLLMWrapper(BaseLLM):
         generate_text(): Generate text using the Langchain LLM.
     """
 
-    langchain_llm: Annotated[LangchainBaseLanguageModel, SkipValidation]
+    langchain_llm: Annotated[
+        LangchainBaseLanguageModel, SkipValidation
+    ]
 
     @field_validator("langchain_llm")
     @classmethod

@@ -86,8 +86,8 @@ class LlamaindexLLMWrapper(BaseLLM):
         """
 
         start_time = time()
-        llamaindex_result: CompletionResponse = self.llamaindex_llm.complete(
-            text
+        llamaindex_result: CompletionResponse = (
+            self.llamaindex_llm.complete(text)
         )
         message = llamaindex_result.text
         response_time = time() - start_time

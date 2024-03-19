@@ -20,7 +20,45 @@ def evaluate(
     llm: Optional[BaseLLM] = None,
     metrics: Optional[Union[BaseMetric, List[BaseMetric]]] = None,
 ) -> EvalResult:
-    """The main evaluation function"""
+    """
+    Evaluate the performance of a given dataset using specified metrics.
+
+    Parameters
+    ----------
+        dataset (Union[Dataset, DataNode, dict]): The dataset to be evaluated.
+            It can be provided either as a `Dataset` object,a 
+            `DataNode` object, or a dictionary representing the dataset.
+        llm (Optional[BaseLLM]): The LLM (Language Model) used for evaluation.
+            If None, a default LLM will be used.
+        metrics (Optional[Union[BaseMetric, List[BaseMetric]]]): The metric or
+            list of metrics used for evaluation. If None,
+            response relevancy metric will be used.
+
+    Returns
+    -------
+        EvalResult: An object containing the evaluation results.
+
+    Examples
+    --------
+        basic usage:
+
+        ```python
+        from ragrank import evaluate
+        from ragrank.dataset import from_dict
+
+        data = from_dict({
+            "question": "Who is the 46th Prime Minister of US ?",
+            "context": [
+                "Joseph Robinette Biden is an American politician, "
+                "he is the 46th and current president of the United States.",
+            ],
+            "response": "Joseph Robinette Biden",
+        })
+        result = evaluate(data)
+
+        print(result)
+        ```
+    """
     if isinstance(dataset, dict):
         dataset = from_dict(dataset)
     if isinstance(dataset, DataNode):
@@ -53,7 +91,8 @@ def evaluate(
         llm=llm.name,
         time_cost=delta,
         metrics={
-            metrics[i].name: mean(scores[i]) for i in range(len(metrics))
+            metrics[i].name: mean(scores[i])
+            for i in range(len(metrics))
         },
         data_size=len(dataset),
     )

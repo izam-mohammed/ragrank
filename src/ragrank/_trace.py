@@ -6,7 +6,12 @@ import os
 from datetime import datetime
 from typing import Dict, Optional, TypeVar
 
-from ragrank.bridge.pydantic import BaseModel, ConfigDict, Field, validate_call
+from ragrank.bridge.pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    validate_call,
+)
 from ragrank.constants import DEBUG_MODE, SERVER_URL
 from ragrank.utils.common import send_request
 
@@ -24,13 +29,24 @@ class BaseEvent(BaseModel):
         time_cost (float): Time taken for the event.
     """
 
-    model_config = ConfigDict(arbitrary_types_allowed=True)
-
-    name: str
-    time: str = Field(
-        default_factory=lambda: datetime.now().isoformat(), repr=False
+    model_config = ConfigDict(
+        arbitrary_types_allowed=True, frozen=True
     )
-    time_cost: float = Field(ge=0)
+
+    name: str = Field(
+        max_length=20,
+        frozen=True,
+        exclude=True,
+        description="Name of the event.",
+    )
+    time: str = Field(
+        default_factory=lambda: datetime.now().isoformat(),
+        repr=False,
+        description="Time of the event.",
+    )
+    time_cost: float = Field(
+        ge=0, repr=False, description="Time taken for the event."
+    )
 
 
 class EvaluationEvent(BaseEvent):
@@ -38,15 +54,28 @@ class EvaluationEvent(BaseEvent):
     Event class for evaluation.
 
     Attributes:
-        llm (str): Long lived model.
+        llm (str): The model used in the evaluation.
         metrics (Dict[str, Optional[float]]): Metrics and their averages.
         data_size (int): Size of the data.
     """
 
-    name: str = Field(default="Evaluation", frozen=True, exclude=True)
-    llm: str
-    metrics: Dict[str, Optional[float]]  # metric and average
-    data_size: int
+    name: str = Field(
+        default="Evaluation",
+        frozen=True,
+        exclude=True,
+        description="Name of the event.",
+    )
+    llm: str = Field(
+        max_length=100,
+        repr=False,
+        description="The model used in the evaluation.",
+    )
+    metrics: Dict[str, Optional[float]] = Field(
+        repr=False, description="Metrics and their averages."
+    )
+    data_size: int = Field(
+        gt=0, repr=False, description="Size of the data."
+    )
 
 
 class DataGenerationEvent(BaseEvent):
@@ -58,9 +87,17 @@ class DataGenerationEvent(BaseEvent):
         source (Optional[str]): Source of the data.
     """
 
-    name: str = Field(default="DataGeneration", frozen=True, exclude=True)
-    data_size: int = Field(gt=0)
-    source: Optional[str]
+    name: str = Field(
+        default="DataGeneration",
+        exclude=True,
+        description="Name of the event.",
+    )
+    data_size: int = Field(
+        gt=0, repr=False, description="Size of the data."
+    )
+    source: Optional[str] = Field(
+        default=None, repr=False, description="Source of the data"
+    )
 
 
 @validate_call(config=ConfigDict(arbitrary_types_allowed=True))

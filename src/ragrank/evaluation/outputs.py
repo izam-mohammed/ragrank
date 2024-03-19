@@ -1,6 +1,6 @@
 """Contains the ouputs of evaluation"""
 
-from typing import Annotated, List
+from typing import List
 
 from pandas import DataFrame
 
@@ -20,22 +20,34 @@ class EvalResult(BaseModel):
     Represents the result of an evaluation.
 
     Attributes:
-        model_config (ConfigDict): Configuration dictionary for the model.
         llm (BaseLLM): The language model used for evaluation.
         metrics (List[BaseMetric]): List of metrics used for evaluation.
         dataset (Dataset): The dataset used for evaluation.
-        scores (List[Annotated[List[float], "each metric"]]):
+        scores (List[List[float]]):
             List of scores for each metric.
         response_time (float): Response time for the evaluation process.
     """
 
-    model_config: ConfigDict = ConfigDict(arbitrary_types_allowed=True)
+    model_config: ConfigDict = ConfigDict(
+        arbitrary_types_allowed=True,
+        frozen=True,
+    )
 
-    llm: BaseLLM
-    metrics: List[BaseMetric]
-    dataset: Dataset
-    scores: List[Annotated[List[float], "each metric"]]
-    response_time: float = Field(gt=0)
+    llm: BaseLLM = Field(
+        description="The language model used for evaluation"
+    )
+    metrics: List[BaseMetric] = Field(
+        description="List of metrics used for evaluation."
+    )
+    dataset: Dataset = Field(
+        description="The dataset used for evaluation"
+    )
+    scores: List[List[float]] = Field(
+        description="List of scores for each metric"
+    )
+    response_time: float = Field(
+        gt=0, description="Response time for the evaluation process."
+    )
 
     @model_validator(mode="after")
     def validator(self) -> "EvalResult":
