@@ -26,11 +26,19 @@ class BaseMetric(BaseModel, ABC):
         prompt (Prompt): The prompt associated with the metric.
     """
 
-    model_config = ConfigDict(arbitrary_types_allowed=True)
+    model_config: ConfigDict = ConfigDict(
+        arbitrary_types_allowed=True
+    )
 
-    metric_type: MetricType
-    llm: BaseLLM
-    prompt: Prompt
+    metric_type: MetricType = Field(
+        description="The type of the metric."
+    )
+    llm: BaseLLM = Field(
+        description="The language model associated with the metric."
+    )
+    prompt: Prompt = Field(
+        description="The prompt associated with the metric."
+    )
 
     @property
     @abstractmethod
@@ -82,13 +90,28 @@ class MetricResult(BaseModel):
         scores (List[Union[int, float]]): List of scores computed
             for each metric.
         reasons (List[str]): List of reasons corresponding to
-            each metric score.
+            each metric score. Defaults to None.
         process_time (Optional[float], optional): Processing time for
             the computation. Defaults to None.
     """
 
-    datanode: DataNode
-    metric: BaseMetric
-    score: Union[float, int]
-    reason: Optional[str]
-    process_time: Optional[float] = Field(default=None, repr=False)
+    model_config: ConfigDict = ConfigDict(frozen=True)
+
+    datanode: DataNode = Field(
+        description="The data node associated with the metric result."
+    )
+    metric: BaseMetric = Field(
+        description="List of metrics used in the computation."
+    )
+    score: Union[float, int] = Field(
+        description="List of scores computed for each metric."
+    )
+    reason: Optional[str] = Field(
+        default=None,
+        description="List of reasons corresponding to each metric score.",
+    )
+    process_time: Optional[float] = Field(
+        default=None,
+        repr=False,
+        description="Processing time for the computation.",
+    )

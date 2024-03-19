@@ -5,7 +5,12 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import List, Optional, Sequence
 
-from ragrank.bridge.pydantic import BaseModel, ConfigDict, Field, validate_call
+from ragrank.bridge.pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    validate_call,
+)
 
 
 class LLMConfig(BaseModel):
@@ -24,37 +29,29 @@ class LLMConfig(BaseModel):
             generation should stop.
     """
 
-    temperature: float = Field(default=1.0, ge=0.0, le=1.0)
-    max_tokens: int = Field(default=300)
-    seed: int = Field(default=44)
-    top_p: float = Field(default=1.0, ge=0.0, le=1.0)
-    stop: Optional[List[str]] = None
-
-
-class LLMResult(BaseModel):
-    """
-    Result of Language Model (LLM) generation.
-
-    Attributes:
-        response (str): Generated text response.
-        response_time (Optional[float]): Time taken for text generation.
-        finish_reason (Optional[str]): Reason for completion of
-            text generation.
-        response_tokens (Optional[int]): Number of tokens in the
-            generated response.
-        llm (Optional[BaseLLM]): Instance of the LLM used for generation.
-        llm_config (Optional[LLMConfig]): Configuration settings
-            used for generation.
-    """
-
-    model_config = ConfigDict(arbitrary_types_allowed=True)
-
-    response: str
-    response_time: Optional[float] = None
-    finish_reason: Optional[str] = None
-    response_tokens: Optional[int] = None
-    llm: Optional[BaseLLM] = None
-    llm_config: Optional[LLMConfig] = None
+    temperature: float = Field(
+        default=1.0,
+        ge=0.0,
+        le=1.0,
+        description="Sampling temperature for text generation.",
+    )
+    max_tokens: int = Field(
+        default=300,
+        description="Maximum number of tokens to generate.",
+    )
+    seed: int = Field(
+        default=44, description="Random seed for text generation."
+    )
+    top_p: float = Field(
+        default=1.0,
+        ge=0.0,
+        le=1.0,
+        description="Sampling top probability for text generation.",
+    )
+    stop: Optional[List[str]] = Field(
+        default=None,
+        description="List of tokens at which text generation should stop",
+    )
 
 
 class BaseLLM(BaseModel, ABC):
@@ -72,7 +69,9 @@ class BaseLLM(BaseModel, ABC):
         generate: Generate responses for a sequence of input texts.
     """
 
-    llm_config: LLMConfig = Field(repr=False, default_factory=LLMConfig)
+    llm_config: LLMConfig = Field(
+        repr=False, default_factory=LLMConfig
+    )
 
     @validate_call
     def set_config(self, config: LLMConfig) -> None:
@@ -128,6 +127,48 @@ class BaseLLM(BaseModel, ABC):
         """
 
         return self.name
+
+
+class LLMResult(BaseModel):
+    """
+    Result of Language Model (LLM) generation.
+
+    Attributes:
+        response (str): Generated text response.
+        response_time (Optional[float]): Time taken for text generation.
+        finish_reason (Optional[str]): Reason for completion of
+            text generation.
+        response_tokens (Optional[int]): Number of tokens in the
+            generated response.
+        llm (Optional[BaseLLM]): Instance of the LLM used for generation.
+        llm_config (Optional[LLMConfig]): Configuration settings
+            used for generation.
+    """
+
+    model_config: ConfigDict = ConfigDict(
+        arbitrary_types_allowed=True, frozen=True
+    )
+
+    response: str = Field(description="Generated text response.")
+    response_time: Optional[float] = Field(
+        default=None, description="Time taken for text generation."
+    )
+    finish_reason: Optional[str] = Field(
+        default=None,
+        description="Reason for completion of text generation",
+    )
+    response_tokens: Optional[int] = Field(
+        default=None,
+        description="Number of tokens in the generated response.",
+    )
+    llm: Optional[BaseLLM] = Field(
+        default=None,
+        description="Instance of the LLM used for generation.",
+    )
+    llm_config: Optional[LLMConfig] = Field(
+        default=None,
+        description="Configuration settings used for generation.",
+    )
 
 
 def default_llm() -> BaseLLM:

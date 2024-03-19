@@ -35,8 +35,14 @@ def prompt_mock() -> Prompt:
         name="Test Prompt",
         instructions="Testing instructions",
         examples=[
-            {"input": "example input 1", "output": "example output 1"},
-            {"input": "example input 2", "output": "example output 2"},
+            {
+                "input": "example input 1",
+                "output": "example output 1",
+            },
+            {
+                "input": "example input 2",
+                "output": "example output 2",
+            },
         ],
         input_keys=["input"],
         output_key="output",
@@ -108,7 +114,9 @@ def test_metric_result_initialization(
     """Test for metric result initialization."""
 
     metric_result = MetricResult(**metric_result_mock)
-    assert metric_result.datanode == data_node_mock, "Data node mismatch"
+    assert (
+        metric_result.datanode == data_node_mock
+    ), "Data node mismatch"
     assert metric_result.metric == base_metric_dict_mock(
         **base_metric_dict
     ), "Metric dictionary mismatch"

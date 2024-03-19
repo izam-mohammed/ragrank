@@ -4,7 +4,9 @@ import logging
 import os
 import sys
 
-LOGGING_FORMAT = "[%(asctime)s: %(levelname)s: %(module)s: %(message)s]"
+LOGGING_FORMAT = (
+    "[%(asctime)s: %(levelname)s: %(module)s: %(message)s]"
+)
 LOG_DIR = "logs"
 LOG_FILEPATH = os.path.join(LOG_DIR, "ragrank_logs.log")
 

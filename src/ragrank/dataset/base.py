@@ -8,8 +8,7 @@ from typing import Any, Dict, Iterator, List
 from pandas import DataFrame
 from tqdm import tqdm
 
-from ragrank._trace import DataGenerationEvent, trace
-from ragrank.bridge.pydantic import BaseModel, model_validator
+from ragrank.bridge.pydantic import BaseModel, Field, model_validator
 
 DATANODE_DICT_TYPE = Dict[str, List[str] | str]
 DATASET_DICT_TYPE = Dict[str, List[str] | List[List[str]]]
@@ -26,9 +25,15 @@ class DataNode(BaseModel):
         response (str): The response or answer to the question.
     """
 
-    question: str
-    context: List[str]
-    response: str
+    question: str = Field(
+        description="The question associated with the data point"
+    )
+    context: List[str] = Field(
+        description="The context information related to the question"
+    )
+    response: str = Field(
+        description="The response or answer to the question"
+    )
 
     def to_dataset(self) -> Dataset:
         """
@@ -57,9 +62,15 @@ class Dataset(BaseModel):
             corresponding to the questions.
     """
 
-    question: List[str]
-    context: List[List[str]]
-    response: List[str]
+    question: List[str] = Field(
+        description="A list of questions, each represented as a string"
+    )
+    context: List[List[str]] = Field(
+        description="A list of contexts, each represented as a list of strings"
+    )
+    response: List[str] = Field(
+        description="A list of responses corresponding to the questions"
+    )
 
     @model_validator(mode="after")
     def validator(self) -> Dataset:
@@ -78,20 +89,6 @@ class Dataset(BaseModel):
             )
 
         return self
-
-    def model_post_init(self, __context: Any) -> None:  # noqa: ANN401
-        """
-        Perform post-initialization tasks for the model.
-
-        Args:
-            __context (Any): The context passed during model initialization.
-        """
-        event = DataGenerationEvent(
-            time_cost=0.00001,
-            data_size=len(self.question),
-            source=None,
-        )
-        trace(event)
 
     def __len__(self) -> int:
         """

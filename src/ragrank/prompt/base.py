@@ -1,8 +1,10 @@
 """base fo the the prompt module"""
 
+from __future__ import annotations
+
 from typing import Any, Dict, List, Optional
 
-from ragrank.bridge.pydantic import BaseModel, model_validator
+from ragrank.bridge.pydantic import BaseModel, Field, model_validator
 
 Example = Dict[str, Any]
 
@@ -18,14 +20,19 @@ class Prompt(BaseModel):
         output_key (str): Key for the output.
     """
 
-    name: str
-    instructions: str
-    examples: List[Example] = []
-    input_keys: List[str]
-    output_key: str
+    name: str = Field(description="The name of the prompt.")
+    instructions: str = Field(
+        description="The instructions for the prompt."
+    )
+    examples: List[Example] = Field(
+        default_factory=list,
+        description="List of example inputs and outputs.",
+    )
+    input_keys: List[str] = Field(description="List of input keys.")
+    output_key: str = Field(description="Key for the output.")
 
     @model_validator(mode="after")
-    def validate_prompt(self) -> "Prompt":
+    def validate_prompt(self) -> Prompt:
         """Validate the prompt using Pydantic.
 
         Raises:

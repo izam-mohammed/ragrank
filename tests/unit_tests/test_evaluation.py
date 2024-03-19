@@ -98,7 +98,9 @@ def test_evalresult_methods(sample_dataset: Dataset) -> None:
     )
 
     df = eval_result.to_dataframe()
-    assert isinstance(df, DataFrame), "Result should be a pandas DataFrame."
+    assert isinstance(
+        df, DataFrame
+    ), "Result should be a pandas DataFrame."
 
 
 def test_evaluate_invalid_data_number() -> None:
@@ -125,5 +127,6 @@ def test_evaluate_invalid_metrics() -> None:
         evaluate(sample_dataset, metrics="invalid_metrics")
     with pytest.raises(ValidationError):
         evaluate(
-            sample_dataset, metrics=["invalid_metric1", "invalid_metric2"]
+            sample_dataset,
+            metrics=["invalid_metric1", "invalid_metric2"],
         )

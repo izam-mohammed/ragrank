@@ -49,6 +49,8 @@ bandit = "^1.7.7"
 flake8 = "^7.0.0"
 pytest-cov = "^4.1.0"
 openai = "^1.13.3"
+langchain-core = "^0.1.32"
+llama-index = "^0.10.20"
 
 [build-system]
 requires = ["poetry-core"]
@@ -56,7 +58,7 @@ build-backend = "poetry.core.masonry.api"
 
 
 [tool.ruff]
-line-length = 79
+line-length = 69
 
 [tool.ruff.lint]
 select = [
@@ -116,6 +118,9 @@ ignore = [
     "ANN101",
 ]
 pyupgrade.keep-runtime-typing = true
+
+[tool.ruff.lint.pycodestyle]
+max-line-length = 79
 
 [tool.ruff.format]
 docstring-code-format = true

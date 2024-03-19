@@ -59,15 +59,21 @@ def invalid_dataset() -> Dict[str, List[str] | List[List[str]]]:
     return {
         "question": ["Q1", "Q2"],
         "context": [["C1"], ["C2"]],
-        "response": ["R1"],  # Invalid, missing response for one question
+        "response": [
+            "R1"
+        ],  # Invalid, missing response for one question
     }
 
 
-def test_valid_datanode(valid_datanode: Dict[str, str | List[str]]) -> None:
+def test_valid_datanode(
+    valid_datanode: Dict[str, str | List[str]],
+) -> None:
     """Test case for a valid data node."""
 
     data_node = DataNode(**valid_datanode)
-    assert isinstance(data_node, DataNode), "Expected instance of DataNode."
+    assert isinstance(
+        data_node, DataNode
+    ), "Expected instance of DataNode."
 
 
 def test_invalid_datanode(
@@ -85,7 +91,9 @@ def test_valid_dataset(
     """Test case for a valid dataset."""
 
     dataset = Dataset(**valid_dataset)
-    assert isinstance(dataset, Dataset), "Expected instance of Dataset."
+    assert isinstance(
+        dataset, Dataset
+    ), "Expected instance of Dataset."
 
 
 def test_invalid_dataset(
@@ -121,7 +129,9 @@ def test_datanode_to_dataset(
 
     data_node = DataNode(**valid_datanode)
     dataset = data_node.to_dataset()
-    assert isinstance(dataset, Dataset), "Expected instance of Dataset."
+    assert isinstance(
+        dataset, Dataset
+    ), "Expected instance of Dataset."
 
 
 # dataset methods
@@ -142,15 +152,25 @@ def test_dataset_subscription(
     """Test case for accessing elements of a dataset."""
 
     dataset = Dataset(**valid_dataset)
-    assert dataset[0].question == "Q1", "Expected first question to be 'Q1'."
-    assert dataset[0].context == ["C1"], "Expected first context to be ['C1']."
-    assert dataset[0].response == "R1", "Expected first response to be 'R1'."
+    assert (
+        dataset[0].question == "Q1"
+    ), "Expected first question to be 'Q1'."
+    assert dataset[0].context == [
+        "C1"
+    ], "Expected first context to be ['C1']."
+    assert (
+        dataset[0].response == "R1"
+    ), "Expected first response to be 'R1'."
 
 
-def test_dataset_append(valid_datanode: Dict[str, str | List[str]]) -> None:
+def test_dataset_append(
+    valid_datanode: Dict[str, str | List[str]],
+) -> None:
     """Test case for appending a data node to a dataset."""
 
-    dataset = Dataset(question=["Q1"], context=[["C1"]], response=["R1"])
+    dataset = Dataset(
+        question=["Q1"], context=[["C1"]], response=["R1"]
+    )
     data_node = DataNode(**valid_datanode)
     dataset.append(data_node)
     assert (
@@ -164,7 +184,9 @@ def test_dataset_addition(
     """Test case for adding two datasets."""
 
     dataset1 = Dataset(**valid_dataset)
-    dataset2 = Dataset(question=["Q3"], context=[["C3"]], response=["R3"])
+    dataset2 = Dataset(
+        question=["Q3"], context=[["C3"]], response=["R3"]
+    )
     combined_dataset = dataset1 + dataset2
     assert (
         len(combined_dataset) == 3
@@ -178,7 +200,9 @@ def test_dataset_with_progress(
 
     dataset = Dataset(**valid_dataset)
     dataset_with_progress = dataset.with_progress()
-    assert isinstance(dataset_with_progress, tqdm), "Expected a tqdm object."
+    assert isinstance(
+        dataset_with_progress, tqdm
+    ), "Expected a tqdm object."
 
 
 def test_dataset_to_dict(
@@ -200,8 +224,13 @@ def test_dataset_to_dataframe(
 
     dataset = Dataset(**valid_dataset)
     df = dataset.to_dataframe()
-    assert isinstance(df, pd.DataFrame), "Expected instance of DataFrame."
-    assert df.shape == (2, 3), "Expected DataFrame shape to be (2, 3)."
+    assert isinstance(
+        df, pd.DataFrame
+    ), "Expected instance of DataFrame."
+    assert df.shape == (
+        2,
+        3,
+    ), "Expected DataFrame shape to be (2, 3)."
 
 
 def test_dataset_to_csv(
@@ -215,7 +244,10 @@ def test_dataset_to_csv(
         filename
     ), "Expected a csv file 'testdata.csv' in the system."
     assert (
-        (pd.read_csv(filename).map(eval_cell) == dataset.to_dataframe())
+        (
+            pd.read_csv(filename).map(eval_cell)
+            == dataset.to_dataframe()
+        )
         .all()
         .all()
     ), "Expected content mismatch in the csv file."
@@ -231,7 +263,9 @@ def test_from_dict_datanode(
     """Test case for creating a data node from a dictionary."""
 
     data_node = from_dict(valid_datanode)
-    assert isinstance(data_node, DataNode), "Expected instance of DataNode."
+    assert isinstance(
+        data_node, DataNode
+    ), "Expected instance of DataNode."
 
 
 def test_from_dict_dataset(
@@ -240,7 +274,9 @@ def test_from_dict_dataset(
     """Test case for creating a dataset from a dictionary."""
 
     dataset = from_dict(valid_dataset)
-    assert isinstance(dataset, Dataset), "Expected instance of Dataset."
+    assert isinstance(
+        dataset, Dataset
+    ), "Expected instance of Dataset."
 
 
 @pytest.fixture
@@ -258,7 +294,9 @@ def test_from_dataframe(
     """check the from_df with valid dataset df"""
 
     dataset = from_dataframe(data=valid_dataframe)
-    assert isinstance(dataset, Dataset), "Expected a Dataset instance."
+    assert isinstance(
+        dataset, Dataset
+    ), "Expected a Dataset instance."
 
 
 def test_from_csv(
@@ -271,5 +309,9 @@ def test_from_csv(
     data.to_csv(filename)
     data_input = from_csv(filename)
     os.remove(filename)
-    assert isinstance(data_input, Dataset), "Expected a Dataset instance."
-    assert data == data_input, "Expected different content in the csv"
+    assert isinstance(
+        data_input, Dataset
+    ), "Expected a Dataset instance."
+    assert (
+        data == data_input
+    ), "Expected different content in the csv"

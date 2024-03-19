@@ -7,29 +7,13 @@ from typing import Any, Dict, List
 
 import pandas as pd
 
-from ragrank.bridge.pydantic import BaseModel
+from ragrank.bridge.pydantic import BaseModel, Field
 from ragrank.dataset import DataNode, Dataset
 from ragrank.utils.common import eval_cell
 
 DATANODE_TYPE = Dict[str, List[str] | str]
 DATASET_TYPE = Dict[str, List[str] | List[List[str]]]
 RAGRANK_DICT_TYPE = DATANODE_TYPE | DATASET_TYPE
-
-
-class ColumnMap(BaseModel):
-    """
-    Represents a mapping of column names to their
-        corresponding names in a dataset.
-
-    Attributes:
-        question (str): The name of the column containing questions.
-        context (str): The name of the column containing contexts.
-        response (str): The name of the column containing responses.
-    """
-
-    question: str = "question"
-    context: str = "context"
-    response: str = "response"
 
 
 def from_dict(
@@ -65,7 +49,9 @@ def from_dict(
             raise ValueError(
                 f"The column {value} not in the data"
             ) from ValueError
-    data = {key: data[value] for key, value in column_map}  # mapping col
+    data = {
+        key: data[value] for key, value in column_map
+    }  # mapping col
 
     if any(isinstance(i, str) for i in data.values()):
         if return_as_dataset:
@@ -131,3 +117,28 @@ def from_csv(
 
     df: pd.DataFrame = pd.read_csv(filepath_or_buffer=path, **kwargs)
     return from_dataframe(data=df, column_map=column_map)
+
+
+class ColumnMap(BaseModel):
+    """
+    Represents a mapping of column names to their
+        corresponding names in a dataset.
+
+    Attributes:
+        question (str): The name of the column containing questions.
+        context (str): The name of the column containing contexts.
+        response (str): The name of the column containing responses.
+    """
+
+    question: str = Field(
+        default="question",
+        description="The name of the column containing questions",
+    )
+    context: str = Field(
+        default="context",
+        description="The name of the column containing contexts",
+    )
+    response: str = Field(
+        default="response",
+        description="The name of the column containing responses",
+    )
