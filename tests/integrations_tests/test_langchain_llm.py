@@ -2,7 +2,6 @@
 
 import pytest
 from langchain_openai.llms import OpenAI
-from ragrank.bridge.pydantic import ValidationError
 from ragrank.integrations.llm import LangchainLLMWrapper
 from ragrank.llm import LLMResult
 
@@ -19,7 +18,7 @@ def test_llm_init() -> None:
 
 def test_invalid_init() -> None:
     """Invalid initialization of LangchainLLMWrapper."""
-    with pytest.raises(ValidationError):
+    with pytest.raises(TypeError):
         LangchainLLMWrapper(llm="invalid llm")
 
 
