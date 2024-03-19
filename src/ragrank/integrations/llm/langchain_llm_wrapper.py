@@ -1,0 +1,112 @@
+"""Module for all of the langchain models in the langchain"""
+
+from __future__ import annotations
+
+from time import time
+from typing import Any, List
+
+from ragrank.bridge.pydantic import model_validator
+from ragrank.llm import BaseLLM, LLMResult
+
+try:
+    from langchain_core.language_models import (
+        BaseLanguageModel as LangchainBaseLanguageModel,
+    )
+    from langchain_core.messages import BaseMessage, HumanMessage
+    from langchain_core.prompt_values import PromptValue
+except ModuleNotFoundError:
+    raise ModuleNotFoundError(
+        "Please install `langchain-core` module by "
+        "`pip install langchain-core`"
+    ) from ModuleNotFoundError
+
+
+class RagrankPromptValue(PromptValue):
+    """Wrapper class for prompts used with Ragrank.
+
+    Attributes:
+        prompt_str (str): The prompt string.
+    """
+
+    prompt_str: str
+
+    def to_messages(self) -> List[BaseMessage]:
+        """Convert the prompt to a list of BaseMessage objects."""
+
+        return [HumanMessage(content=self.to_string())]
+
+    def to_string(self) -> str:
+        """Convert the prompt to a string."""
+
+        return self.prompt_str
+
+
+class LangchainLLMWrapper(BaseLLM):
+    """Wrapper class for Langchain Language Models.
+
+    Attributes:
+        langchain_llm (LangchainBaseLLM): The Langchain Language Model.
+
+    Properties:
+        name (str): Get the name of the Langchain LLM Wrapper.
+        llm_name (str): Get the name of the wrapped Langchain LLM.
+
+    Methods:
+        generate_text(): Generate text using the Langchain LLM.
+    """
+
+    langchain_llm: Any  # noqa: ANN401
+
+    @model_validator(mode="after")
+    def validator(self) -> LangchainLLMWrapper:
+        """Validate the Langchain LLM attribute"""
+
+        if not isinstance(self.langchain_llm, LangchainBaseLanguageModel):
+            raise TypeError(
+                "type of the langchain llm is not currect"
+            ) from TypeError
+        return self
+
+    @property
+    def name(self) -> str:
+        """Get the name of the Langchain LLM Wrapper."""
+
+        return f"Langchain LLM Wrapper for {self.llm_name}"
+
+    @property
+    def llm_name(self) -> str:
+        """Get the name of the wrapped Langchain LLM."""
+
+        return self.langchain_llm.get_name()
+
+    def generate_text(
+        self,
+        text: str,
+    ) -> LLMResult:
+        """Generate text using the Langchain LLM.
+
+        Args:
+            text (str): The input text.
+
+        Returns:
+            LLMResult: The generated text result.
+
+        """
+
+        start_time = time()
+        prompt = RagrankPromptValue(prompt_str=text)
+        langchain_result = self.langchain_llm.generate_prompt(prompts=[prompt])
+        message = langchain_result.generations[0][0].text
+        response_tokens = langchain_result.llm_output["token_usage"][
+            "completion_tokens"
+        ]
+        response_time = time() - start_time
+        result = LLMResult(
+            response=message,
+            response_time=response_time,
+            response_tokens=response_tokens,
+            llm=self,
+            llm_config=self.llm_config,
+        )
+
+        return result
