@@ -3,12 +3,9 @@
 from __future__ import annotations
 
 from time import time
-from typing import Annotated, List, Type
+from typing import Any, List, Type, cast
 
-from ragrank.bridge.pydantic import (
-    SkipValidation,
-    field_validator,
-)
+from ragrank.bridge.pydantic import Field, field_validator
 from ragrank.llm import BaseLLM, LLMResult
 
 try:
@@ -31,7 +28,7 @@ class LangchainLLMWrapper(BaseLLM):
     """Wrapper class for Langchain Language Models.
 
     Attributes:
-        langchain_llm (LangchainBaseLLM): The Langchain Language Model.
+        llm (LangchainBaseLLM): The Langchain Language Model.
 
     Properties:
         name (str): Get the name of the Langchain LLM Wrapper.
@@ -41,11 +38,11 @@ class LangchainLLMWrapper(BaseLLM):
         generate_text(): Generate text using the Langchain LLM.
     """
 
-    langchain_llm: Annotated[
-        LangchainBaseLanguageModel, SkipValidation
-    ]
+    llm: cast(LangchainBaseLanguageModel, Any) = Field(  # type: ignore
+        description="The Langchain Language Model."
+    )
 
-    @field_validator("langchain_llm")
+    @field_validator("llm")
     @classmethod
     def validator(
         cls: Type[LangchainLLMWrapper], v: LangchainBaseLanguageModel
@@ -76,7 +73,7 @@ class LangchainLLMWrapper(BaseLLM):
     def llm_name(self) -> str:
         """Get the name of the wrapped Langchain LLM."""
 
-        return self.langchain_llm.get_name()
+        return self.llm.get_name()
 
     def generate_text(
         self,
@@ -94,7 +91,7 @@ class LangchainLLMWrapper(BaseLLM):
         start_time = time()
         prompt = RagrankPromptValue(prompt_str=text)
         langchain_result: LangchainLLMResult = (
-            self.langchain_llm.generate_prompt(prompts=[prompt])
+            self.llm.generate_prompt(prompts=[prompt])
         )
         message = langchain_result.generations[0][0].text
         response_tokens = langchain_result.llm_output["token_usage"][
