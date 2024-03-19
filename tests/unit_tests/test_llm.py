@@ -58,7 +58,9 @@ def llm_config_invalid_type_dict() -> Dict[str, Any]:
 
 
 @pytest.fixture
-def llm_result_valid_dict() -> Dict[str, str | float | BaseLLM | LLMConfig]:
+def llm_result_valid_dict() -> (
+    Dict[str, str | float | BaseLLM | LLMConfig]
+):
     """Fixture to return a valid LLMResult dictionary."""
 
     return {
@@ -93,11 +95,16 @@ def test_llm_config_initialization_valid(
     with valid parameters."""
 
     config = LLMConfig(**llm_config_valid_dict)
-    assert config.temperature == 0.8, "Expected temperature to be 0.8"
+    assert (
+        config.temperature == 0.8
+    ), "Expected temperature to be 0.8"
     assert config.max_tokens == 200, "Expected max tokens to be 200"
     assert config.seed == 123, "Expected seed to be 123"
     assert config.top_p == 0.9, "Expected top p to be 0.9"
-    assert config.stop == ["</s>", "<|endoftext|>"], "Stop assertion failed"
+    assert config.stop == [
+        "</s>",
+        "<|endoftext|>",
+    ], "Stop assertion failed"
 
 
 def test_llm_config_initialization_invalid(
@@ -118,15 +125,23 @@ def test_llm_config_default_check() -> None:
     """Test case to check the default values of LLMConfig."""
 
     config = LLMConfig()
-    assert config.temperature == 1.0, "Expected default temperature to be 1.0"
-    assert config.max_tokens == 300, "Expected default max tokens to be 300"
+    assert (
+        config.temperature == 1.0
+    ), "Expected default temperature to be 1.0"
+    assert (
+        config.max_tokens == 300
+    ), "Expected default max tokens to be 300"
     assert config.seed == 44, "Expected default seed to be 44"
     assert config.top_p == 1.0, "Expected default top p to be 1.0"
-    assert config.stop is None, "Expected default stop tokens to be None"
+    assert (
+        config.stop is None
+    ), "Expected default stop tokens to be None"
 
 
 def test_llm_result_initialization_valid(
-    llm_result_valid_dict: Dict[str, str | float | BaseLLM | LLMConfig],
+    llm_result_valid_dict: Dict[
+        str, str | float | BaseLLM | LLMConfig
+    ],
 ) -> None:
     """Test case to validate the initialization of LLMResult
     with valid parameters."""
@@ -135,12 +150,18 @@ def test_llm_result_initialization_valid(
     assert (
         result.response == "This is a valid response."
     ), "Expected response to match"
-    assert result.response_time == 0.5, "Expected response time to be 0.5"
+    assert (
+        result.response_time == 0.5
+    ), "Expected response time to be 0.5"
     assert (
         result.finish_reason == "Complete"
     ), "Expected finish reason to be 'Complete'"
-    assert result.response_tokens == 50, "Expected response tokens to be 50"
-    assert isinstance(result.llm, BaseLLM), "Expected an instance of BaseLLM"
+    assert (
+        result.response_tokens == 50
+    ), "Expected response tokens to be 50"
+    assert isinstance(
+        result.llm, BaseLLM
+    ), "Expected an instance of BaseLLM"
     assert isinstance(
         result.llm_config, LLMConfig
     ), "Expected an instance of LLMConfig"
@@ -160,18 +181,27 @@ def test_llm_result_default_check() -> None:
     """Test case to check the default values of LLMResult."""
 
     result = LLMResult(response="Default response")
-    assert result.response == "Default response", "Expected response to match"
-    assert result.response_time is None, "Expected response time to be None"
-    assert result.finish_reason is None, "Expected finish reason to be None"
+    assert (
+        result.response == "Default response"
+    ), "Expected response to match"
+    assert (
+        result.response_time is None
+    ), "Expected response time to be None"
+    assert (
+        result.finish_reason is None
+    ), "Expected finish reason to be None"
     assert (
         result.response_tokens is None
     ), "Expected response tokens to be None"
     assert result.llm is None, "Expected llm to be None"
-    assert result.llm_config is None, "Expected llm_config to be None"
+    assert (
+        result.llm_config is None
+    ), "Expected llm_config to be None"
 
 
 def test_base_llm_set_config(
-    base_llm: BaseLLM, llm_config_valid_dict: Dict[str, float | List[str]]
+    base_llm: BaseLLM,
+    llm_config_valid_dict: Dict[str, float | List[str]],
 ) -> None:
     """Test case to set configuration for BaseLLM."""
 

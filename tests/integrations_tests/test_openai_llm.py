@@ -16,7 +16,9 @@ def test_generate_text_returns_llmresult() -> None:
 
     openai_llm = OpenaiLLM()
     result = openai_llm.generate_text("Test input")
-    assert isinstance(result, LLMResult), "Expected an LLMResult instance."
+    assert isinstance(
+        result, LLMResult
+    ), "Expected an LLMResult instance."
 
 
 def test_generate_returns_llm_result() -> None:
