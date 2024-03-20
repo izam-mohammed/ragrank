@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional, Tuple
 
+import datasets as hf_datasets
 import pandas as pd
+from datasets.arrow_dataset import Dataset as HF_Arrow_Dataset
 
 from ragrank.bridge.pydantic import BaseModel, Field
 from ragrank.dataset import DataNode, Dataset
@@ -20,7 +22,7 @@ def from_dict(
     data: RAGRANK_DICT_TYPE,
     *,
     return_as_dataset: bool = False,
-    column_map: ColumnMap | None = None,
+    column_map: Optional[ColumnMap] = None,
 ) -> Dataset | DataNode:
     """
     Create a Dataset or DataNode object from a dictionary representation.
@@ -64,7 +66,7 @@ def from_dataframe(
     data: pd.DataFrame,
     *,
     return_as_dataset: bool = False,
-    column_map: ColumnMap | None = None,
+    column_map: Optional[ColumnMap] = None,
 ) -> Dataset | DataNode:
     """
     Create a Dataset or DataNode object from a Pandas DataFrame.
@@ -97,7 +99,7 @@ def from_dataframe(
 def from_csv(
     path: str | Path,
     *,
-    column_map: ColumnMap | None = None,
+    column_map: Optional[ColumnMap] = None,
     **kwargs: Any,  # noqa: ANN401
 ) -> Dataset | DataNode:
     """
@@ -117,6 +119,42 @@ def from_csv(
 
     df: pd.DataFrame = pd.read_csv(filepath_or_buffer=path, **kwargs)
     return from_dataframe(data=df, column_map=column_map)
+
+
+def from_hfdataset(
+    url: str | Tuple[str],
+    *,
+    split: str,
+    column_map: Optional[ColumnMap] = None,
+) -> Dataset:
+    """
+    Create a Dataset object from a Hugging Face dataset.
+
+    Args:
+        url (Union[str, Tuple[str]]): The URL or tuple of URLs
+            pointing to the dataset.
+        split (str): The name of the split to load from the dataset.
+        column_map (ColumnMap, optional): Column mapping.
+            Defaults to ColumnMap().
+
+    Returns:
+        Dataset: A Dataset object containing the loaded data.
+    """
+    if column_map is None:
+        column_map = ColumnMap()
+    dataset = (
+        hf_datasets.load_dataset(url)
+        if isinstance(url, str)
+        else hf_datasets.load_dataset(*url)
+    )
+    data: HF_Arrow_Dataset = dataset[split]
+    data_dict = {
+        column: data[column] for column in data.column_names
+    }
+    data_dict[column_map.context] = [
+        eval_cell(cell) for cell in data_dict[column_map.context]
+    ]
+    return from_dict(data_dict, column_map=column_map)
 
 
 class ColumnMap(BaseModel):

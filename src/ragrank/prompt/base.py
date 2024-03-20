@@ -4,7 +4,12 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Optional
 
-from ragrank.bridge.pydantic import BaseModel, Field, model_validator
+from ragrank.bridge.pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    model_validator,
+)
 
 Example = Dict[str, Any]
 
@@ -20,16 +25,23 @@ class Prompt(BaseModel):
         output_key (str): Key for the output.
     """
 
+    model_config: ConfigDict = ConfigDict(frozen=True)
+
     name: str = Field(description="The name of the prompt.")
     instructions: str = Field(
-        description="The instructions for the prompt."
+        repr=False, description="The instructions for the prompt."
     )
     examples: List[Example] = Field(
+        repr=False,
         default_factory=list,
         description="List of example inputs and outputs.",
     )
-    input_keys: List[str] = Field(description="List of input keys.")
-    output_key: str = Field(description="Key for the output.")
+    input_keys: List[str] = Field(
+        repr=False, description="List of input keys."
+    )
+    output_key: str = Field(
+        repr=False, description="Key for the output."
+    )
 
     @model_validator(mode="after")
     def validate_prompt(self) -> Prompt:

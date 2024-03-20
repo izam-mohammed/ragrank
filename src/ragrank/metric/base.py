@@ -72,6 +72,14 @@ class BaseMetric(BaseModel, ABC):
             str: A reason for the prediction.
         """
 
+    def __repr__(self) -> str:
+        """Representation of the metric
+
+        Returns:
+            str: The name of the metric.
+        """
+        return self.name
+
     def save(self) -> None:
         """Method to save the metric. Not implemented in base class."""
         raise NotImplementedError
@@ -98,7 +106,7 @@ class MetricResult(BaseModel):
     model_config: ConfigDict = ConfigDict(frozen=True)
 
     datanode: DataNode = Field(
-        description="The data node associated with the metric result."
+        description="The data node associated with the metric result.",
     )
     metric: BaseMetric = Field(
         description="List of metrics used in the computation."
