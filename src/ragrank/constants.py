@@ -1,11 +1,11 @@
 """All of the contants for ragrank"""
 
-from typing import Final, List
+from typing import List
 
-KEYFILE: Final[str] = ".ragrank"
-DEFAULT_EMBEDDING_DIMENTION: Final[int] = 64
-DEFAULT_LLM_MODEL: Final[str] = "openai-3.5"
-DEFAULT_METRIC: Final[str] = "relevancy"
+KEYFILE: str = ".ragrank"
+DEFAULT_EMBEDDING_DIMENTION: int = 64
+DEFAULT_LLM_MODEL: str = "openai-3.5"
+DEFAULT_METRIC: str = "relevancy"
 
 QUESTION_FIELD: str = "question"
 CONTEXT_FIELD: str = "context"

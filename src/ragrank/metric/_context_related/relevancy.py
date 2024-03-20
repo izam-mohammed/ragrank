@@ -1,4 +1,4 @@
-"""Response relevancy metric"""
+"""Context Relevancy metric"""
 
 from time import time
 from typing import Union
@@ -8,12 +8,13 @@ from ragrank.dataset import DataNode
 from ragrank.llm import BaseLLM, default_llm
 from ragrank.metric.base import BaseMetric, MetricResult, MetricType
 from ragrank.prompt import Prompt
-from ragrank.prompt._prompts import RESPONSE_RELEVANCY_PROMPT
+from ragrank.prompt._prompts import CONTEXT_RELEVANCY_PROMPT
 
 
-class ResponseRelevancy(BaseMetric):
+class ContextRevevancy(BaseMetric):
     """
-    A class representing a metric for evaluating the relevancy of responses.
+    A metric to measure the relevancy of context
+    in language model responses.
 
     Attributes:
         metric_type (MetricType): The type of metric, which is non-binary.
@@ -23,12 +24,10 @@ class ResponseRelevancy(BaseMetric):
     Methods:
         name(self) -> str:
             Get the name for the metric.
-
         score(self, data: DataNode) -> Union[float, int]:
-            Calculate the score for the response relevancy metric
-                based on the provided data.
+            Calculate the context relevancy score for the given data.
         _reason(self, data: DataNode, score: float) -> str:
-            Determine the reason for the given score.
+            Provide a reason for the given data and score.
     """
 
     metric_type: MetricType = Field(
@@ -40,7 +39,7 @@ class ResponseRelevancy(BaseMetric):
         description="The language model used to generate the response.",
     )
     prompt: Prompt = Field(
-        default_factory=lambda: RESPONSE_RELEVANCY_PROMPT,
+        default_factory=lambda: CONTEXT_RELEVANCY_PROMPT,
         description="The prompt provided for generating the response",
     )
 
@@ -51,20 +50,17 @@ class ResponseRelevancy(BaseMetric):
         Returns:
             str: The name of the metric.
         """
-
-        return "Response Relevancy"
+        return "Context Relevancy"
 
     def score(self, data: DataNode) -> Union[float, int]:
-        """Calculate the score for the response relevancy metric.
+        """Calculate the context relevancy score for the given data.
 
         Args:
-            data (DataNode): The input data to be used for scoring.
+            data (DataNode): The data node containing the model dump.
 
         Returns:
-            Union[float, int]: The score indicating the
-                relevancy of the response.
+            Union[float, int]: The context relevancy score.
         """
-
         tm = time()
         prompt_str = self.prompt.to_string()
         prompt_dt = prompt_str.format(**data.model_dump())
@@ -87,19 +83,16 @@ class ResponseRelevancy(BaseMetric):
         )
 
     def _reason(self, data: DataNode, score: float) -> str:
-        """Determine the reason for the given score.
-        Not implemented yet.
+        """Provide a reason for the given data and score.
 
         Args:
-            data (DataNode): The input data used for scoring.
-            score (float): The score indicating the
-                relevancy of the response.
+            data (DataNode): The data node containing the model dump.
+            score (float): The context relevancy score.
 
         Returns:
-            str: The reason for the given score.
+            str: The reason for the score.
         """
-
         raise NotImplementedError
 
 
-response_relevancy = ResponseRelevancy()
+context_relevancy = ContextRevevancy()
