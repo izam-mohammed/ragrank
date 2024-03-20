@@ -2,7 +2,7 @@
 
 # ruff: noqa: E501
 
-from ragrank.prompt import Prompt
+from ragrank.prompt.base import Prompt
 
 RESPONSE_RELEVANCY_PROMPT = Prompt(
     name="Answer Relevancy",

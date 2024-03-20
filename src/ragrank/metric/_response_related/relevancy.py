@@ -6,8 +6,7 @@ from typing import Union
 from ragrank.bridge.pydantic import Field
 from ragrank.dataset import DataNode
 from ragrank.llm import BaseLLM, default_llm
-from ragrank.metric import BaseMetric, MetricResult
-from ragrank.metric.base import MetricType
+from ragrank.metric.base import BaseMetric, MetricResult, MetricType
 from ragrank.prompt import Prompt
 from ragrank.prompt._prompts import RESPONSE_RELEVANCY_PROMPT
 
