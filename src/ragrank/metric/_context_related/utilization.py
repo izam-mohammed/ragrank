@@ -1,5 +1,6 @@
 """Context Utilization metric"""
 
+import logging
 from time import time
 from typing import Union
 
@@ -9,6 +10,8 @@ from ragrank.llm import BaseLLM, default_llm
 from ragrank.metric.base import BaseMetric, MetricResult, MetricType
 from ragrank.prompt import Prompt
 from ragrank.prompt._prompts import CONTEXT_UTILIZATION_PROMPT
+
+logger = logging.getLogger(__name__)
 
 
 class ContextUtilization(BaseMetric):
@@ -72,6 +75,9 @@ class ContextUtilization(BaseMetric):
         try:
             response = float(response.response)
         except ValueError:
+            logger.error(
+                f"Got unexpected LLM response - '{response.response}'"
+            )
             raise ValueError(
                 "Got unexpected response from the LLM"
             ) from ValueError

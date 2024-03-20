@@ -25,7 +25,9 @@ logging.basicConfig(
     level=logging.DEBUG,
     format="[%(asctime)s: %(levelname)s: %(module)s: %(message)s]",
     handlers=[
-        logging.FileHandler(os.path.join("logs", "ragrank_logs.log")),
+        logging.FileHandler(
+            os.path.join("logs", "ragrank_logs.log")
+        ),
     ],
 )
 

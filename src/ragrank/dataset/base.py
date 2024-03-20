@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 from pathlib import Path
 from typing import Any, Dict, Iterator, List
 
@@ -12,6 +13,8 @@ from ragrank.bridge.pydantic import BaseModel, Field, model_validator
 
 DATANODE_DICT_TYPE = Dict[str, List[str] | str]
 DATASET_DICT_TYPE = Dict[str, List[str] | List[List[str]]]
+
+logger = logging.getLogger(__name__)
 
 
 class DataNode(BaseModel):
@@ -42,11 +45,13 @@ class DataNode(BaseModel):
         Returns:
             Dataset: A Dataset instance containing the current data node.
         """
-        return Dataset(
+        dataset = Dataset(
             question=[self.question],
             context=[self.context],
             response=[self.response],
         )
+        logger.info("DataNode converted to Dataset succesfully !")
+        return dataset
 
 
 class Dataset(BaseModel):
