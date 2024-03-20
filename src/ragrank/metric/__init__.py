@@ -1,8 +1,8 @@
 """Base class for metrics module"""
 
-from ragrank.metric.base import BaseMetric, MetricResult
-from ragrank.metric.response_related.response_relevancy import (
+from ragrank.metric._response_related.relevancy import (
     response_relevancy,
 )
+from ragrank.metric.base import BaseMetric, MetricResult
 
 __all__ = ["BaseMetric", "MetricResult", "response_relevancy"]

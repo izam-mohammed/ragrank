@@ -23,6 +23,7 @@ requests = "^2.28.2, !=2.30.0"
 pydantic = "^2.6.3"
 pandas = "^2.2.1"
 tqdm = "^4.66.2"
+datasets = "^2.18.0"
 
 [tool.poetry.group.docs]
 optional = true
@@ -51,6 +52,7 @@ pytest-cov = "^4.1.0"
 openai = "^1.13.3"
 langchain-core = "^0.1.32"
 llama-index = "^0.10.20"
+langchain-openai = "^0.0.8"
 
 [build-system]
 requires = ["poetry-core"]

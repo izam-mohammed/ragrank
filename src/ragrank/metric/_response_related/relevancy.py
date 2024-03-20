@@ -6,28 +6,9 @@ from typing import Union
 from ragrank.bridge.pydantic import Field
 from ragrank.dataset import DataNode
 from ragrank.llm import BaseLLM, default_llm
-from ragrank.metric import BaseMetric, MetricResult
-from ragrank.metric.base import MetricType
+from ragrank.metric.base import BaseMetric, MetricResult, MetricType
 from ragrank.prompt import Prompt
-
-PROMPT: Prompt = Prompt(
-    name="Answer Relevancy",
-    instructions="You are good in determining the relevancy of the answer. Your response should be a float value. give a score between 0 and 1. don't have to explain anything. Your response should be a one number",  # noqa: E501
-    examples=[
-        {
-            "question": "How are you",
-            "response": "I am fine",
-            "relevancy": "0.99",
-        },
-        {
-            "question": "How are you",
-            "response": "The whether is very bad",
-            "relevancy": "0.02",
-        },
-    ],
-    input_keys=["question", "response"],
-    output_key="relevancy",
-)
+from ragrank.prompt._prompts import RESPONSE_RELEVANCY_PROMPT
 
 
 class ResponseRelevancy(BaseMetric):
@@ -45,9 +26,18 @@ class ResponseRelevancy(BaseMetric):
             for the computed score.
     """
 
-    metric_type: MetricType = MetricType.NON_BINARY
-    llm: BaseLLM = Field(default_factory=lambda: default_llm())
-    prompt: Prompt = Field(default_factory=lambda: PROMPT)
+    metric_type: MetricType = Field(
+        default_factory=lambda: MetricType.NON_BINARY,
+        description="The type of metric, which is non-binary.",
+    )
+    llm: BaseLLM = Field(
+        default_factory=lambda: default_llm(),
+        description="The language model used to generate the response.",
+    )
+    prompt: Prompt = Field(
+        default_factory=lambda: RESPONSE_RELEVANCY_PROMPT,
+        description="The prompt provided for generating the response",
+    )
 
     @property
     def name(self) -> str:
@@ -91,6 +81,7 @@ class ResponseRelevancy(BaseMetric):
 
     def _reason(self, data: DataNode, score: float) -> str:
         """Method to provide a reason for the prediction.
+        Not implemented ...
 
         Args:
             data (DataNode): The data node for which the score was computed.
@@ -99,7 +90,7 @@ class ResponseRelevancy(BaseMetric):
         Returns:
             str: A reason for the prediction.
         """
-        return "There is no reason for it"
+        raise NotImplementedError
 
 
 response_relevancy = ResponseRelevancy()
