@@ -1,4 +1,4 @@
-"""Response relevancy metric"""
+"""Response Conciseness metric"""
 
 from time import time
 from typing import Union
@@ -8,12 +8,12 @@ from ragrank.dataset import DataNode
 from ragrank.llm import BaseLLM, default_llm
 from ragrank.metric.base import BaseMetric, MetricResult, MetricType
 from ragrank.prompt import Prompt
-from ragrank.prompt._prompts import RESPONSE_RELEVANCY_PROMPT
+from ragrank.prompt._prompts import RESPONSE_CONCISENESS_PROMPT
 
 
-class ResponseRelevancy(BaseMetric):
+class ResponseConciseness(BaseMetric):
     """
-    A class representing a metric for evaluating the relevancy of responses.
+    A metric to evaluate the conciseness of generated responses.
 
     Attributes:
         metric_type (MetricType): The type of metric, which is non-binary.
@@ -25,7 +25,7 @@ class ResponseRelevancy(BaseMetric):
             Get the name for the metric.
 
         score(self, data: DataNode) -> Union[float, int]:
-            Calculate the score for the response relevancy metric
+            Calculate the score for the response conciseness metric
                 based on the provided data.
         _reason(self, data: DataNode, score: float) -> str:
             Determine the reason for the given score.
@@ -40,7 +40,7 @@ class ResponseRelevancy(BaseMetric):
         description="The language model used to generate the response.",
     )
     prompt: Prompt = Field(
-        default_factory=lambda: RESPONSE_RELEVANCY_PROMPT,
+        default_factory=lambda: RESPONSE_CONCISENESS_PROMPT,
         description="The prompt provided for generating the response",
     )
 
@@ -52,17 +52,17 @@ class ResponseRelevancy(BaseMetric):
             str: The name of the metric.
         """
 
-        return "Response Relevancy"
+        return "Response Conciseness"
 
     def score(self, data: DataNode) -> Union[float, int]:
-        """Calculate the score for the response relevancy metric.
+        """Calculate the conciseness score of the generated response.
 
         Args:
-            data (DataNode): The input data to be used for scoring.
+            data (DataNode): The data node containing information for
+                generating the response.
 
         Returns:
-            Union[float, int]: The score indicating the
-                relevancy of the response.
+            Union[float, int]: The conciseness score of the response.
         """
 
         tm = time()
@@ -87,19 +87,19 @@ class ResponseRelevancy(BaseMetric):
         )
 
     def _reason(self, data: DataNode, score: float) -> str:
-        """Determine the reason for the given score.
+        """Provide a reason for the given score.
         Not implemented yet.
 
         Args:
-            data (DataNode): The input data used for scoring.
-            score (float): The score indicating the
-                relevancy of the response.
+            data (DataNode): The data node containing information
+                for generating the response.
+            score (float): The conciseness score of the response.
 
         Returns:
-            str: The reason for the given score.
+            str: A string explaining the reason for the score.
         """
 
         raise NotImplementedError
 
 
-response_relevancy = ResponseRelevancy()
+response_conciseness = ResponseConciseness()

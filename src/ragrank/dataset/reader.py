@@ -154,7 +154,9 @@ def from_hfdataset(
     data_dict[column_map.context] = [
         eval_cell(cell) for cell in data_dict[column_map.context]
     ]
-    return from_dict(data_dict, column_map=column_map)
+    return from_dict(
+        data_dict, column_map=column_map, return_as_dataset=True
+    )
 
 
 class ColumnMap(BaseModel):
