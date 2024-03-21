@@ -1,3 +1,4 @@
+(the-metrics)=
 # Metrics
 
 There are a lot of metrics available in Ragrank. They are classified into this

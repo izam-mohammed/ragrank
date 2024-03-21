@@ -13,17 +13,60 @@ more/index
 
 # Ragrank 🎯
 
-Ragrank 📊 user-friendly Python library designed to simplify the evaluation process of your Retrieval Augmented Generation (RAG) models.
+Ragrank is a user-friendly Python library created to make evaluating Retrieval Augmented Generation (RAG) models easier 🔥.
+
 
 **With Ragrank, you can:**
 
-- Effortlessly assess the performance of your models by providing clear rankings and feedback on their generated outputs. 📈
-- Gain valuable insights into their strengths and weaknesses, allowing you to optimize them for specific tasks and unlock their full potential. 💡
-- Save valuable time and resources by automating the evaluation process, freeing you to focus on other crucial aspects of your project. ⏳
+- Evaluate, monitor, and troubleshoot LLM applications 🛠
+- Plug-and-use 5+ LLM-evaluated metrics, most with research backing 💡
+- Custom metrics are simple to personalize and create 📐
+- Define evaluation datasets in Python code 📦
 
 
-**Ragrank is packed with features:**
 
-- Easy to learn and use, even for developers with minimal experience in RAG models. 📘
-- Highly customizable, allowing you to tailor the evaluation process to your specific needs and data. 🛠️
-- Open-source, making it freely available for contribution and collaboration, fostering a vibrant community around RAG evaluation. 🌟
+**Key Features:**
+
+- Easy to Use: Designed for developers new to RAG models 📘
+- Customizable: Tailor the evaluation process to your data and metrics 🛠️
+- Open Source: The source code is publically available 🌟
+-------
+
+
+````{grid}
+:gutter: 2
+
+```{grid-item-card} 🚀 Quick Start
+:link: quick-start
+:link-type: ref
+
+Master the basics of `ragrank` with a strong step. Evaluate RAG pipelines, generate test sets, and set up online monitoring for RAG apps — all with a few lines of code.
+```
+
+```{grid-item-card} 🪩 Core concepts
+:link: core-concepts
+:link-type: ref
+
+Discover the main ideas and concepts of `ragrank`. Learn how to check how well models work using the tools in the library with fundamentals.
+```
+
+````
+
+````{grid}
+:gutter: 2
+
+```{grid-item-card} 🛠 The Evaluation
+:link: the-evaluation
+:link-type: ref
+
+Head over to the comprehensive evaluation with `ragrank`. Explore the various aspects of evaluating Language Model (LLM) and Retrieval Augmented Generation (RAG) models.
+```
+
+```{grid-item-card} 📏 Metrics
+:link: the-metrics
+:link-type: ref
+
+Discover different metrics and create custom ones using `ragrank`. Dive into a variety of measurement methods to analyze and improve the performance of your models effectively.
+```
+
+````
