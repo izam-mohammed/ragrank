@@ -2,7 +2,7 @@
 
 import logging
 from time import time
-from typing import Union
+from typing import Optional
 
 from ragrank.bridge.pydantic import Field
 from ragrank.dataset import DataNode
@@ -27,11 +27,12 @@ class ResponseConciseness(BaseMetric):
         name(self) -> str:
             Get the name for the metric.
 
-        score(self, data: DataNode) -> Union[float, int]:
+        score(self, data: DataNode) -> MetricResult:
             Calculate the score for the response conciseness metric
-                based on the provided data.
-        _reason(self, data: DataNode, score: float) -> str:
-            Determine the reason for the given score.
+            based on the provided data.
+
+        _reason(self, data: DataNode, score: float) -> Optional[str]:
+            Determine the reason for the given score. (Not implemented yet)
     """
 
     metric_type: MetricType = Field(
@@ -57,7 +58,7 @@ class ResponseConciseness(BaseMetric):
 
         return "Response Conciseness"
 
-    def score(self, data: DataNode) -> Union[float, int]:
+    def score(self, data: DataNode) -> MetricResult:
         """Calculate the conciseness score of the generated response.
 
         Args:
@@ -65,7 +66,7 @@ class ResponseConciseness(BaseMetric):
                 generating the response.
 
         Returns:
-            Union[float, int]: The conciseness score of the response.
+            MetricResult: The conciseness score of the response.
         """
 
         tm = time()
@@ -75,7 +76,7 @@ class ResponseConciseness(BaseMetric):
             prompt_dt,
         )
         try:
-            response = float(response.response)
+            score = float(response.response)
         except ValueError:
             logger.error(
                 f"Got unexpected LLM response - '{response.response}'"
@@ -87,12 +88,12 @@ class ResponseConciseness(BaseMetric):
         return MetricResult(
             datanode=data,
             metric=self,
-            score=response,
+            score=score,
             reason=None,
             process_time=delta,
         )
 
-    def _reason(self, data: DataNode, score: float) -> str:
+    def _reason(self, data: DataNode, score: float) -> Optional[str]:
         """Provide a reason for the given score.
         Not implemented yet.
 
@@ -102,7 +103,7 @@ class ResponseConciseness(BaseMetric):
             score (float): The conciseness score of the response.
 
         Returns:
-            str: A string explaining the reason for the score.
+            Optional[str]: A string explaining the reason for the score.
         """
 
         raise NotImplementedError

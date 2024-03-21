@@ -2,7 +2,7 @@
 
 import logging
 from time import time
-from typing import Union
+from typing import Optional
 
 from ragrank.bridge.pydantic import Field
 from ragrank.dataset import DataNode
@@ -27,11 +27,12 @@ class ResponseRelevancy(BaseMetric):
         name(self) -> str:
             Get the name for the metric.
 
-        score(self, data: DataNode) -> Union[float, int]:
+        score(self, data: DataNode) -> MetricResult:
             Calculate the score for the response relevancy metric
-                based on the provided data.
-        _reason(self, data: DataNode, score: float) -> str:
-            Determine the reason for the given score.
+            based on the provided data.
+
+        _reason(self, data: DataNode, score: float) -> Optional[str]:
+            Determine the reason for the given score. (Not implemented yet)
     """
 
     metric_type: MetricType = Field(
@@ -57,15 +58,14 @@ class ResponseRelevancy(BaseMetric):
 
         return "Response Relevancy"
 
-    def score(self, data: DataNode) -> Union[float, int]:
+    def score(self, data: DataNode) -> MetricResult:
         """Calculate the score for the response relevancy metric.
 
         Args:
             data (DataNode): The input data to be used for scoring.
 
         Returns:
-            Union[float, int]: The score indicating the
-                relevancy of the response.
+            MetricResult: The result of the metric calculation.
         """
 
         tm = time()
@@ -75,7 +75,7 @@ class ResponseRelevancy(BaseMetric):
             prompt_dt,
         )
         try:
-            response = float(response.response)
+            score = float(response.response)
         except ValueError:
             logger.error(
                 f"Got unexpected LLM response - '{response.response}'"
@@ -87,12 +87,12 @@ class ResponseRelevancy(BaseMetric):
         return MetricResult(
             datanode=data,
             metric=self,
-            score=response,
+            score=score,
             reason=None,
             process_time=delta,
         )
 
-    def _reason(self, data: DataNode, score: float) -> str:
+    def _reason(self, data: DataNode, score: float) -> Optional[str]:
         """Determine the reason for the given score.
         Not implemented yet.
 
@@ -102,7 +102,7 @@ class ResponseRelevancy(BaseMetric):
                 relevancy of the response.
 
         Returns:
-            str: The reason for the given score.
+            Optional[str]: The reason for the given score.
         """
 
         raise NotImplementedError
