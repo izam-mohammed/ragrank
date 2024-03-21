@@ -27,7 +27,7 @@ class ContextRevevancy(BaseMetric):
     Methods:
         name(self) -> str:
             Get the name for the metric.
-        score(self, data: DataNode) -> Union[float, int]:
+        score(self, data: DataNode) -> Metric Result:
             Calculate the context relevancy score for the given data.
         _reason(self, data: DataNode, score: float) -> str:
             Provide a reason for the given data and score.

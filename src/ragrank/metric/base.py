@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import Optional, Union
+from typing import Optional
 
 from ragrank.bridge.pydantic import BaseModel, ConfigDict, Field
 from ragrank.dataset import DataNode
@@ -101,7 +101,7 @@ class MetricResult(BaseModel):
     metric: BaseMetric = Field(
         description="List of metrics used in the computation."
     )
-    score: Union[float, int] = Field(
+    score: float | int = Field(
         description="List of scores computed for each metric."
     )
     reason: Optional[str] = Field(
