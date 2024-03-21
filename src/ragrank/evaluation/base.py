@@ -1,7 +1,10 @@
 """evaluation: the main module"""
 
+from __future__ import annotations
+
+import logging
 from time import time
-from typing import List, Optional, Union
+from typing import List, Optional
 
 from numpy import mean
 
@@ -12,13 +15,15 @@ from ragrank.evaluation.outputs import EvalResult
 from ragrank.llm import BaseLLM, default_llm
 from ragrank.metric import BaseMetric, response_relevancy
 
+logger = logging.getLogger(__name__)
+
 
 @validate_call(validate_return=False)
 def evaluate(
-    dataset: Union[Dataset, DataNode, dict],
+    dataset: Dataset | DataNode | dict,
     *,
     llm: Optional[BaseLLM] = None,
-    metrics: Optional[Union[BaseMetric, List[BaseMetric]]] = None,
+    metrics: Optional[BaseMetric | List[BaseMetric]] = None,
 ) -> EvalResult:
     """
     Evaluate the performance of a given dataset using specified metrics.
@@ -78,6 +83,7 @@ def evaluate(
         ]
         for metric in metrics
     ]
+    logger.info(f"Evaluation completed with {len(metrics)} metrics")
     delta = time() - dt
 
     result = EvalResult(

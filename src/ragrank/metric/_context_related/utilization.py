@@ -1,7 +1,8 @@
 """Context Utilization metric"""
 
+import logging
 from time import time
-from typing import Union
+from typing import Optional
 
 from ragrank.bridge.pydantic import Field
 from ragrank.dataset import DataNode
@@ -9,6 +10,8 @@ from ragrank.llm import BaseLLM, default_llm
 from ragrank.metric.base import BaseMetric, MetricResult, MetricType
 from ragrank.prompt import Prompt
 from ragrank.prompt._prompts import CONTEXT_UTILIZATION_PROMPT
+
+logger = logging.getLogger(__name__)
 
 
 class ContextUtilization(BaseMetric):
@@ -22,11 +25,13 @@ class ContextUtilization(BaseMetric):
         prompt (Prompt): The prompt provided for generating the response.
 
     Methods:
-        name(self) -> str:
+        name() -> str:
             Get the name for the metric.
-        score(self, data: DataNode) -> Union[float, int]:
+
+        score(data: DataNode) -> MetricResult:
             Calculate the context utilization score for the given data.
-        _reason(self, data: DataNode, score: float) -> str:
+
+        _reason(data: DataNode, score: float) -> Optional[str]:
             Provide a reason for the given data and score.
     """
 
@@ -53,14 +58,14 @@ class ContextUtilization(BaseMetric):
 
         return "Context Utilization"
 
-    def score(self, data: DataNode) -> Union[float, int]:
+    def score(self, data: DataNode) -> MetricResult:
         """Calculate the context utilization score for the given data.
 
         Args:
             data (DataNode): The data node containing the model dump.
 
         Returns:
-            Union[float, int]: The context utilization score.
+            MetricResult: The context utilization score.
         """
 
         tm = time()
@@ -70,8 +75,11 @@ class ContextUtilization(BaseMetric):
             prompt_dt,
         )
         try:
-            response = float(response.response)
+            score = float(response.response)
         except ValueError:
+            logger.error(
+                f"Got unexpected LLM response - '{response.response}'"
+            )
             raise ValueError(
                 "Got unexpected response from the LLM"
             ) from ValueError
@@ -79,12 +87,12 @@ class ContextUtilization(BaseMetric):
         return MetricResult(
             datanode=data,
             metric=self,
-            score=response,
+            score=score,
             reason=None,
             process_time=delta,
         )
 
-    def _reason(self, data: DataNode, score: float) -> str:
+    def _reason(self, data: DataNode, score: float) -> Optional[str]:
         """Provide a reason for the given data and score.
 
         Args:
@@ -92,7 +100,7 @@ class ContextUtilization(BaseMetric):
             score (float): The context utilization score.
 
         Returns:
-            str: The reason for the score.
+            Optional[str]: The reason for the score.
         """
 
         raise NotImplementedError

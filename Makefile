@@ -37,7 +37,7 @@ clean: ## Clean all generated files
 
 test: ## Run tests
 	@echo "(pytest) Running tests..."
-	@$(PYTHON_EXEC) $(PYTEST_CMD) -v $(TESTS_DIR)
+	@$(PYTHON_EXEC) $(PYTEST_CMD) --cov=ragrank -v $(TESTS_DIR)
 
 code_coverage: ## Run code coverage analysis
 	@echo "Running code coverage analysis..."

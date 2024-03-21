@@ -1,35 +1,43 @@
-"""Include all of the prompts for the ragrank"""
+"""Private Module that include all of the prompts for the ragrank"""
 
 # ruff: noqa: E501
 from ragrank.prompt.base import Prompt
+
+NONE_PROMPT = Prompt(
+    name="None Prompt",
+    instructions="",
+    examples=[{"input": "", "output": ""}],
+    input_keys=["input"],
+    output_key="output",
+)
 
 RESPONSE_RELEVANCY_PROMPT = Prompt(
     name="Answer Relevancy",
     instructions="You are tasked with determining the relevancy of an answer given the context provided. Provide a score between 0 and 1, indicating how relevant the response is to the given question and context. You don't need to explain your score, just provide a single float value. Your response to this should be a number.",
     examples=[
         {
-            "question": "How are you?",
+            "question": "How do plants obtain energy?",
             "context": [
-                "Sarah slumped into the chair at the cafe, sighing heavily. 'That meeting dragged on forever,' she said to her friend Emily.",
+                "Photosynthesis is the process by which green plants and some other organisms use sunlight to synthesize foods with the help of chlorophyll. The process occurs in two stages: the light-dependent reactions and the light-independent reactions. In the light-dependent reactions, light energy is converted into chemical energy, while in the light-independent reactions (Calvin cycle), carbon dioxide and water are converted into glucose.",
             ],
-            "response": "I am fine.",
-            "relevancy": "0.99",
+            "response": "Plants obtain energy through a process called photosynthesis, where they convert sunlight into chemical energy.",
+            "relevancy": 0.90,
         },
         {
-            "question": "How are you?",
+            "question": "How do plants obtain energy?",
             "context": [
-                "John nervously tapped his foot in the doctor's waiting room, glancing at the clock every few minutes. He clutched the crumpled referral slip in his sweaty hand.",
+                "Gardening enthusiasts often wonder about the mechanisms behind plant growth and nutrition. One of the key processes involved is photosynthesis, where plants convert light energy into chemical energy through the utilization of pigments like chlorophyll.",
             ],
-            "response": "The weather is very bad.",
-            "relevancy": "0.02",
+            "response": "The earthworms in the soil help aerate the soil, making it easier for plants to absorb nutrients.",
+            "relevancy": 0.15,
         },
         {
-            "question": "What is the capital of France?",
+            "question": "What are some common programming languages?",
             "context": [
-                "Ms. Rousseau pointed to a map of Europe hanging on the classroom wall. 'Today, class, we'll be learning about the capital cities of major European countries. Can anyone tell me the capital of France?'",
+                "In the rapidly evolving field of technology, knowing the right programming languages can make a significant difference in career opportunities. Some widely used programming languages include Python, Java, and JavaScript, each with its unique features and applications.",
             ],
-            "response": "The capital of France is Paris.",
-            "relevancy": "0.95",
+            "response": "Some common programming languages include Python, Java, and JavaScript.",
+            "relevancy": 0.95,
         },
     ],
     input_keys=["question", "context", "response"],

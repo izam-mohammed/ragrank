@@ -1,8 +1,10 @@
 """Base module for metric"""
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import Optional, Union
+from typing import Optional
 
 from ragrank.bridge.pydantic import BaseModel, ConfigDict, Field
 from ragrank.dataset import DataNode
@@ -50,26 +52,14 @@ class BaseMetric(BaseModel, ABC):
         """
 
     @abstractmethod
-    def score(self, data: DataNode) -> Union[float, int]:
+    def score(self, data: DataNode) -> MetricResult:
         """Method to compute the metric score.
 
         Args:
             data (DataNode): The data node for which the score is computed.
 
         Returns:
-            Union[int, float]: The computed score.
-        """
-
-    @abstractmethod
-    def _reason(self, data: DataNode, score: float) -> str:
-        """Method to provide a reason for the prediction.
-
-        Args:
-            data (DataNode): The data node for which the score was computed.
-            score (Union[int, float]): The computed score.
-
-        Returns:
-            str: A reason for the prediction.
+            MetricResult: The computed score.
         """
 
     def __repr__(self) -> str:
@@ -111,7 +101,7 @@ class MetricResult(BaseModel):
     metric: BaseMetric = Field(
         description="List of metrics used in the computation."
     )
-    score: Union[float, int] = Field(
+    score: float | int = Field(
         description="List of scores computed for each metric."
     )
     reason: Optional[str] = Field(

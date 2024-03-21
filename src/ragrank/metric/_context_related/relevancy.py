@@ -1,7 +1,8 @@
 """Context Relevancy metric"""
 
+import logging
 from time import time
-from typing import Union
+from typing import Optional
 
 from ragrank.bridge.pydantic import Field
 from ragrank.dataset import DataNode
@@ -9,6 +10,8 @@ from ragrank.llm import BaseLLM, default_llm
 from ragrank.metric.base import BaseMetric, MetricResult, MetricType
 from ragrank.prompt import Prompt
 from ragrank.prompt._prompts import CONTEXT_RELEVANCY_PROMPT
+
+logger = logging.getLogger(__name__)
 
 
 class ContextRevevancy(BaseMetric):
@@ -24,7 +27,7 @@ class ContextRevevancy(BaseMetric):
     Methods:
         name(self) -> str:
             Get the name for the metric.
-        score(self, data: DataNode) -> Union[float, int]:
+        score(self, data: DataNode) -> Metric Result:
             Calculate the context relevancy score for the given data.
         _reason(self, data: DataNode, score: float) -> str:
             Provide a reason for the given data and score.
@@ -52,14 +55,14 @@ class ContextRevevancy(BaseMetric):
         """
         return "Context Relevancy"
 
-    def score(self, data: DataNode) -> Union[float, int]:
+    def score(self, data: DataNode) -> MetricResult:
         """Calculate the context relevancy score for the given data.
 
         Args:
             data (DataNode): The data node containing the model dump.
 
         Returns:
-            Union[float, int]: The context relevancy score.
+            MetricResult: The context relevancy score.
         """
         tm = time()
         prompt_str = self.prompt.to_string()
@@ -68,8 +71,11 @@ class ContextRevevancy(BaseMetric):
             prompt_dt,
         )
         try:
-            response = float(response.response)
+            score = float(response.response)
         except ValueError:
+            logger.error(
+                f"Got unexpected LLM response - '{response.response}'"
+            )
             raise ValueError(
                 "Got unexpected response from the LLM"
             ) from ValueError
@@ -77,12 +83,12 @@ class ContextRevevancy(BaseMetric):
         return MetricResult(
             datanode=data,
             metric=self,
-            score=response,
+            score=score,
             reason=None,
             process_time=delta,
         )
 
-    def _reason(self, data: DataNode, score: float) -> str:
+    def _reason(self, data: DataNode, score: float) -> Optional[str]:
         """Provide a reason for the given data and score.
 
         Args:
