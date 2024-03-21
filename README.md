@@ -34,42 +34,61 @@
     <p>
 </h4>
 
-Welcome to Ragrank! This toolkit is designed to assist you in evaluating the performance of your LLM applications. Whether you're working on chatbots, text generators, or any other natural language processing (NLP) task, our toolkit can help you assess various aspects of your model's performance.
+Welcome to Ragrank! This toolkit is designed to assist you in evaluating the performance of your Retrieval-Augmented Generation (RAG) applications. You will get proper metrics for evaluate RAG model. The product is still in `beta` stage.
 
-## What does it do?
+## 🔥 Installation
 
-Our free LLM evaluation toolkit offers functionalities to assess:
+Ragrank is available as a PyPi package. To install it, simply run:
 
-- **Accuracy of Facts:** Evaluate how accurately your model generates factual information.
-- **Understanding of Context:** Measure how well your model comprehends and maintains context within a conversation or text.
-- **Tone Analysis:** Analyze the tone of generated text to ensure it aligns with your desired tone or sentiment.
-- **And More:** Additional evaluation metrics and functionalities to help you gauge the effectiveness of your LLM applications.
+```bash
+pip install ragrank
+```
 
-## How to Use
+If you prefer to install it from the source:
 
-1. **Installation:** Clone or download this repository to your local machine.
+```bash
+git clone git@github.com:Auto-Playground/ragrank.git && cd ragrank
+poetry install
+```
 
-2. **Usage:** Utilize the provided evaluation scripts and tools to evaluate your LLM applications. Detailed instructions for each evaluation metric are included within their respective directories.
+## 🚀 Quick Start
 
-3. **Customization:** Feel free to customize and extend the toolkit to suit your specific evaluation needs. Contributions and feedback are welcomed!
+Set your `OPENAI_API_KEY` as an environment variable (you can also evaluate using your own custom model, refer [docs](https://ragrank.readthedocs.io/)):
+```bash
+export OPENAI_API_KEY="..."
+```
 
-## Contributing
+Here's a quick example of how you can use Ragrank to evaluate the relevance of generated responses:
 
-If you'd like to contribute to the LLM Evaluation Toolkit, please follow these steps:
+```python
+from ragrank import evaluate
+from ragrank.dataset import from_dict
+from ragrank.metric import response_relevancy
 
-1. Fork this repository.
-2. Create a new branch (`git checkout -b feature/improvement`).
-3. Make your changes.
-4. Commit your changes (`git commit -am 'Add new feature'`).
-5. Push to the branch (`git push origin feature/improvement`).
-6. Create a new Pull Request.
+# Define your dataset
+data = from_dict({
+    "question": ["What is the capital of France?"],
+    "context": ["France is famous for its iconic landmarks such as the Eiffel Tower and its rich culinary tradition."],
+    "answer": ["The capital of France is Paris."]
+})
+
+# Evaluate the response relevance metric
+result = evaluate(data=data, metrics=[response_relevancy])
+
+# Display the evaluation results
+result.to_dataframe()
+```
+
+For more information on how to use Ragrank and its various features, please refer to the [documentation](https://ragrank.readthedocs.io/). 📚
 
 ## License
 
-This project is licensed under the [Apatche Licence](https://github.com/Auto-Playground/Ragrank/blob/main/LICENSE).
+This project is licensed under the [Apache License](https://github.com/Auto-Playground/Ragrank/blob/main/LICENSE). Feel free to use and modify it according to your needs.
 
 ## Feedback and Support
 
-If you encounter any issues, have questions, or would like to provide feedback, please open an issue on the GitHub repository.
+If you encounter any issues, have questions, or would like to provide feedback, please don't hesitate to open an issue on the GitHub repository. Your contributions and suggestions are highly appreciated!
 
-Happy evaluating!
+Join our community on Discord to connect with other users, ask questions, and share your experiences with Ragrank. We're here to help you make the most out of your NLP projects! 💬
+
+> Happy evaluating! 🙂
