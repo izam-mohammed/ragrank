@@ -67,6 +67,7 @@ def test_metrics(
         start = time()
         try:
             result = evaluate(dataset=sample_dataset, metrics=[metric])
+            logger.info(f"result - {result}")
         except Exception as e:
             logger.error(f"Error evaluating metric {metric.name}: {e}")
             continue
