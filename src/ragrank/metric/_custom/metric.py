@@ -121,16 +121,4 @@ class CustomMetric(BaseMetric, ABC):
         Returns:
             Optional[str]: The reason for the given score.
         """
-        return self.reason(data=data, score=score)
-
-    @abstractmethod
-    def reason(self, data: DataNode, score: float) -> Optional[str]:
-        """Abstract method to provide a reason for the given score.
-
-        Args:
-            data (DataNode): The input data used for scoring.
-            score (float): The score indicating the relevancy of the response.
-
-        Returns:
-            Optional[str]: The reason for the given score.
-        """
+        return None

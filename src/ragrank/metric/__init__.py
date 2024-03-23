@@ -6,7 +6,10 @@ from ragrank.metric._context_related.relevancy import (
 from ragrank.metric._context_related.utilization import (
     context_utilization,
 )
-from ragrank.metric._custom.instruct import CustomInstruct
+from ragrank.metric._custom.instruct import (
+    CustomInstruct,
+    InstructConfig,
+)
 from ragrank.metric._custom.metric import CustomMetric
 from ragrank.metric._response_related.conciseness import (
     response_conciseness,
@@ -25,4 +28,5 @@ __all__ = [
     "CustomInstruct",
     "context_utilization",
     "context_relevancy",
+    "InstructConfig",
 ]

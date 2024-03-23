@@ -9,7 +9,11 @@ from ragrank.dataset import DataNode
 from ragrank.llm import BaseLLM, default_llm
 from ragrank.metric.base import BaseMetric, MetricResult, MetricType
 from ragrank.prompt import Prompt
-from ragrank.prompt._prompts import NONE_PROMPT
+from ragrank.prompt._prompts import (
+    BINARY_PROMPT_ADDON,
+    NON_BINARY_PROMPT_ADDON,
+    NONE_PROMPT,
+)
 from ragrank.prompt.base import Example as PromptExample
 
 logger = logging.getLogger(__name__)
@@ -120,7 +124,11 @@ class CustomInstruct(BaseMetric):
         self.metric_type = self.config.metric_type
         self.prompt = Prompt(
             name=self.config.name,
-            instructions=self.config.instructions,
+            instructions=(
+                self.config.instructions + BINARY_PROMPT_ADDON
+                if self.config.metric_type == MetricType.BINARY
+                else NON_BINARY_PROMPT_ADDON
+            ),
             examples=self.config.examples,
             input_keys=self.config.input_fields,
             output_key=self.config.output_field,

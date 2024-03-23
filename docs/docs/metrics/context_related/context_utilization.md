@@ -1,12 +1,13 @@
-(context-relevancy)=
-# Context relevancy
+(response-utilization)=
+# Context Utilization
 
-This measure how relevant the context provided for the given question. It is a non-binary metric. So the score will be a value between 0 and 1.
+This measure how much context is utilizing in the response. It is a non-binary metric. So the score will be a value between 0 and 1.
 
 ```{Hint}
 - **question**: 
-- **High relevant context**:
-- **Low relevant context**
+- **context**: 
+- **High context utilization answer**:
+- **Low context utilization answer**:
 ```
 
 ```python 

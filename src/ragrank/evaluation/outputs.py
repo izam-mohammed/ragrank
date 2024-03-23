@@ -11,6 +11,7 @@ from ragrank.bridge.pydantic import (
     model_validator,
 )
 from ragrank.dataset import Dataset
+from ragrank.dataset.reader import RAGRANK_DICT_TYPE
 from ragrank.llm import BaseLLM
 from ragrank.metric import BaseMetric
 
@@ -74,6 +75,18 @@ class EvalResult(BaseModel):
                 ) from ValueError
 
         return self
+
+    def to_dict(self) -> RAGRANK_DICT_TYPE:
+        """
+        Convert the evaluation result to a dict.
+
+        Returns:
+            dict: A dict containing the evaluation results.
+        """
+        dict_data = self.dataset.to_dict()
+        for i in range(len(self.metrics)):
+            dict_data[self.metrics[i].name] = self.scores[i]
+        return dict_data
 
     def to_dataframe(self) -> DataFrame:
         """

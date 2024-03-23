@@ -61,18 +61,23 @@ def test_metrics(
     metrics: List[BaseMetric], sample_dataset: Dataset
 ) -> None:
     """Test the dataset with each metric."""
-    
+
     logger.info("Starting the metric wise evaluation")
     for metric in metrics:
         start = time()
         try:
-            result = evaluate(dataset=sample_dataset, metrics=[metric])
+            result = evaluate(
+                dataset=sample_dataset, metrics=[metric]
+            )
             logger.info(f"result - {result}")
-        except Exception as e:
-            logger.error(f"Error evaluating metric {metric.name}: {e}")
+        except Exception as e:  # noqa: BLE001
+            logger.error(
+                f"Error evaluating metric {metric.name}: {e}"
+            )
             continue
-        
+
         time_cost = time() - start
         logger.info(
-            f"==== Completed the metric '{metric.name}' in {time_cost:.3f} seconds ===="
+            f"==== Completed the metric '{metric.name}'"
+            f" in {time_cost:.3f} seconds ===="
         )

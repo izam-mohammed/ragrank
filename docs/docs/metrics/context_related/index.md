@@ -1,15 +1,29 @@
 # Context related
 
-Here are the metrics for evaluate the context related attributes in your RAG model
+Here are the metrics for evaluate the context related attributes in your RAG model.
 
-- Context f1
-- Context Relevancy
-- Hallucination
+````{grid}
+:gutter: 2
+
+```{grid-item-card} 📜 Context Relevancy
+:link: context-relevancy
+:link-type: ref
+
+These metrics evaluate how well the provided context matches the given question, ensuring relevance and coherence.
+```
+
+```{grid-item-card} 📜 Context Utilization
+:link: response-utilization
+:link-type: ref
+
+This measures how effectively the response uses the surrounding context to provide relevant information.
+```
+
+````
 
 ```{toctree}
 :hidden:
 
-context_f1
 context_relevancy
-hallucination
+context_utilization
 ```

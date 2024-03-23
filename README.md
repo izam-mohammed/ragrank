@@ -47,7 +47,7 @@ pip install ragrank
 If you prefer to install it from the source:
 
 ```bash
-git clone git@github.com:Auto-Playground/ragrank.git && cd ragrank
+git clone https://github.com/Auto-Playground/ragrank.git && cd ragrank
 poetry install
 ```
 
@@ -67,9 +67,9 @@ from ragrank.metric import response_relevancy
 
 # Define your dataset
 data = from_dict({
-    "question": ["What is the capital of France?"],
+    "question": "What is the capital of France?",
     "context": ["France is famous for its iconic landmarks such as the Eiffel Tower and its rich culinary tradition."],
-    "answer": ["The capital of France is Paris."]
+    "answer": "The capital of France is Paris.",
 })
 
 # Evaluate the response relevance metric
