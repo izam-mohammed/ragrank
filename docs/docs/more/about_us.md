@@ -8,7 +8,7 @@
 
 - But Ragrank is more than just a tool. It's a reflection of our values and what we believe in. It's about working hard, staying positive, and always trying to make things better.
 
-- As you check out Ragrank, we hope you'll join us on our journey. Let's dream big, challenge ourselves, and make the world of computers a better place – together.
+- As you check out Ragrank, we hope you'll join us on our journey. 
 
 Thanks for being a part of our adventure!
 

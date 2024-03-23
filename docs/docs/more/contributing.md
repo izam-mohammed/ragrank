@@ -1,3 +1,4 @@
+(contributing)=
 # Contributing 
 
 🚀 Thank you for your interest in contributing to Ragrank! We welcome contributions from the community to help improve our product and make it even more robust. Below is a step-by-step guide on how you can contribute to Ragrank:
