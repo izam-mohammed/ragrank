@@ -1,4 +1,4 @@
-# API reference
+# 🛠 API reference
 
 ```{admonition} Please Note
 :class: note
