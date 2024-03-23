@@ -7,7 +7,6 @@ evaluation/index
 metrics/index
 integrations/index
 api_reference/index
-community/index
 more/index
 ```
 
