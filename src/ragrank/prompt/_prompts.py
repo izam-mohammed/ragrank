@@ -11,6 +11,9 @@ NONE_PROMPT = Prompt(
     output_key="output",
 )
 
+BINARY_PROMPT_ADDON = "Provide a score should either 0 or 1, indicating the metric for given question and context. You don't need to explain your score, just provide a single float value. Your response to this should be 0 or 1."
+NON_BINARY_PROMPT_ADDON = "Provide a score between 0 and 1, indicating the metric for given question and context. You don't need to explain your score, just provide a single float value. Your response to this should be a number."
+
 RESPONSE_RELEVANCY_PROMPT = Prompt(
     name="Answer Relevancy",
     instructions="You are tasked with determining the relevancy of an answer given the context provided. Provide a score between 0 and 1, indicating how relevant the response is to the given question and context. You don't need to explain your score, just provide a single float value. Your response to this should be a number.",
@@ -90,15 +93,6 @@ CONTEXT_RELEVANCY_PROMPT = Prompt(
     name="Context Relevancy",
     instructions="You are tasked with determining the relevancy of a context provided for a given question. Provide a score between 0 and 1, indicating how relevant the context is to the given question. You don't need to explain your score, just provide a single float value. Your response to this should be a number.",
     examples=[
-        {
-            "question": "How do I create a neural network using TensorFlow?",
-            "context": [
-                "As a beginner in machine learning, I'm interested in learning how to build neural networks. I've heard TensorFlow is a popular library for this purpose."
-                "I've already installed TensorFlow and I'm ready to start coding."
-            ],
-            "response": "To create a neural network using TensorFlow, you can start by importing the necessary modules and defining the layers of your model. Then, compile the model specifying the optimizer, loss function, and metrics. Finally, train the model using the fit method on your training data.",
-            "relevancy": 0.95,
-        },
         {
             "question": "What are some common interview questions for data science positions?",
             "context": [
