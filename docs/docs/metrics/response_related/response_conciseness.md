@@ -1,18 +1,19 @@
-(context-relevancy)=
-# Context relevancy
+(response-conciseness)=
+# Response Conciseness
 
-This measure how relevant the context provided for the given question. It is a non-binary metric. So the score will be a value between 0 and 1.
+This measure how much concise the response is while preserving maximum information. It is a non-binary metric. So the score will be a value between 0 and 1.
 
 ```{Hint}
-- **question**: 
-- **High relevant context**:
-- **Low relevant context**
+- **question**:
+- **context**:
+- **response (concise)**:
+- **response (low concise / lengthy)**:
 ```
 
 ```python 
 from ragrank import evaluate
 from ragrank.dataset import DataNode
-from ragrank.metric import response_relevancy
+from ragrank.metric import response_conciseness
 
 data = DataNode(
     question="What is the tallest mountain in the world?",
@@ -26,7 +27,7 @@ data = DataNode(
 result = evaluate(
     dataset=data,
     metrics=[
-        response_relevancy,
+        response_conciseness,
     ]
 )
 
