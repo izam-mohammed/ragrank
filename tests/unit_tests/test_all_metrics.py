@@ -70,7 +70,7 @@ def test_metrics(
                 dataset=sample_dataset, metrics=[metric]
             )
             logger.info(f"result - {result}")
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             logger.error(
                 f"Error evaluating metric {metric.name}: {e}"
             )
@@ -78,5 +78,6 @@ def test_metrics(
 
         time_cost = time() - start
         logger.info(
-            f"==== Completed the metric '{metric.name}' in {time_cost:.3f} seconds ===="
+            f"==== Completed the metric '{metric.name}'"
+            f" in {time_cost:.3f} seconds ===="
         )
