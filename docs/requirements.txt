@@ -141,4 +141,4 @@ wrapt==1.16.0 ; python_version >= "3.9" and python_version < "4.0"
 xxhash==3.4.1 ; python_version >= "3.9" and python_version < "4.0"
 yarl==1.9.4 ; python_version >= "3.9" and python_version < "4.0"
 zipp==3.18.1 ; python_version >= "3.9" and python_version < "3.10"
-ragrank
+ragrank==0.0.5
