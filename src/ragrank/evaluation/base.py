@@ -28,8 +28,7 @@ def evaluate(
     """
     Evaluate the performance of a given dataset using specified metrics.
 
-    Parameters
-    ----------
+    Parameters:
         dataset (Union[Dataset, DataNode, dict]): The dataset to be evaluated.
             It can be provided either as a `Dataset` object, `DataNode` object,
             or a `dict` representing the dataset.
@@ -39,15 +38,11 @@ def evaluate(
             list of metrics used for evaluation. If None,
             response relevancy metric will be used.
 
-    Returns
-    -------
+    Returns:
         EvalResult: An object containing the evaluation results.
 
-    Examples
-    --------
-        basic usage:
+    Examples::
 
-        ```python
         from ragrank import evaluate
         from ragrank.dataset import from_dict
 
@@ -62,7 +57,6 @@ def evaluate(
         result = evaluate(data)
 
         print(result)
-        ```
     """
     if isinstance(dataset, dict):
         dataset = from_dict(dataset)

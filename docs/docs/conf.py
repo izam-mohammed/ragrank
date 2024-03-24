@@ -17,7 +17,7 @@ release = "0.0.1"
 extensions = [
     "myst_parser",
     "sphinx_design",
-    # 'sphinxext.opengraph',
+    "sphinxext.opengraph",
     "sphinx_copybutton",
 ]
 
@@ -73,13 +73,13 @@ html_theme_options = {
 
 
 # open graph configuration
-# ogp_site_url = "http://example.org/"
-# ogp_image = "http://example.org/image.png"
-# ogp_description_length = 300
-# ogp_type = "article"
+ogp_site_url = "https://ragrank.readthedocs.io/"
+ogp_image = "https://raw.githubusercontent.com/Auto-Playground/ragrank/main/docs/docs/_static/imgs/ragrank_dark.png"
+ogp_description_length = 300
+ogp_type = "article"
 
-# ogp_custom_meta_tags = [
-#     '<meta property="og:ignore_canonical" content="true" />',
-# ]
+ogp_custom_meta_tags = [
+    '<meta property="og:ignore_canonical" content="true" />',
+]
 
-# ogp_enable_meta_description = True
+ogp_enable_meta_description = True
