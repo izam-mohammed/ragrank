@@ -5,7 +5,7 @@ sys.path.insert(0, os.path.abspath("."))
 
 
 # -- Project information --------
-project = "Ragrank"
+project = "Ragrank API documentation"
 copyright = "2024, Izam Mohammed"
 author = "Izam Mohammed"
 release = "0.0.1"

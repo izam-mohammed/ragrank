@@ -2,7 +2,7 @@ ragrank.bridge
 ===============
 
 .. autosummary::
-    ragrank.bridge.pydantic
+    ragrank.bridge
 
 .. automodule:: ragrank.bridge
     :members:
