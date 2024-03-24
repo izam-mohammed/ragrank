@@ -24,6 +24,7 @@ pydantic = "^2.6.3"
 pandas = "^2.2.1"
 tqdm = "^4.66.2"
 datasets = "^2.18.0"
+openai = "^1.14.2"
 
 [tool.poetry.group.docs]
 optional = true
