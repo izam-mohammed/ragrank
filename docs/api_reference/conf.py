@@ -14,10 +14,10 @@ release = "0.0.1"
 # -- General configuration ---------
 
 extensions = [
-    "myst_parser",
-    # 'sphinxext.opengraph',
-    "sphinx_copybutton",
-    "sphinx_rtd_theme",
+    "sphinx_design",
+    "sphinx.ext.autodoc",
+    "sphinx.ext.napoleon",
+    "sphinx.ext.autosummary"
 ]
 
 myst_enable_extensions = [
