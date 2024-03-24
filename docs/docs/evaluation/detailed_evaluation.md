@@ -23,7 +23,7 @@ data = from_dict(
         "context": [
             "France is famous for its iconic landmarks such as the Eiffel Tower and its rich culinary tradition."
         ],
-        "answer": "The capital of France is Paris.",
+        "response": "The capital of France is Paris.",
     },
     return_as_dataset=True,
 )

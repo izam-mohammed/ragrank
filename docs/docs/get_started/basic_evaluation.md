@@ -25,7 +25,7 @@ from ragrank.metric import response_relevancy
 data = from_dict({
     "question": "What is the capital of France?",
     "context": ["France is famous for its iconic landmarks such as the Eiffel Tower and its rich culinary tradition."],
-    "answer": "The capital of France is Paris.",
+    "response": "The capital of France is Paris.",
 })
 
 # Evaluate the response relevance metric

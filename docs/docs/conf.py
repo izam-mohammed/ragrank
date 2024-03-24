@@ -6,7 +6,7 @@ sys.path.insert(0, os.path.abspath("."))
 
 # -- Project information --------
 
-project = "ragrank"
+project = "Ragrank"
 copyright = "2024, Izam Mohammed"
 author = "Izam Mohammed"
 release = "0.0.6"
@@ -45,7 +45,7 @@ myst_heading_anchors = 2
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 html_theme = "furo"
-html_title = "ragrank 🎯"
+html_title = "ragrank"
 html_favicon = "./_static/favicon.ico"
 html_static_path = ["_static"]
 language = "en"
