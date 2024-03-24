@@ -3,5 +3,5 @@
 ```{admonition} Please Note
 :class: note
 
-The API documentation will available soon.
+The API documentation is availbale at [api-ragrank.readthedocs.io](https://api-ragrank.readthedocs.io/)
 ```
