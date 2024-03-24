@@ -9,6 +9,9 @@ SRC_DIR ?= src
 DOCS_DIR ?= docs
 TESTS_DIR ?= tests
 
+CORE_TEST_DIR ?= tests/unit_tests
+INTEGRATION_TEST_DIR ?= tests/integration_tests
+
 PACKAGE_NAME ?= ragrank
 
 .PHONY: help format lint clean test code_coverage install_deps dependency_check build_dist build_docs
@@ -37,7 +40,15 @@ clean: ## Clean all generated files
 
 test: ## Run tests
 	@echo "(pytest) Running tests..."
-	@$(PYTHON_EXEC) $(PYTEST_CMD) --cov=ragrank -v $(TESTS_DIR)
+	@$(PYTHON_EXEC) $(PYTEST_CMD) -v $(TESTS_DIR)
+
+test-core: # Run the core files test
+	@echo "(pytest) Running test on core files"
+	@$(PYTHON_EXEC) $(PYTEST_CMD) -v $(CORE_TEST_DIR)
+
+test-integration: # Run the test integrations
+	@echo "(pytest) Running test on integrations"
+	@$(PYTHON_EXEC) $(PYTEST_CMD) -v $(INTEGRATION_TEST_DIR)
 
 code_coverage: ## Run code coverage analysis
 	@echo "Running code coverage analysis..."

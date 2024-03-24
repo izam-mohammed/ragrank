@@ -2,7 +2,7 @@
 
 import pytest
 from langchain_openai.llms import OpenAI
-from ragrank.integrations.llm import LangchainLLMWrapper
+from ragrank.integrations.langchain import LangchainLLMWrapper
 from ragrank.llm import LLMResult
 
 

@@ -1,6 +1,6 @@
 """Testing the openai LLM module"""
 
-from ragrank.integrations.llm import OpenaiLLM
+from ragrank.integrations.openai import OpenaiLLM
 from ragrank.llm import LLMResult
 
 

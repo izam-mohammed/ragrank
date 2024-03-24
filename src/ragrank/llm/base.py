@@ -182,7 +182,7 @@ def default_llm() -> BaseLLM:
     Returns:
         BaseLLM: Default LLM instance.
     """
-    from ragrank.integrations.llm import OpenaiLLM
+    from ragrank.integrations.openai import OpenaiLLM
 
     llm = OpenaiLLM()
     return llm

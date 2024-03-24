@@ -2,7 +2,7 @@
 
 import pytest
 from llama_index.llms.openai import OpenAI
-from ragrank.integrations.llm import LlamaindexLLMWrapper
+from ragrank.integrations.llama_index import LlamaindexLLMWrapper
 from ragrank.llm import LLMResult
 
 
