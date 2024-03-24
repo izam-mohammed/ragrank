@@ -2,7 +2,9 @@ ragrank.integrations
 ====================
 
 .. autosummary::
-    ragrank.integrations.llm
+    ragrank.integrations.openai
+    ragrank.integrations.langchain
+    ragrank.integrations.llama_index
 
 .. automodule:: ragrank.integrations
     :members:
@@ -10,4 +12,6 @@ ragrank.integrations
 .. toctree::
     :maxdepth: 1
 
-    llm/index
+    openai/index
+    langchain/index
+    llama_index/index
