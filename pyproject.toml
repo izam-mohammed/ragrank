@@ -1,15 +1,15 @@
 [tool.poetry]
 name = "ragrank"
-version = "0.0.5"
+version = "0.0.6"
 description = "An evaluation library for RAG models"
 authors = ["Izam Mohammed <izamdeveloper1@gmail.com>"]
 license = "Apache-2.0"
 readme = "README.md"
-repository = "https://github.com/Auto-Playground/Ragrank"
+repository = "https://github.com/Auto-Playground/ragrank"
 packages = [
     { include = "ragrank", from = "src" },
 ]
-keywords = ["rag", "evaluation"]
+keywords = ["rag", "evaluation", "llmops"]
 
 
 
