@@ -18,6 +18,7 @@ extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.napoleon",
     "sphinx.ext.autosummary",
+    "sphinxext.opengraph",
 ]
 
 myst_enable_extensions = [
@@ -45,3 +46,15 @@ html_title = "ragrank 🎯"
 html_favicon = "./_static/favicon.ico"
 html_static_path = ["_static"]
 language = "en"
+
+# open graph configuration
+ogp_site_url = "https://api-ragrank.readthedocs.io/"
+ogp_image = "https://raw.githubusercontent.com/Auto-Playground/ragrank/main/docs/docs/_static/imgs/ragrank_dark.png"
+ogp_description_length = 300
+ogp_type = "article"
+
+ogp_custom_meta_tags = [
+    '<meta property="og:ignore_canonical" content="true" />',
+]
+
+ogp_enable_meta_description = True
