@@ -8,7 +8,7 @@ sys.path.insert(0, os.path.abspath("."))
 project = "Ragrank API documentation"
 copyright = "2024, Izam Mohammed"
 author = "Izam Mohammed"
-release = "0.0.1"
+release = "0.0.5"
 
 
 # -- General configuration ---------
@@ -17,7 +17,7 @@ extensions = [
     "sphinx_design",
     "sphinx.ext.autodoc",
     "sphinx.ext.napoleon",
-    "sphinx.ext.autosummary"
+    "sphinx.ext.autosummary",
 ]
 
 myst_enable_extensions = [
