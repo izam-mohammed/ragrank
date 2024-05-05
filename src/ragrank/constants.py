@@ -16,6 +16,6 @@ DATA_FIELDS: List[str] = [
     RESPONSE_FIELD,
 ]
 
-SERVER_URL: str = "https://ragrank-trace.vercel.app/"
+SERVER_URL: str = "https://ragrank-trace.onrender.com/api/"
 DEBUG_MODE: str = "DEBUG_MODE_ON"
 REQUEST_TIME_OUT: float = 10.0
