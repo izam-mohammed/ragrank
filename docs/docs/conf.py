@@ -9,7 +9,7 @@ sys.path.insert(0, os.path.abspath("."))
 project = "Ragrank"
 copyright = "2024, Izam Mohammed"
 author = "Izam Mohammed"
-release = "0.0.6"
+release = "0.0.7"
 
 
 # -- General configuration ------

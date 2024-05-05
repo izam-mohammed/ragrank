@@ -17,7 +17,7 @@ data = DataNode(
 )
 
 result:EvalResult = evaluate(
-    dataset=data,
+    data ,
 )
 
 print(result.to_dict())

@@ -29,7 +29,7 @@ data = from_dict({
 })
 
 # Evaluate the response relevance metric
-result = evaluate(data=data, metrics=[response_relevancy])
+result = evaluate(data, metrics=[response_relevancy])
 
 # Display the evaluation results
 result.to_dataframe()

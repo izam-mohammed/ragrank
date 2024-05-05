@@ -57,7 +57,7 @@ data = DataNode(
 )
 
 result = evaluate(
-    dataset=data,
+    data ,
     metrics=[grammar_checker],
 )
 print(result)

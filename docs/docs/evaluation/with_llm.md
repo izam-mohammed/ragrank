@@ -29,7 +29,7 @@ llm_configuration = LLMConfig(
 llm = OpenaiLLM(llm_config=llm_configuration)
 
 result = evaluate(
-    dataset=data,
+    data ,
     llm=llm,
 )
 
@@ -72,7 +72,7 @@ data = DataNode(
 )
 
 result = evaluate(
-    dataset = data,
+    data ,
     llm = ragrank_llm,
 )
 ```

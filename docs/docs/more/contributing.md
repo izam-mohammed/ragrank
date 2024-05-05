@@ -34,33 +34,42 @@
 **5. Test Your Changes:**
    - Run tests to ensure your changes haven't introduced any regressions:
      ```
-     pytest
+     make test
      ```
 
-**6. Commit Your Changes:**
+**6. Linting and formating:**
+   - Format the code
+     ```
+     make format
+     ```
+   - Check the linting
+     ```
+     make lint
+     ```
+**7. Commit Your Changes:**
    - Once you're satisfied with your changes, commit them:
      ```
      git add .
      git commit -m "Add your descriptive commit message here"
      ```
 
-**7. Push Changes to Your Fork:**
+**8. Push Changes to Your Fork:**
    - Push your changes to your forked repository:
      ```
      git push origin my-feature
      ```
 
-**8. Create a Pull Request:**
+**9. Create a Pull Request:**
    - Go to your forked repository on GitHub.
    - Click on the "Compare & pull request" button next to your branch.
    - Fill out the pull request form with a descriptive title and details of your changes.
    - Click on the "Create pull request" button to submit your contribution.
 
-**9. Collaborate and Iterate:**
+**10. Collaborate and Iterate:**
    - Engage with reviewers and address any feedback or requests for changes.
    - Iterate on your code until it meets the project's standards and requirements.
 
-**10. Stay Updated:**
+**11. Stay Updated:**
    - Keep an eye on the pull request for any updates or requests from maintainers.
    - Stay engaged with the Ragrank community and contribute to discussions and future development efforts.
 
