@@ -30,7 +30,8 @@
         <a href="https://ragrank.readthedocs.io/latest/">Documentation</a> |
         <a href="https://api-ragrank.readthedocs.io/">API reference</a> |
         <a href="https://ragrank.readthedocs.io/latest/get_started/basic_evaluation.html">Quickstart</a> |
-        <a href="https://discord.gg/KzfVpds3">Join the Community</a>
+        <a href="https://discord.gg/KzfVpds3">Join the Community</a> |
+        <a href="https://pypi.org/project/ragrank/">Pypi</a> |
     <p>
 </h4>
 
