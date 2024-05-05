@@ -42,7 +42,7 @@ data = DataNode(
 )
 
 result = evaluate(
-    dataset=data,
+    data ,
     metrics=[
         my_metric,
     ]

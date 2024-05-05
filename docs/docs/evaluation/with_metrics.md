@@ -45,7 +45,7 @@ data = DataNode(
 
 # evaluating the metrics
 result = evaluate(
-    data = data,
+    data ,
     metrics=[
         response_relevancy,
         response_conciseness,

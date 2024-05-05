@@ -30,7 +30,7 @@
         <a href="https://ragrank.readthedocs.io/latest/">Documentation</a> |
         <a href="https://api-ragrank.readthedocs.io/">API reference</a> |
         <a href="https://ragrank.readthedocs.io/latest/get_started/basic_evaluation.html">Quickstart</a> |
-        <a href="https://discord.gg/yaFRx6ja">Join the Community</a>
+        <a href="https://discord.gg/KzfVpds3">Join the Community</a>
     <p>
 </h4>
 
@@ -73,7 +73,7 @@ data = from_dict({
 })
 
 # Evaluate the response relevance metric
-result = evaluate(data=data, metrics=[response_relevancy])
+result = evaluate(data, metrics=[response_relevancy])
 
 # Display the evaluation results
 result.to_dataframe()

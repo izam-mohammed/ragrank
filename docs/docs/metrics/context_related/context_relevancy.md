@@ -24,7 +24,7 @@ data = DataNode(
 )
 
 result = evaluate(
-    dataset=data,
+    data ,
     metrics=[
         response_relevancy,
     ]
