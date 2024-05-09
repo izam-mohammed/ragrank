@@ -6,9 +6,6 @@ import logging
 from time import time
 from typing import List, Optional
 
-from numpy import mean
-
-from ragrank._trace import EvaluationEvent, trace
 from ragrank.bridge.pydantic import validate_call
 from ragrank.dataset import DataNode, Dataset, from_dict
 from ragrank.evaluation.outputs import EvalResult
@@ -87,14 +84,5 @@ def evaluate(
         response_time=delta,
         scores=scores,
     )
-    evaluation_event = EvaluationEvent(
-        llm=llm.name,
-        time_cost=delta,
-        metrics={
-            metrics[i].name: mean(scores[i])
-            for i in range(len(metrics))
-        },
-        data_size=len(data),
-    )
-    trace(evaluation_event)
+
     return result

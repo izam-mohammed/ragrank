@@ -10,11 +10,20 @@ Set your `OPENAI_API_KEY` as an environment variable
 By default, we are using the OpenAI LLM for internal operations. You can change it later on. So please set your valid `OPENAI_API_KEY`, otherwise you will get internal error 🤓.
 ```
 
+Set the API key with running this in the terminal. replace `<your_api_key>` with your actual API key.
 ```bash
-export OPENAI_API_KEY="..."
+export OPENAI_API_KEY="<your_api_key>"
 ```
 
-Performing the evaluation in python
+Alternatively, you can set the API key in python with `os` module. replace `<your_api_key>` with your actual API key.
+
+```python
+import os
+
+os.environ["OPENAI_API_KEY"] = "<your_api_key>"
+```
+
+To perform the evaluation in Python, open the `main.py` file and add the following code:
 
 ```python
 from ragrank import evaluate
@@ -34,6 +43,8 @@ result = evaluate(data, metrics=[response_relevancy])
 # Display the evaluation results
 result.to_dataframe()
 ```
+
+After adding the code, run the `main.py` file.
 
 Congratulations 🎉, you have done your first step. 
 > A journey of thousand miles starts with the first step 🌱.
