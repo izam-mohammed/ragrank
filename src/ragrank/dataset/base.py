@@ -53,6 +53,23 @@ class DataNode(BaseModel):
         logger.info("DataNode converted to Dataset succesfully !")
         return dataset
 
+    def __add__(self, other: DataNode) -> Dataset:
+        """
+        Concatenate two Datanodes.
+
+        Args:
+            other (DataNode): The datanode to concatenate with.
+
+        Returns:
+            Dataset: The concatenated dataset.
+        """
+        combined_dataset = Dataset(
+            question=[self.question, other.question],
+            context=[self.context, other.context],
+            response=[self.response, other.response],
+        )
+        return combined_dataset
+
 
 class Dataset(BaseModel):
     """
