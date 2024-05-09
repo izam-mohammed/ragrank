@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 @validate_call(validate_return=False)
 def evaluate(
-    dataset: Dataset | DataNode | dict,
+    data: Dataset | DataNode | dict,
     *,
     llm: Optional[BaseLLM] = None,
     metrics: Optional[BaseMetric | List[BaseMetric]] = None,
@@ -58,10 +58,10 @@ def evaluate(
 
         print(result)
     """
-    if isinstance(dataset, dict):
-        dataset = from_dict(dataset)
-    if isinstance(dataset, DataNode):
-        dataset = dataset.to_dataset()
+    if isinstance(data, dict):
+        data = from_dict(data)
+    if isinstance(data, DataNode):
+        data = data.to_dataset()
     if llm is None:
         llm = default_llm()
     if metrics is None:
@@ -73,7 +73,7 @@ def evaluate(
     scores = [
         [
             metric.score(datanode).score
-            for datanode in dataset.with_progress("Evaluating")
+            for datanode in data.with_progress("Evaluating")
         ]
         for metric in metrics
     ]
@@ -83,7 +83,7 @@ def evaluate(
     result = EvalResult(
         llm=llm,
         metrics=metrics,
-        dataset=dataset,
+        dataset=data,
         response_time=delta,
         scores=scores,
     )
@@ -94,7 +94,7 @@ def evaluate(
             metrics[i].name: mean(scores[i])
             for i in range(len(metrics))
         },
-        data_size=len(dataset),
+        data_size=len(data),
     )
     trace(evaluation_event)
     return result
