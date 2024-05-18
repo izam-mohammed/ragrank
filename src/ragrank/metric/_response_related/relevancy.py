@@ -1,8 +1,8 @@
 """Response relevancy metric"""
+from __future__ import annotations
 
 import logging
 from time import time
-from typing import Optional
 
 from ragrank.bridge.pydantic import Field
 from ragrank.dataset import DataNode
@@ -31,7 +31,7 @@ class ResponseRelevancy(BaseMetric):
             Calculate the score for the response relevancy metric
             based on the provided data.
 
-        _reason(self, data: DataNode, score: float) -> Optional[str]:
+        _reason(self, data: DataNode, score: float) -> str | None:
             Determine the reason for the given score. (Not implemented yet)
     """
 
@@ -92,7 +92,7 @@ class ResponseRelevancy(BaseMetric):
             process_time=delta,
         )
 
-    def _reason(self, data: DataNode, score: float) -> Optional[str]:
+    def _reason(self, data: DataNode, score: float) -> str | None:
         """Determine the reason for the given score.
         Not implemented yet.
 
@@ -102,7 +102,7 @@ class ResponseRelevancy(BaseMetric):
                 relevancy of the response.
 
         Returns:
-            Optional[str]: The reason for the given score.
+            str | None: The reason for the given score.
         """
 
         raise NotImplementedError

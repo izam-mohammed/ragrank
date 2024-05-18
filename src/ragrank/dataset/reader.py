@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Tuple
 
 import datasets as hf_datasets
 import pandas as pd
@@ -22,7 +22,7 @@ def from_dict(
     data: RAGRANK_DICT_TYPE,
     *,
     return_as_dataset: bool = False,
-    column_map: Optional[ColumnMap] = None,
+    column_map: ColumnMap | None = None,
 ) -> Dataset | DataNode:
     """
     Create a Dataset or DataNode object from a dictionary representation.
@@ -32,7 +32,7 @@ def from_dict(
             the data representation.
         return_as_dataset (bool, optional): If True, return as Dataset object,
             otherwise return as DataNode. Defaults to False.
-        column_map (ColumnMap, optional): Column mapping.
+        column_map (ColumnMap | None, optional): Column mapping.
             Defaults to ColumnMap().
 
     Returns:
@@ -52,7 +52,7 @@ def from_dict(
                 f"The column {value} not in the data"
             ) from ValueError
     data = {
-        key: data[value] for key, value in column_map
+        key: data[value] for key, value in column_map.items()
     }  # mapping col
 
     if any(isinstance(i, str) for i in data.values()):
@@ -66,7 +66,7 @@ def from_dataframe(
     data: pd.DataFrame,
     *,
     return_as_dataset: bool = False,
-    column_map: Optional[ColumnMap] = None,
+    column_map: ColumnMap | None = None,
 ) -> Dataset | DataNode:
     """
     Create a Dataset or DataNode object from a Pandas DataFrame.
@@ -75,7 +75,7 @@ def from_dataframe(
         data (pd.DataFrame): The DataFrame containing the data.
         return_as_dataset (bool, optional): If True, return as Dataset object,
             otherwise return as DataNode. Defaults to False.
-        column_map (ColumnMap, optional): Column mapping.
+        column_map (ColumnMap | None, optional): Column mapping.
             Defaults to ColumnMap().
 
     Returns:
@@ -99,7 +99,7 @@ def from_dataframe(
 def from_csv(
     path: str | Path,
     *,
-    column_map: Optional[ColumnMap] = None,
+    column_map: ColumnMap | None = None,
     **kwargs: Any,  # noqa: ANN401
 ) -> Dataset | DataNode:
     """
@@ -107,7 +107,7 @@ def from_csv(
 
     Args:
         path (Union[str, Path]): The path to the CSV file.
-        column_map (ColumnMap, optional): Column mapping.
+        column_map (ColumnMap | None, optional): Column mapping.
             Defaults to ColumnMap().
         **kwargs: Keyword arguments to pass to pandas read_csv function.
 
@@ -125,7 +125,7 @@ def from_hfdataset(
     url: str | Tuple[str],
     *,
     split: str,
-    column_map: Optional[ColumnMap] = None,
+    column_map: ColumnMap | None = None,
 ) -> Dataset:
     """
     Create a Dataset object from a Hugging Face dataset.
@@ -134,7 +134,7 @@ def from_hfdataset(
         url (Union[str, Tuple[str]]): The URL or tuple of URLs
             pointing to the dataset.
         split (str): The name of the split to load from the dataset.
-        column_map (ColumnMap, optional): Column mapping.
+        column_map (ColumnMap | None, optional): Column mapping.
             Defaults to ColumnMap().
 
     Returns:
