@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import List, Optional, Sequence
+from typing import List, Sequence
 
 from ragrank.bridge.pydantic import (
     BaseModel,
@@ -25,7 +25,7 @@ class LLMConfig(BaseModel):
         seed (int): Random seed for text generation. Default is 44.
         top_p (float): Sampling top probability for text generation.
             Default is 1.0.
-        stop (Optional[List[str]]): List of tokens at which text
+        stop (List[str] | None): List of tokens at which text
             generation should stop.
     """
 
@@ -48,7 +48,7 @@ class LLMConfig(BaseModel):
         le=1.0,
         description="Sampling top probability for text generation.",
     )
-    stop: Optional[List[str]] = Field(
+    stop: List[str] | None = Field(
         default=None,
         description="List of tokens at which text generation should stop",
     )
@@ -118,7 +118,7 @@ class BaseLLM(BaseModel, ABC):
             texts (Sequence[str]): A sequence of input texts.
 
         Returns:
-            List[LLMResult]: A list of LLM results.
+            List[LLMResult]: A List of LLM results.
         """
         return [self.generate_text(text) for text in texts]
 
@@ -139,13 +139,13 @@ class LLMResult(BaseModel):
 
     Attributes:
         response (str): Generated text response.
-        response_time (Optional[float]): Time taken for text generation.
-        finish_reason (Optional[str]): Reason for completion of
+        response_time (float | None): Time taken for text generation.
+        finish_reason (str | None): Reason for completion of
             text generation.
-        response_tokens (Optional[int]): Number of tokens in the
+        response_tokens (int | None): Number of tokens in the
             generated response.
-        llm (Optional[BaseLLM]): Instance of the LLM used for generation.
-        llm_config (Optional[LLMConfig]): Configuration settings
+        llm (BaseLLM | None): Instance of the LLM used for generation.
+        llm_config (LLMConfig | None): Configuration settings
             used for generation.
     """
 
@@ -154,22 +154,22 @@ class LLMResult(BaseModel):
     )
 
     response: str = Field(description="Generated text response.")
-    response_time: Optional[float] = Field(
+    response_time: float | None = Field(
         default=None, description="Time taken for text generation."
     )
-    finish_reason: Optional[str] = Field(
+    finish_reason: str | None = Field(
         default=None,
         description="Reason for completion of text generation",
     )
-    response_tokens: Optional[int] = Field(
+    response_tokens: int | None = Field(
         default=None,
         description="Number of tokens in the generated response.",
     )
-    llm: Optional[BaseLLM] = Field(
+    llm: BaseLLM | None = Field(
         default=None,
         description="Instance of the LLM used for generation.",
     )
-    llm_config: Optional[LLMConfig] = Field(
+    llm_config: LLMConfig | None = Field(
         default=None,
         description="Configuration settings used for generation.",
     )

@@ -5,7 +5,6 @@ from __future__ import annotations
 import logging
 import os
 from time import time
-from typing import List, Optional
 
 from datasets.arrow_dataset import Dataset
 from ragrank import evaluate
@@ -33,8 +32,8 @@ logging.basicConfig(
 
 
 def benchmark(
-    metrics: Optional[List[BaseMetric] | BaseMetric] = None,
-    data: Optional[Dataset] = None,
+    metrics: List[BaseMetric] | BaseMetric | None = None,
+    data: Dataset | None = None,
 ) -> None:
     """Check the benchmarks of the metrics"""
 

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 from ragrank.bridge.pydantic import (
     BaseModel,
@@ -92,11 +92,11 @@ class Prompt(BaseModel):
 
         return prompt_str
 
-    def get_examples(self, example_no: Optional[int] = None) -> str:
+    def get_examples(self, example_no: int | None = None) -> str:
         """Retrieve examples from the prompt.
 
         Args:
-            example_no (Optional[int]): The number of examples to retrieve.
+            example_no (int | None): The number of examples to retrieve.
 
         Returns:
             List[Example]: List of example inputs and outputs.

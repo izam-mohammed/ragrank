@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import Optional
 
 from ragrank.bridge.pydantic import BaseModel, ConfigDict, Field
 from ragrank.dataset import DataNode
@@ -84,13 +83,10 @@ class MetricResult(BaseModel):
 
     Attributes:
         datanode (DataNode): The data node associated with the metric result.
-        metrics (List[BaseMetric]): List of metrics used in the computation.
-        scores (List[Union[int, float]]): List of scores computed
-            for each metric.
-        reasons (List[str]): List of reasons corresponding to
-            each metric score. Defaults to None.
-        process_time (Optional[float], optional): Processing time for
-            the computation. Defaults to None.
+        metric (BaseMetric): Metric used in the computation.
+        score (int | float): Score computed for the metric.
+        reason (str | None): Reason corresponding to the metric score.
+        process_time (float | None): Processing time for the computation.
     """
 
     model_config: ConfigDict = ConfigDict(frozen=True)
@@ -104,11 +100,11 @@ class MetricResult(BaseModel):
     score: float | int = Field(
         description="List of scores computed for each metric."
     )
-    reason: Optional[str] = Field(
+    reason: str | None = Field(
         default=None,
         description="List of reasons corresponding to each metric score.",
     )
-    process_time: Optional[float] = Field(
+    process_time: float | None = Field(
         default=None,
         repr=False,
         description="Processing time for the computation.",

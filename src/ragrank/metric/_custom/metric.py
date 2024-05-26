@@ -1,9 +1,9 @@
 """Custom metric"""
+from __future__ import annotations
 
 import logging
 from abc import ABC, abstractmethod
 from time import time
-from typing import Optional
 
 from ragrank.bridge.pydantic import Field
 from ragrank.dataset import DataNode
@@ -35,7 +35,7 @@ class CustomMetric(BaseMetric, ABC):
             Calculate the score for the custom metric based on
                 the provided data.
 
-        reason(self, data: DataNode, score: float) -> Optional[str]:
+        reason(self, data: DataNode, score: float) -> str | None:
             Determine the reason for the given score.
     """
 
@@ -111,7 +111,7 @@ class CustomMetric(BaseMetric, ABC):
             Float: The result score of the metric
         """
 
-    def _reason(self, data: DataNode, score: float) -> Optional[str]:
+    def _reason(self, data: DataNode, score: float) -> str | None:
         """Provide a reason for the given score.
 
         Args:
@@ -119,6 +119,6 @@ class CustomMetric(BaseMetric, ABC):
             score (float): The score indicating the relevancy of the response.
 
         Returns:
-            Optional[str]: The reason for the given score.
+            str | None: The reason for the given score.
         """
         return None

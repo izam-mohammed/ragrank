@@ -1,8 +1,9 @@
 """Custom Instruct Metric"""
+from __future__ import annotations
 
 import logging
 from time import time
-from typing import Any, List, Optional
+from typing import Any, List
 
 from ragrank.bridge.pydantic import BaseModel, ConfigDict, Field
 from ragrank.dataset import DataNode
@@ -99,7 +100,7 @@ class CustomInstruct(BaseMetric):
             Calculate the score for the custom metric based
             on the provided data.
 
-        _reason(self, data: DataNode, score: float) -> Optional[str]:
+        _reason(self, data: DataNode, score: float) -> str | None:
             Determine the reason for the given score. (Not implemented yet)
     """
 
@@ -179,7 +180,7 @@ class CustomInstruct(BaseMetric):
             process_time=delta,
         )
 
-    def _reason(self, data: DataNode, score: float) -> Optional[str]:
+    def _reason(self, data: DataNode, score: float) -> str | None:
         """Determine the reason for the given score.
         Not implemented yet.
 

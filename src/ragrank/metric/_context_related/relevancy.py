@@ -1,8 +1,8 @@
 """Context Relevancy metric"""
+from __future__ import annotations
 
 import logging
 from time import time
-from typing import Optional
 
 from ragrank.bridge.pydantic import Field
 from ragrank.dataset import DataNode
@@ -29,7 +29,7 @@ class ContextRevevancy(BaseMetric):
             Get the name for the metric.
         score(self, data: DataNode) -> Metric Result:
             Calculate the context relevancy score for the given data.
-        _reason(self, data: DataNode, score: float) -> str:
+        _reason(self, data: DataNode, score: float) -> str | None:
             Provide a reason for the given data and score.
     """
 
@@ -88,7 +88,7 @@ class ContextRevevancy(BaseMetric):
             process_time=delta,
         )
 
-    def _reason(self, data: DataNode, score: float) -> Optional[str]:
+    def _reason(self, data: DataNode, score: float) -> str | None:
         """Provide a reason for the given data and score.
 
         Args:
@@ -96,7 +96,7 @@ class ContextRevevancy(BaseMetric):
             score (float): The context relevancy score.
 
         Returns:
-            str: The reason for the score.
+            str | None: The reason for the score.
         """
         raise NotImplementedError
 

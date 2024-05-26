@@ -1,8 +1,8 @@
 """Response Conciseness metric"""
+from __future__ import annotations
 
 import logging
 from time import time
-from typing import Optional
 
 from ragrank.bridge.pydantic import Field
 from ragrank.dataset import DataNode
@@ -31,7 +31,7 @@ class ResponseConciseness(BaseMetric):
             Calculate the score for the response conciseness metric
             based on the provided data.
 
-        _reason(self, data: DataNode, score: float) -> Optional[str]:
+        _reason(self, data: DataNode, score: float) -> str | None:
             Determine the reason for the given score. (Not implemented yet)
     """
 
@@ -93,7 +93,7 @@ class ResponseConciseness(BaseMetric):
             process_time=delta,
         )
 
-    def _reason(self, data: DataNode, score: float) -> Optional[str]:
+    def _reason(self, data: DataNode, score: float) -> str | None:
         """Provide a reason for the given score.
         Not implemented yet.
 
@@ -103,7 +103,7 @@ class ResponseConciseness(BaseMetric):
             score (float): The conciseness score of the response.
 
         Returns:
-            Optional[str]: A string explaining the reason for the score.
+            str | None: A string explaining the reason for the score.
         """
 
         raise NotImplementedError

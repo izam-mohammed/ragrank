@@ -1,8 +1,8 @@
 """Context Utilization metric"""
+from __future__ import annotations
 
 import logging
 from time import time
-from typing import Optional
 
 from ragrank.bridge.pydantic import Field
 from ragrank.dataset import DataNode
@@ -92,7 +92,7 @@ class ContextUtilization(BaseMetric):
             process_time=delta,
         )
 
-    def _reason(self, data: DataNode, score: float) -> Optional[str]:
+    def _reason(self, data: DataNode, score: float) -> str | None:
         """Provide a reason for the given data and score.
 
         Args:
@@ -100,7 +100,7 @@ class ContextUtilization(BaseMetric):
             score (float): The context utilization score.
 
         Returns:
-            Optional[str]: The reason for the score.
+            str | None: The reason for the score.
         """
 
         raise NotImplementedError
