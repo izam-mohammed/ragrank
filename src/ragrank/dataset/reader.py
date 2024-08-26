@@ -52,7 +52,7 @@ def from_dict(
                 f"The column {value} not in the data"
             ) from ValueError
     data = {
-        key: data[value] for key, value in column_map.items()
+        key: data[value] for key, value in column_map.model_dump().items()
     }  # mapping col
 
     if any(isinstance(i, str) for i in data.values()):
