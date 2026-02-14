@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from time import time
-from typing import Any, Type, cast
+from typing import Any, cast
 
 try:
     from llama_index.core.base.llms.types import CompletionResponse
@@ -44,7 +44,7 @@ class LlamaindexLLMWrapper(BaseLLM):
     @field_validator("llm")
     @classmethod
     def validator(
-        cls: Type[LlamaindexLLMWrapper], v: LlamaindexBaseLLM
+        cls: type[LlamaindexLLMWrapper], v: LlamaindexBaseLLM
     ) -> LlamaindexLLMWrapper:
         """
         Pydantic validation for Llamaindex LLM instance.

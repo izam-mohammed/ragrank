@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import logging
 from time import time
-from typing import List
 
 from ragrank.bridge.pydantic import validate_call
 from ragrank.dataset import DataNode, Dataset, from_dict
@@ -20,7 +19,7 @@ def evaluate(
     data: Dataset | DataNode | dict,
     *,
     llm: BaseLLM | None = None,
-    metrics: BaseMetric | List[BaseMetric] | None = None,
+    metrics: BaseMetric | list[BaseMetric] | None = None,
 ) -> EvalResult:
     """
     Evaluate the performance of a given dataset using specified metrics.
