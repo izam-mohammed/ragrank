@@ -1,6 +1,6 @@
 GIT_ROOT ?= $(shell git rev-parse --show-toplevel)
 
-PYTHON_EXEC ?= uv run
+PYTHON_EXEC ?= uv run --group dev
 RUFF_CMD ?= ruff
 PYTEST_CMD ?= pytest
 UV_CMD ?= uv
@@ -85,6 +85,6 @@ build_dist: ## Build distribution packages
 build_docs: ## Build the documentation
 	@$(UV_CMD) export --group docs --no-hashes -o $(DOCS_DIR)/requirements.txt
 	@echo "Building the documentation ..."
-	@$(PYTHON_EXEC) sphinx-build -M html $(DOCS_DIR)/docs $(DOCS_DIR)/docs/_build/
+	@$(UV_CMD) run --group docs sphinx-build -M html $(DOCS_DIR)/docs $(DOCS_DIR)/docs/_build/
 	@echo "Building the API reference..."
-	@$(PYTHON_EXEC) sphinx-build -M html $(DOCS_DIR)/api_reference $(DOCS_DIR)/api_reference/_build/
+	@$(UV_CMD) run --group docs sphinx-build -M html $(DOCS_DIR)/api_reference $(DOCS_DIR)/api_reference/_build/

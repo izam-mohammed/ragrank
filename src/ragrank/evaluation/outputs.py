@@ -1,6 +1,5 @@
 """Contains the ouputs of evaluation"""
 
-
 from pandas import DataFrame
 
 from ragrank.bridge.pydantic import (
