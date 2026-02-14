@@ -44,6 +44,7 @@ def sample_data_dict() -> Dict[str, str | List[str]]:
     }
 
 
+@pytest.mark.openai
 def test_evaluate_with_dataset(sample_dataset: Dataset) -> None:
     """Test evaluate function with a sample dataset."""
     result = evaluate(sample_dataset)
@@ -52,6 +53,7 @@ def test_evaluate_with_dataset(sample_dataset: Dataset) -> None:
     ), "Result should be an instance of EvalResult."
 
 
+@pytest.mark.openai
 def test_evaluate_with_datanode(sample_datanode: DataNode) -> None:
     """Test evaluate function with a sample data node."""
     result = evaluate(sample_datanode)
@@ -60,6 +62,7 @@ def test_evaluate_with_datanode(sample_datanode: DataNode) -> None:
     ), "Result should be an instance of EvalResult."
 
 
+@pytest.mark.openai
 def test_evaluate_with_datadict(
     sample_data_dict: Dict[str, str | List[str]],
 ) -> None:
@@ -70,6 +73,7 @@ def test_evaluate_with_datadict(
     ), "Result should be an instance of EvalResult."
 
 
+@pytest.mark.openai
 def test_evaluate_default_behavior(sample_dataset: Dataset) -> None:
     """Test evaluate function default behavior."""
     result = evaluate(sample_dataset)

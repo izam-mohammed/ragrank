@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from typing import List
-
 import requests
 
 from ragrank.constants import REQUEST_TIME_OUT, SERVER_URL
@@ -36,7 +34,7 @@ def send_request(
     return response.ok
 
 
-def eval_cell(cell_value: str | List[str]) -> str | List[str]:
+def eval_cell(cell_value: str | list[str]) -> str | list[str]:
     """
     Evaluate a cell value and return it as a string or a list of strings.
 

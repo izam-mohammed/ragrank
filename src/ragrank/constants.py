@@ -1,6 +1,5 @@
 """All of the contants for ragrank"""
 
-from typing import List
 
 KEYFILE: str = ".ragrank"
 DEFAULT_EMBEDDING_DIMENTION: int = 64
@@ -10,7 +9,7 @@ DEFAULT_METRIC: str = "relevancy"
 QUESTION_FIELD: str = "question"
 CONTEXT_FIELD: str = "context"
 RESPONSE_FIELD: str = "response"
-DATA_FIELDS: List[str] = [
+DATA_FIELDS: list[str] = [
     QUESTION_FIELD,
     CONTEXT_FIELD,
     RESPONSE_FIELD,

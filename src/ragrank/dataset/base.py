@@ -3,16 +3,17 @@
 from __future__ import annotations
 
 import logging
+from collections.abc import Iterator
 from pathlib import Path
-from typing import Any, Dict, Iterator, List
+from typing import Any
 
 from pandas import DataFrame
 from tqdm import tqdm
 
 from ragrank.bridge.pydantic import BaseModel, Field, model_validator
 
-DATANODE_DICT_TYPE = Dict[str, List[str] | str]
-DATASET_DICT_TYPE = Dict[str, List[str] | List[List[str]]]
+DATANODE_DICT_TYPE = dict[str, list[str] | str]
+DATASET_DICT_TYPE = dict[str, list[str] | list[list[str]]]
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +24,7 @@ class DataNode(BaseModel):
 
     Attributes:
         question (str): The question associated with the data point.
-        context (List[str]): The context or background
+        context (list[str]): The context or background
             nformation related to the question.
         response (str): The response or answer to the question.
     """
@@ -31,7 +32,7 @@ class DataNode(BaseModel):
     question: str = Field(
         description="The question associated with the data point"
     )
-    context: List[str] = Field(
+    context: list[str] = Field(
         description="The context information related to the question"
     )
     response: str = Field(
@@ -77,20 +78,20 @@ class Dataset(BaseModel):
         and responses.
 
     Attributes:
-        question (List[str]): A list of questions.
-        context (List[List[str]]): A list of contexts,
+        question (list[str]): A list of questions.
+        context (list[list[str]]): A list of contexts,
             each represented as a list of strings.
-        response (List[str]): A list of responses
+        response (list[str]): A list of responses
             corresponding to the questions.
     """
 
-    question: List[str] = Field(
+    question: list[str] = Field(
         description="A list of questions, each represented as a string"
     )
-    context: List[List[str]] = Field(
+    context: list[list[str]] = Field(
         description="A list of contexts, each represented as a list of strings"
     )
-    response: List[str] = Field(
+    response: list[str] = Field(
         description="A list of responses corresponding to the questions"
     )
 
