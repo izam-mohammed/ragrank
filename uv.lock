@@ -4042,7 +4042,6 @@ wheels = [
 
 [[package]]
 name = "ragrank"
-version = "0.0.7"
 source = { editable = "." }
 dependencies = [
     { name = "datasets" },
