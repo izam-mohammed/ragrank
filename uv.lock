@@ -4075,6 +4075,7 @@ dev = [
     { name = "pytest", version = "8.4.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
     { name = "pytest", version = "9.0.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
     { name = "pytest-cov" },
+    { name = "python-dotenv" },
     { name = "ruff" },
 ]
 docs = [
@@ -4123,6 +4124,7 @@ dev = [
     { name = "openai", specifier = ">=1.13.3" },
     { name = "pytest", specifier = ">=8.0.1" },
     { name = "pytest-cov", specifier = ">=4.1.0" },
+    { name = "python-dotenv", specifier = ">=1.2.1" },
     { name = "ruff", specifier = "==0.2.2" },
 ]
 docs = [
