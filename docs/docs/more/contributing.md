@@ -21,7 +21,7 @@
      ```
    - Install the required dependencies by running:
      ```
-     poetry install --with dev, docs
+     uv sync --group dev --group docs
      ```
 
 **4. Make Changes:**

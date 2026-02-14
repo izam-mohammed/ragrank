@@ -1,9 +1,9 @@
 GIT_ROOT ?= $(shell git rev-parse --show-toplevel)
 
-PYTHON_EXEC ?= poetry run
+PYTHON_EXEC ?= uv run
 RUFF_CMD ?= ruff
 PYTEST_CMD ?= pytest
-POETRY_CMD ?= poetry
+UV_CMD ?= uv
 
 SRC_DIR ?= src
 DOCS_DIR ?= docs
@@ -28,7 +28,7 @@ format: ## Running code formatter: ruff
 
 lint: ## Running the linter: ruff
 	@echo "(ruff) Linting the project ..."
-	@$(PYTHON_EXEC) $(RUFF_CMD) check $(SRC_DIR) 
+	@$(PYTHON_EXEC) $(RUFF_CMD) check $(SRC_DIR)
 
 lint-test: ## Running the linter: ruff
 	@echo "(ruff) Linting the project with test files ..."
@@ -56,26 +56,26 @@ code_coverage: ## Run code coverage analysis
 
 install_deps: ## Install dependencies
 	@echo "Installing project dependencies..."
-	@$(POETRY_CMD) install
+	@$(UV_CMD) sync
 	@if [ "$(INSTALL_DEV)" = true ]; then \
 		echo "Installing development dependencies..."; \
-		$(POETRY_CMD) install --with dev; \
+		$(UV_CMD) sync --group dev; \
 	fi
 	@if [ "$(INSTALL_DOCS)" = true ]; then \
 		echo "Installing documentation dependencies..."; \
-		$(POETRY_CMD) install --with docs; \
+		$(UV_CMD) sync --group docs; \
 	fi
 
 dependency_check: ## Check for outdated dependencies
 	@echo "Checking for outdated dependencies..."
-	@$(POETRY_CMD) show --outdated
+	@$(UV_CMD) pip list --outdated
 
 build_dist: ## Build distribution packages
 	@echo "Building distribution packages..."
-	@$(POETRY_CMD) build
+	@$(UV_CMD) build
 
-build_docs: ## Build the documentation 
-	@$(POETRY_CMD) export --with docs -f requirements.txt --without-hashes --output $(DOCS_DIR)/requirements.txt 
+build_docs: ## Build the documentation
+	@$(UV_CMD) export --group docs --no-hashes -o $(DOCS_DIR)/requirements.txt
 	@echo "Building the documentation ..."
 	@$(PYTHON_EXEC) sphinx-build -M html $(DOCS_DIR)/docs $(DOCS_DIR)/docs/_build/
 	@echo "Building the API reference..."

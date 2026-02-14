@@ -6,13 +6,7 @@ on:
 
 jobs:
   build_docs:
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: [3.11]
-        poetry-version: [1.6.1]
-        os: [ubuntu-latest]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
       - name: Documentation build
         uses: johannes-huther/webhook.sh@v1.0.0
