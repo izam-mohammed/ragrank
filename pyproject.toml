@@ -1,6 +1,6 @@
 [project]
 name = "ragrank"
-version = "0.0.7"
+dynamic = ["version"]
 description = "An evaluation library for RAG models"
 authors = [{ name = "Izam Mohammed", email = "izamdeveloper1@gmail.com" }]
 license = "Apache-2.0"
@@ -55,8 +55,14 @@ dev = [
 default-groups = []
 
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.build.hooks.vcs]
+version-file = "src/ragrank/_version.py"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/ragrank"]
