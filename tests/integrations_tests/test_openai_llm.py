@@ -1,7 +1,10 @@
 """Testing the openai LLM module"""
 
+import pytest
 from ragrank.integrations.openai import OpenaiLLM
 from ragrank.llm import LLMResult
+
+pytestmark = pytest.mark.openai
 
 
 def test_llm_init() -> None:

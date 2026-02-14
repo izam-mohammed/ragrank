@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from time import time
-from typing import Any, List, Type, cast
+from typing import Any, cast
 
 from ragrank.bridge.pydantic import Field, field_validator
 from ragrank.llm import BaseLLM, LLMResult
@@ -45,7 +45,7 @@ class LangchainLLMWrapper(BaseLLM):
     @field_validator("llm")
     @classmethod
     def validator(
-        cls: Type[LangchainLLMWrapper], v: LangchainBaseLanguageModel
+        cls: type[LangchainLLMWrapper], v: LangchainBaseLanguageModel
     ) -> LangchainBaseLanguageModel:
         """Validating the langchain base language seperately
         Doing this because of the conflict in the v1 pydantic module.
@@ -118,7 +118,7 @@ class RagrankPromptValue(PromptValue):
 
     prompt_str: str
 
-    def to_messages(self) -> List[BaseMessage]:
+    def to_messages(self) -> list[BaseMessage]:
         """Convert the prompt to a list of BaseMessage objects."""
 
         return [HumanMessage(content=self.to_string())]

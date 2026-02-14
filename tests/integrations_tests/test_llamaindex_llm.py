@@ -2,6 +2,8 @@
 
 import pytest
 from llama_index.llms.openai import OpenAI
+
+pytestmark = pytest.mark.openai
 from ragrank.integrations.llama_index import LlamaindexLLMWrapper
 from ragrank.llm import LLMResult
 

@@ -1,6 +1,5 @@
 """Contains the ouputs of evaluation"""
 
-from typing import List
 
 from pandas import DataFrame
 
@@ -37,13 +36,13 @@ class EvalResult(BaseModel):
     llm: BaseLLM = Field(
         description="The language model used for evaluation"
     )
-    metrics: List[BaseMetric] = Field(
+    metrics: list[BaseMetric] = Field(
         description="List of metrics used for evaluation."
     )
     dataset: Dataset = Field(
         description="The dataset used for evaluation"
     )
-    scores: List[List[float]] = Field(
+    scores: list[list[float]] = Field(
         description="List of scores for each metric"
     )
     response_time: float = Field(

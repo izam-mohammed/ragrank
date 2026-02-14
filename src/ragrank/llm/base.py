@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import List, Sequence
+from collections.abc import Sequence
 
 from ragrank.bridge.pydantic import (
     BaseModel,
@@ -48,7 +48,7 @@ class LLMConfig(BaseModel):
         le=1.0,
         description="Sampling top probability for text generation.",
     )
-    stop: List[str] | None = Field(
+    stop: list[str] | None = Field(
         default=None,
         description="List of tokens at which text generation should stop",
     )
@@ -110,7 +110,7 @@ class BaseLLM(BaseModel, ABC):
             LLMResult: The result of the LLM generation.
         """
 
-    def generate(self, texts: Sequence[str]) -> List[LLMResult]:
+    def generate(self, texts: Sequence[str]) -> list[LLMResult]:
         """
         Generate responses for a dataset input.
 

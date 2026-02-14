@@ -57,6 +57,7 @@ def metrics() -> List[BaseMetric]:
     ]
 
 
+@pytest.mark.openai
 def test_metrics(
     metrics: List[BaseMetric], sample_dataset: Dataset
 ) -> None:

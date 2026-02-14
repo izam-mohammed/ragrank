@@ -1,4 +1,5 @@
 """Context Relevancy metric"""
+
 from __future__ import annotations
 
 import logging

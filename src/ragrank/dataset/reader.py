@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
 import datasets as hf_datasets
 import pandas as pd
@@ -13,8 +13,8 @@ from ragrank.bridge.pydantic import BaseModel, Field
 from ragrank.dataset import DataNode, Dataset
 from ragrank.utils.common import eval_cell
 
-DATANODE_TYPE = Dict[str, List[str] | str]
-DATASET_TYPE = Dict[str, List[str] | List[List[str]]]
+DATANODE_TYPE = dict[str, list[str] | str]
+DATASET_TYPE = dict[str, list[str] | list[list[str]]]
 RAGRANK_DICT_TYPE = DATANODE_TYPE | DATASET_TYPE
 
 
@@ -52,7 +52,8 @@ def from_dict(
                 f"The column {value} not in the data"
             ) from ValueError
     data = {
-        key: data[value] for key, value in column_map.model_dump().items()
+        key: data[value]
+        for key, value in column_map.model_dump().items()
     }  # mapping col
 
     if any(isinstance(i, str) for i in data.values()):
@@ -122,7 +123,7 @@ def from_csv(
 
 
 def from_hfdataset(
-    url: str | Tuple[str],
+    url: str | tuple[str],
     *,
     split: str,
     column_map: ColumnMap | None = None,

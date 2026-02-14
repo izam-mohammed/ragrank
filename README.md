@@ -51,7 +51,7 @@ If you prefer to install it from the source:
 
 ```bash
 git clone https://github.com/Auto-Playground/ragrank.git && cd ragrank
-poetry install
+uv sync
 ```
 
 ## 🚀 Quick Start

@@ -1,9 +1,10 @@
 """Custom Instruct Metric"""
+
 from __future__ import annotations
 
 import logging
 from time import time
-from typing import Any, List
+from typing import Any
 
 from ragrank.bridge.pydantic import BaseModel, ConfigDict, Field
 from ragrank.dataset import DataNode
@@ -48,11 +49,11 @@ class InstructConfig(BaseModel):
     instructions: str = Field(
         description="Instructions for the metric"
     )
-    examples: List[PromptExample] = Field(
+    examples: list[PromptExample] = Field(
         description="Examples for the Instruction metric",
         default_factory=list,
     )
-    input_fields: List[str] = Field(
+    input_fields: list[str] = Field(
         description="Input fields for the Instruct Metric"
     )
     output_field: str = Field(

@@ -2,6 +2,8 @@
 
 import pytest
 from langchain_openai.llms import OpenAI
+
+pytestmark = pytest.mark.openai
 from ragrank.integrations.langchain import LangchainLLMWrapper
 from ragrank.llm import LLMResult
 
