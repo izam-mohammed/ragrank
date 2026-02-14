@@ -15,9 +15,11 @@ uv sync --group dev                        # dev deps (pytest, ruff, etc.)
 uv sync --group docs                       # docs deps (sphinx)
 
 # Test
-make test                                   # all tests
+make test-offline                           # tests without OpenAI (used in CI)
+make test                                   # all tests (requires OPENAI_API_KEY)
+make test-openai                            # only OpenAI-dependent tests
 make test-core                              # unit tests only (tests/unit_tests/)
-make test-integration                       # integration tests (tests/integration_tests/)
+make test-integration                       # integration tests (tests/integrations_tests/)
 uv run pytest tests/unit_tests/test_dataset.py  # single test file
 uv run pytest tests/unit_tests/test_dataset.py::test_name -v  # single test
 

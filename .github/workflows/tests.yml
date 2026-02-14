@@ -19,7 +19,4 @@ jobs:
       - name: Install dependencies
         run: make install_deps INSTALL_DEV=true
       - name: Run tests
-        run: make test
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          DEBUG_MODE_ON: "true"
+        run: make test-offline

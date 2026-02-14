@@ -38,15 +38,23 @@ clean: ## Clean all generated files
 	@echo "Cleaning all temporary files..."
 	@git clean -xdf
 
-test: ## Run tests
-	@echo "(pytest) Running tests..."
+test: ## Run all tests (requires OPENAI_API_KEY)
+	@echo "(pytest) Running all tests..."
 	@$(PYTHON_EXEC) $(PYTEST_CMD) -v $(TESTS_DIR)
 
-test-core: # Run the core files test
+test-offline: ## Run tests that don't require OpenAI API key
+	@echo "(pytest) Running offline tests..."
+	@$(PYTHON_EXEC) $(PYTEST_CMD) -v -m "not openai" $(TESTS_DIR)
+
+test-openai: ## Run tests that require OpenAI API key
+	@echo "(pytest) Running OpenAI tests..."
+	@$(PYTHON_EXEC) $(PYTEST_CMD) -v -m "openai" $(TESTS_DIR)
+
+test-core: # Run the unit tests
 	@echo "(pytest) Running test on core files"
 	@$(PYTHON_EXEC) $(PYTEST_CMD) -v $(CORE_TEST_DIR)
 
-test-integration: # Run the test integrations
+test-integration: # Run the integration tests
 	@echo "(pytest) Running test on integrations"
 	@$(PYTHON_EXEC) $(PYTEST_CMD) -v $(INTEGRATION_TEST_DIR)
 
