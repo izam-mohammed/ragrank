@@ -69,6 +69,7 @@ packages = ["src/ragrank"]
 
 [tool.ruff]
 line-length = 69
+exclude = ["src/ragrank/_version.py"]
 
 [tool.ruff.lint]
 select = [
