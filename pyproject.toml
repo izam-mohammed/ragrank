@@ -49,6 +49,7 @@ dev = [
     "langchain-core>=0.1.32",
     "llama-index>=0.10.20",
     "langchain-openai>=0.0.8",
+    "python-dotenv>=1.2.1",
 ]
 
 [tool.uv]
