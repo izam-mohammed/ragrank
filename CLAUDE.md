@@ -38,7 +38,7 @@ make build_docs                             # build sphinx documentation
 - **Line length**: 69 characters (ruff), 79 max (pycodestyle)
 - **Linter**: ruff with extensive rule set (see `[tool.ruff.lint]` in pyproject.toml)
 - `S101` (assert usage) is ignored in tests
-- All commands run through `uv run` (aliased as `PYTHON_EXEC` in Makefile)
+- All commands run through `uv run --group dev` (aliased as `PYTHON_EXEC` in Makefile)
 - **Python 3.9+ modern typing**: Use builtin types for annotations, not `typing` generics. Common mistakes to avoid:
   - `list[str]` not `List[str]`, `dict[str, Any]` not `Dict[str, Any]`, `tuple[int, ...]` not `Tuple[int, ...]`
   - `type[Foo]` not `Type[Foo]`

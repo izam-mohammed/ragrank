@@ -1,6 +1,5 @@
 """All of the contants for ragrank"""
 
-
 KEYFILE: str = ".ragrank"
 DEFAULT_EMBEDDING_DIMENTION: int = 64
 DEFAULT_LLM_MODEL: str = "openai-3.5"
