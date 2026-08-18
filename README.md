@@ -37,7 +37,7 @@
     <p>
 </h4>
 
-Welcome to Ragrank! This toolkit is designed to assist you in evaluating the performance of your Retrieval-Augmented Generation (RAG) applications. You will get proper metrics for evaluate RAG model. The product is still in `beta` stage.
+Welcome to Ragrank! An orchestration library for evaluating Retrieval-Augmented Generation (RAG) applications. It provides a unified interface to define custom metrics, integrate with evaluation libraries (ragas, deepeval), LLM frameworks (LangChain, LlamaIndex), and monitoring tools (Langfuse, Arize). The product is still in `beta` stage.
 
 ## 🔥 Installation
 
@@ -61,12 +61,21 @@ Set your `OPENAI_API_KEY` as an environment variable (you can also evaluate usin
 export OPENAI_API_KEY="..."
 ```
 
-Here's a quick example of how you can use Ragrank to evaluate the relevance of generated responses:
+Here's a quick example of how you can use Ragrank to evaluate generated responses:
 
 ```python
 from ragrank import evaluate
 from ragrank.dataset import from_dict
-from ragrank.metric import response_relevancy
+from ragrank.metric import CustomInstruct, InstructConfig
+
+# Define your metric
+metric = CustomInstruct(config=InstructConfig(
+    name="Response Relevancy",
+    instructions="Evaluate how relevant the response is to the question given the provided context.",
+    examples=[],
+    input_fields=["question", "context", "response"],
+    output_field="relevancy",
+))
 
 # Define your dataset
 data = from_dict({
@@ -75,8 +84,8 @@ data = from_dict({
     "response": "The capital of France is Paris.",
 })
 
-# Evaluate the response relevance metric
-result = evaluate(data, metrics=[response_relevancy])
+# Evaluate
+result = evaluate(data, metrics=[metric])
 
 # Display the evaluation results
 result.to_dataframe()

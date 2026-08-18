@@ -43,14 +43,17 @@ from ragrank.llm import default_llm
 By default Ragrank is using Openai LLM for internal operations. You can change this LLM as what ever you want. Checkout the [LLM Integrations](./with_llm.md) for more.
 ```
 
-Getting the evaluation metrics from ragrank
+Define your evaluation metrics using `CustomInstruct`:
 ```python
-from ragrank.metric import (
-    response_relevancy,
-    response_conciseness,
-    context_relevancy,
-    context_utilization,
-)
+from ragrank.metric import CustomInstruct, InstructConfig
+
+relevancy = CustomInstruct(config=InstructConfig(
+    name="Response Relevancy",
+    instructions="Evaluate how relevant the response is to the question given the provided context.",
+    examples=[],
+    input_fields=["question", "context", "response"],
+    output_field="relevancy",
+))
 ```
 
 Now that we have our data, we can evaluate it using Ragrank. We use the `evaluate` method to do this. This method takes the following arguments:
@@ -63,15 +66,10 @@ Now that we have our data, we can evaluate it using Ragrank. We use the `evaluat
 from ragrank import evaluate
 from ragrank.evaluation import EvalResult
 
-result:EvalResult = evaluate(
+result: EvalResult = evaluate(
     dataset=data,
     llm=default_llm(),
-    metrics=[
-        response_relevancy,
-        response_conciseness,
-        context_relevancy,
-        context_utilization,
-    ],
+    metrics=[relevancy],
 )
 ```
 

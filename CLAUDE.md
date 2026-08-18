@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Ragrank is a Python evaluation library for RAG (Retrieval-Augmented Generation) models. It provides metrics and an evaluation pipeline to assess RAG system output quality. Uses uv for dependency management, source lives in `src/ragrank/`.
+Ragrank is a Python orchestration library for evaluating RAG (Retrieval-Augmented Generation) applications. It provides a unified interface to define custom metrics, integrate with evaluation libraries (ragas, deepeval), LLM frameworks (LangChain, LlamaIndex), and monitoring tools (Langfuse, Arize). Uses uv for dependency management, source lives in `src/ragrank/`.
 
 ## Commands
 
@@ -50,7 +50,7 @@ make build_docs                             # build sphinx documentation
 ### Core Data Flow
 
 1. User creates a `Dataset` (collection of `DataNode`s) via `from_dict()`, `from_csv()`, `from_dataframe()`, or `from_hfdataset()`
-2. User calls `evaluate(dataset, llm=None, metrics=None)` — the main entry point
+2. User calls `evaluate(dataset, llm=None, metrics=[...])` — the main entry point
 3. For each DataNode × metric: the metric formats a `Prompt`, sends it to the `BaseLLM`, parses the score
 4. Returns `EvalResult` with scores, convertible to DataFrame/dict
 
@@ -63,11 +63,10 @@ make build_docs                             # build sphinx documentation
 - **`Prompt`** (`prompt/base.py`): Structured prompt with name, instructions, examples, input/output keys. Pre-defined prompts in `prompt/_prompts.py`
 - **`EvalResult`** (`evaluation/outputs.py`): Aggregated scores with `to_dataframe()` and `to_dict()`
 
-### Built-in Metrics (in `metric/`)
+### Custom Metrics (in `metric/`)
 
-- `response_relevancy`, `response_conciseness` — in `_response_related/`
-- `context_relevancy`, `context_utilization` — in `_context_related/`
 - `CustomMetric`, `CustomInstruct` (with `InstructConfig`) — in `_custom/`
+- No predefined metrics; users define their own via `CustomInstruct` or `CustomMetric`
 
 ### Integrations (`integrations/`)
 
@@ -79,7 +78,7 @@ make build_docs                             # build sphinx documentation
 
 - **Pydantic bridge** (`bridge/pydantic.py`): Centralizes all Pydantic imports — use this instead of importing pydantic directly
 - **Exceptions** (`exceptions.py`): `RagRankError`, `EvaluationError`, `ValidationError`
-- **Constants** (`constants.py`): Default field names, LLM model, embedding dimensions
+- **Constants** (`constants.py`): Default field names (`question`, `context`, `response`)
 
 ## Environment
 
