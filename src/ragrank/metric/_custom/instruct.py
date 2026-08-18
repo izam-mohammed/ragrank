@@ -43,7 +43,8 @@ class InstructConfig(BaseModel):
     )
 
     metric_type: MetricType = Field(
-        description="The type of the metric"
+        default=MetricType.NON_BINARY,
+        description="The type of the metric",
     )
     name: str = Field(description="The name of the Instruct metric")
     instructions: str = Field(
