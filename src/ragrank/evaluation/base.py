@@ -9,7 +9,7 @@ from ragrank.bridge.pydantic import validate_call
 from ragrank.dataset import DataNode, Dataset, from_dict
 from ragrank.evaluation.outputs import EvalResult
 from ragrank.llm import BaseLLM, default_llm
-from ragrank.metric import BaseMetric, response_relevancy
+from ragrank.metric import BaseMetric
 
 logger = logging.getLogger(__name__)
 
@@ -19,20 +19,19 @@ def evaluate(
     data: Dataset | DataNode | dict,
     *,
     llm: BaseLLM | None = None,
-    metrics: BaseMetric | list[BaseMetric] | None = None,
+    metrics: BaseMetric | list[BaseMetric],
 ) -> EvalResult:
     """
     Evaluate the performance of a given dataset using specified metrics.
 
     Parameters:
-        dataset (Union[Dataset, DataNode, dict]): The dataset to be evaluated.
+        data (Union[Dataset, DataNode, dict]): The dataset to be evaluated.
             It can be provided either as a `Dataset` object, `DataNode` object,
             or a `dict` representing the dataset.
         llm (Optional[BaseLLM]): The LLM (Language Model) used for evaluation.
             If None, a default LLM will be used.
-        metrics (Optional[Union[BaseMetric, List[BaseMetric]]]): The metric or
-            list of metrics used for evaluation. If None,
-            response relevancy metric will be used.
+        metrics (Union[BaseMetric, List[BaseMetric]]): The metric or
+            list of metrics used for evaluation.
 
     Returns:
         EvalResult: An object containing the evaluation results.
@@ -41,16 +40,17 @@ def evaluate(
 
         from ragrank import evaluate
         from ragrank.dataset import from_dict
+        from ragrank.metric import CustomInstruct, InstructConfig
 
         data = from_dict({
-            "question": "Who is the 46th Prime Minister of US ?",
+            "question": "Who is the 46th President of the US?",
             "context": [
                 "Joseph Robinette Biden is an American politician, "
                 "he is the 46th and current president of the United States.",
             ],
             "response": "Joseph Robinette Biden",
         })
-        result = evaluate(data)
+        result = evaluate(data, metrics=[...])
 
         print(result)
     """
@@ -60,8 +60,6 @@ def evaluate(
         data = data.to_dataset()
     if llm is None:
         llm = default_llm()
-    if metrics is None:
-        metrics = [response_relevancy]
     if isinstance(metrics, BaseMetric):
         metrics = [metrics]
 

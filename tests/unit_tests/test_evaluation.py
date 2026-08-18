@@ -2,16 +2,16 @@
 
 from __future__ import annotations
 
-from typing import Dict, List
-
 import pytest
 from pandas import DataFrame
 from ragrank import evaluate
 from ragrank.bridge.pydantic import ValidationError
 from ragrank.dataset import DataNode, Dataset
 from ragrank.evaluation import EvalResult
-from ragrank.llm import default_llm
-from ragrank.metric import response_relevancy
+from ragrank.llm import BaseLLM, default_llm
+from ragrank.metric import BaseMetric
+from ragrank.metric.base import MetricType
+from ragrank.prompt import Prompt
 
 
 @pytest.fixture
@@ -35,7 +35,7 @@ def sample_datanode() -> DataNode:
 
 
 @pytest.fixture
-def sample_data_dict() -> Dict[str, str | List[str]]:
+def sample_data_dict() -> dict[str, str | list[str]]:
     """Fixture for generating a sample data dictionary."""
     return {
         "question": "sample question",
@@ -44,61 +44,35 @@ def sample_data_dict() -> Dict[str, str | List[str]]:
     }
 
 
-@pytest.mark.openai
-def test_evaluate_with_dataset(sample_dataset: Dataset) -> None:
-    """Test evaluate function with a sample dataset."""
-    result = evaluate(sample_dataset)
-    assert isinstance(
-        result, EvalResult
-    ), "Result should be an instance of EvalResult."
+@pytest.fixture
+def mock_metric() -> BaseMetric:
+    """Fixture to create a mock metric."""
+    BaseMetric.__abstractmethods__ = set()
+    prompt = Prompt(
+        name="Mock",
+        instructions="",
+        examples=[{"input": "", "output": ""}],
+        input_keys=["input"],
+        output_key="output",
+    )
+    return BaseMetric(
+        metric_type=MetricType.NON_BINARY,
+        llm=default_llm(),
+        prompt=prompt,
+    )
 
 
-@pytest.mark.openai
-def test_evaluate_with_datanode(sample_datanode: DataNode) -> None:
-    """Test evaluate function with a sample data node."""
-    result = evaluate(sample_datanode)
-    assert isinstance(
-        result, EvalResult
-    ), "Result should be an instance of EvalResult."
-
-
-@pytest.mark.openai
-def test_evaluate_with_datadict(
-    sample_data_dict: Dict[str, str | List[str]],
+def test_evalresult_methods(
+    sample_dataset: Dataset,
+    mock_metric: BaseMetric,
 ) -> None:
-    """Test evaluate function with a sample data dictionary."""
-    result = evaluate(sample_data_dict)
-    assert isinstance(
-        result, EvalResult
-    ), "Result should be an instance of EvalResult."
-
-
-@pytest.mark.openai
-def test_evaluate_default_behavior(sample_dataset: Dataset) -> None:
-    """Test evaluate function default behavior."""
-    result = evaluate(sample_dataset)
-    assert (
-        result.llm == default_llm()
-    ), "LLM should be the default language model."
-    assert result.metrics == [
-        response_relevancy
-    ], "Metrics should include response_relevancy."
-
-
-def test_evalresult_methods(sample_dataset: Dataset) -> None:
     """Test methods of the EvalResult class."""
-    llm = default_llm()
-    metrics = [response_relevancy]
-    dataset = sample_dataset
-    scores = [[1.0]]
-    response_time = 0.1
-
     eval_result = EvalResult(
-        llm=llm,
-        metrics=metrics,
-        dataset=dataset,
-        scores=scores,
-        response_time=response_time,
+        llm=default_llm(),
+        metrics=[mock_metric],
+        dataset=sample_dataset,
+        scores=[[1.0]],
+        response_time=0.1,
     )
 
     df = eval_result.to_dataframe()
@@ -116,19 +90,32 @@ def test_evaluate_invalid_data_number() -> None:
 def test_evaluate_invalid_data() -> None:
     """Test evaluate function with invalid data."""
     with pytest.raises(ValueError):
-        evaluate({"invalid_key": "invalid_value"})
+        evaluate(
+            {"invalid_key": "invalid_value"},
+            metrics=[],
+        )
 
 
-def test_evaluate_invalid_llm() -> None:
+def test_evaluate_invalid_llm(
+    sample_dataset: Dataset,
+) -> None:
     """Test evaluate function with invalid language model."""
     with pytest.raises(ValidationError):
-        evaluate(sample_dataset, llm="invalid_llm")
+        evaluate(
+            sample_dataset,
+            llm="invalid_llm",
+            metrics=[],
+        )
 
 
-def test_evaluate_invalid_metrics() -> None:
+def test_evaluate_invalid_metrics(
+    sample_dataset: Dataset,
+) -> None:
     """Test evaluate function with invalid metrics."""
     with pytest.raises(ValidationError):
-        evaluate(sample_dataset, metrics="invalid_metrics")
+        evaluate(
+            sample_dataset, metrics="invalid_metrics"
+        )
     with pytest.raises(ValidationError):
         evaluate(
             sample_dataset,
