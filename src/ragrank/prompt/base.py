@@ -74,21 +74,26 @@ class Prompt(BaseModel):
             str: String representation of the prompt.
         """
 
-        prompt_str = self.name + "\n\n"
-        prompt_str += self.instructions + "\n"
+        prompt_str = (
+            f"<task>{self.name}</task>\n\n"
+            f"<instructions>\n{self.instructions}\n"
+            f"</instructions>\n"
+        )
 
+        prompt_str += "\n<examples>\n"
         for example in self.examples:
+            prompt_str += "<example>\n"
             for key, value in example.items():
-                prompt_str += f"\n{key}: {value}"
-            prompt_str += "\n"
+                prompt_str += f"<{key}>{value}</{key}>\n"
+            prompt_str += "</example>\n"
+        prompt_str += "</examples>\n"
 
-        if self.input_keys:
-            prompt_str += "".join(
-                f"\n{key}: {{{key}}}" for key in self.input_keys
-            )
+        prompt_str += "\n<input>\n"
+        for key in self.input_keys:
+            prompt_str += f"<{key}>{{{key}}}</{key}>\n"
+        prompt_str += "</input>\n"
 
-        if self.output_key:
-            prompt_str += f"\n{self.output_key}:\n"
+        prompt_str += f"\n<{self.output_key}>"
 
         return prompt_str
 

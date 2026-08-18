@@ -112,11 +112,23 @@ def test_to_string(
 
     example_prompt = Prompt(**example_prompt_dict)
     expected_output = (
-        "Test Prompt\n\nTesting instructions\n\n"
-        "input: example input 1\noutput: example output 1\n\n"
-        "input: example input 2\noutput: example output 2\n\n"
-        "input: {input}\n"
-        "output:\n"
+        "<task>Test Prompt</task>\n\n"
+        "<instructions>\nTesting instructions\n"
+        "</instructions>\n"
+        "\n<examples>\n"
+        "<example>\n"
+        "<input>example input 1</input>\n"
+        "<output>example output 1</output>\n"
+        "</example>\n"
+        "<example>\n"
+        "<input>example input 2</input>\n"
+        "<output>example output 2</output>\n"
+        "</example>\n"
+        "</examples>\n"
+        "\n<input>\n"
+        "<input>{input}</input>\n"
+        "</input>\n"
+        "\n<output>"
     )
     assert (
         example_prompt.to_string() == expected_output
