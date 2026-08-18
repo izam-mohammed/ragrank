@@ -176,18 +176,24 @@ class Dataset(BaseModel):
         )
         return combined_dataset
 
-    def with_progress(self, purpose: str = "Iterating") -> tqdm:
+    def with_progress(
+        self,
+        purpose: str = "Iterating",
+        num_metrics: int = 1,
+    ) -> tqdm:
         """
         Return a tqdm progress bar for iterating over the dataset.
 
         Args:
-            purpose (str): The purpose for iterating over the dataset.
+            purpose (str): The purpose for iterating.
+            num_metrics (int): Number of metrics per datanode.
+                Total steps = len(dataset) * num_metrics.
 
         Returns:
             tqdm: A tqdm progress bar.
         """
         return tqdm(
-            self,
+            total=len(self) * num_metrics,
             ncols=100,
             desc=purpose + " ",
             bar_format=(

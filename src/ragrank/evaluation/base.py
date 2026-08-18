@@ -65,10 +65,18 @@ def evaluate(
 
     dt = time()
     scores = [[] for _ in metrics]
-    for datanode in data.with_progress("Evaluating"):
+    pbar = data.with_progress(
+        "Evaluating", num_metrics=len(metrics)
+    )
+    for datanode in data:
         for i, metric in enumerate(metrics):
+            pbar.set_description(metric.name + " ")
             scores[i].append(metric.score(datanode).score)
-    logger.info(f"Evaluation completed with {len(metrics)} metrics")
+            pbar.update(1)
+    pbar.close()
+    logger.info(
+        f"Evaluation completed with {len(metrics)} metrics"
+    )
     delta = time() - dt
 
     result = EvalResult(
