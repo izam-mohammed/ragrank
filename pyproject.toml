@@ -5,7 +5,7 @@ description = "An evaluation library for RAG models"
 authors = [{ name = "Izam Mohammed", email = "izamdeveloper1@gmail.com" }]
 license = "Apache-2.0"
 readme = "README.md"
-requires-python = ">=3.9,<4.0"
+requires-python = ">=3.10,<4.0"
 keywords = ["rag", "evaluation", "llmops"]
 dependencies = [
     "numpy>=1.26.4",
