@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Dict
+from typing import Any
 
 import pytest
 from ragrank.dataset import DataNode
@@ -63,7 +63,7 @@ def data_node_mock() -> DataNode:
 @pytest.fixture
 def base_metric_dict(
     llm_mock: BaseLLM, prompt_mock: Prompt
-) -> Dict[str, BaseLLM | Prompt | MetricType]:
+) -> dict[str, BaseLLM | Prompt | MetricType]:
     """Fixture to create a dictionary for a base metric."""
 
     return {
@@ -74,7 +74,7 @@ def base_metric_dict(
 
 
 def test_base_metric_initialization(
-    base_metric_dict: Dict[str, BaseLLM | Prompt | MetricType],
+    base_metric_dict: dict[str, BaseLLM | Prompt | MetricType],
     llm_mock: BaseLLM,
     prompt_mock: Prompt,
     base_metric_dict_mock: BaseMetric,
@@ -91,7 +91,7 @@ def test_base_metric_initialization(
 
 @pytest.fixture
 def metric_result_mock(
-    base_metric_dict: Dict[str, BaseLLM | Prompt | MetricType],
+    base_metric_dict: dict[str, BaseLLM | Prompt | MetricType],
     data_node_mock: DataNode,
     base_metric_dict_mock: BaseMetric,
 ) -> None:
@@ -106,8 +106,8 @@ def metric_result_mock(
 
 
 def test_metric_result_initialization(
-    metric_result_mock: Dict[str, Any],
-    base_metric_dict: Dict[str, BaseLLM | Prompt | MetricType],
+    metric_result_mock: dict[str, Any],
+    base_metric_dict: dict[str, BaseLLM | Prompt | MetricType],
     data_node_mock: DataNode,
     base_metric_dict_mock: BaseMetric,
 ) -> None:
@@ -125,7 +125,7 @@ def test_metric_result_initialization(
 
 
 def test_metric_result_default_values(
-    metric_result_mock: Dict[str, Any],
+    metric_result_mock: dict[str, Any],
 ) -> None:
     """Test for default values of metric result."""
 

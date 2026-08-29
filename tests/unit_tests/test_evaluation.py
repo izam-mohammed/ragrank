@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from typing import Dict, List
-
 import pytest
 from pandas import DataFrame
 from ragrank import evaluate
@@ -35,7 +33,7 @@ def sample_datanode() -> DataNode:
 
 
 @pytest.fixture
-def sample_data_dict() -> Dict[str, str | List[str]]:
+def sample_data_dict() -> dict[str, str | list[str]]:
     """Fixture for generating a sample data dictionary."""
     return {
         "question": "sample question",
@@ -64,7 +62,7 @@ def test_evaluate_with_datanode(sample_datanode: DataNode) -> None:
 
 @pytest.mark.openai
 def test_evaluate_with_datadict(
-    sample_data_dict: Dict[str, str | List[str]],
+    sample_data_dict: dict[str, str | list[str]],
 ) -> None:
     """Test evaluate function with a sample data dictionary."""
     result = evaluate(sample_data_dict)
