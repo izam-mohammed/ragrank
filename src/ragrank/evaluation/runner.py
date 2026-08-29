@@ -24,6 +24,11 @@ from ragrank.evaluation.usage import (
 )
 from ragrank.exceptions import ValidationError
 from ragrank.llm import BaseLLM, default_llm
+from ragrank.llm.cache import (
+    CacheBackend,
+    CachedLLM,
+    DiskCache,
+)
 from ragrank.metric import BaseMetric, LLMMetric, MetricResult
 
 logger = logging.getLogger(__name__)
@@ -48,7 +53,9 @@ class RunConfig(BaseModel):
             row should not destroy a long, paid run.
     """
 
-    model_config: ConfigDict = ConfigDict(frozen=True)
+    model_config: ConfigDict = ConfigDict(
+        frozen=True, arbitrary_types_allowed=True
+    )
 
     max_workers: int = Field(
         default=4, ge=1, description="Concurrent metric calls."
@@ -69,6 +76,13 @@ class RunConfig(BaseModel):
     raise_on_error: bool = Field(
         default=False,
         description="Abort the run on the first failure.",
+    )
+    cache: CacheBackend | bool | None = Field(
+        default=None,
+        description=(
+            "Cache judge responses. True uses an on-disk cache, or "
+            "pass a CacheBackend of your own. None disables caching."
+        ),
     )
 
 
@@ -118,10 +132,29 @@ def validate_dataset(
         )
 
 
+def _resolve_cache(
+    cache: CacheBackend | bool | None,
+) -> CacheBackend | None:
+    """Turn the RunConfig setting into a backend, or None.
+
+    Args:
+        cache (CacheBackend | bool | None): The configured value.
+
+    Returns:
+        CacheBackend | None: The backend to use, if any.
+    """
+    if cache is None or cache is False:
+        return None
+    if cache is True:
+        return DiskCache()
+    return cache
+
+
 def _with_tracking(
     metric: BaseMetric,
     llm: BaseLLM | None,
     tracker: UsageTracker,
+    cache: CacheBackend | None,
 ) -> BaseMetric:
     """Bind a metric to a token-counting view of its language model.
 
@@ -132,6 +165,7 @@ def _with_tracking(
         metric (BaseMetric): The metric to bind.
         llm (BaseLLM | None): The LLM offered by the run.
         tracker (UsageTracker): Where to record usage.
+        cache (CacheBackend | None): Cache to serve repeats from.
 
     Returns:
         BaseMetric: The metric, bound to a tracked model if it uses one.
@@ -140,6 +174,8 @@ def _with_tracking(
         return metric
 
     inner = metric.llm or llm or default_llm()
+    if cache is not None:
+        inner = CachedLLM(inner=inner, backend=cache)
     return metric.model_copy(
         update={"llm": TrackedLLM(inner=inner, tracker=tracker)}
     )
@@ -216,8 +252,10 @@ def run_metrics(
     validate_dataset(dataset, metrics)
 
     tracker = UsageTracker()
+    backend = _resolve_cache(config.cache)
     bound = [
-        _with_tracking(metric, llm, tracker) for metric in metrics
+        _with_tracking(metric, llm, tracker, backend)
+        for metric in metrics
     ]
     nodes = list(dataset)
     jobs = [

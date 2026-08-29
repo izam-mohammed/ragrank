@@ -6,6 +6,12 @@ from ragrank.llm.base import (
     LLMResult,
     default_llm,
 )
+from ragrank.llm.cache import (
+    CacheBackend,
+    CachedLLM,
+    DiskCache,
+    MemoryCache,
+)
 from ragrank.llm.fake import FakeLLM
 
 __all__ = [
@@ -14,4 +20,8 @@ __all__ = [
     "BaseLLM",
     "FakeLLM",
     "default_llm",
+    "CacheBackend",
+    "MemoryCache",
+    "DiskCache",
+    "CachedLLM",
 ]
