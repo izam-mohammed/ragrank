@@ -71,6 +71,16 @@ Faithfulness: 0.812 -> 0.901 (+0.089)
 Token F1: 0.640 -> 0.638 (-0.002)
 ```
 
+## An HTML report
+
+```bash
+ragrank eval ragrank.yaml --html report.html
+```
+
+One self-contained page with every row, every score and the judge's
+reasoning - the useful artefact for a CI job that just failed a
+threshold. See [HTML reports](../evaluation/reports.md).
+
 ## Column mapping
 
 If your CSV uses different column names:

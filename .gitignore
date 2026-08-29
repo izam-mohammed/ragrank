@@ -76,9 +76,11 @@ docs/_build/
 
 # PyBuilder
 .pybuilder/
+# Build output from other ecosystems. ragrank.target is a package and
+# its docs are pages, so both need an exception.
 target/
-# ...but ragrank.target is a package, not build output.
 !src/ragrank/target/
+!docs/api_reference/target/
 
 # Jupyter Notebook
 .ipynb_checkpoints

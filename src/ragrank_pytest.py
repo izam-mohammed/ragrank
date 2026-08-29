@@ -105,15 +105,18 @@ def ragrank_llm() -> BaseLLM | None:
     """The model evals judge with.
 
     Defaults to None, which lets each metric fall back to the library
-    default. Override it in a conftest to point every eval in the suite
-    at one judge, or at a fake:
-
-        @pytest.fixture(scope="session")
-        def ragrank_llm():
-            return LiteLLM(model="anthropic/claude-sonnet-4-5")
+    default.
 
     Returns:
         BaseLLM | None: The judge, or None for the default.
+
+    Examples:
+        Override it in a conftest to point every eval in the suite at
+        one judge, or at a fake::
+
+            @pytest.fixture(scope="session")
+            def ragrank_llm():
+                return LiteLLM(model="anthropic/claude-sonnet-4-5")
     """
     return None
 

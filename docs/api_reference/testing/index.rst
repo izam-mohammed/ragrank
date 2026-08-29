@@ -7,3 +7,4 @@ ragrank.testing
     :maxdepth: 1
 
     assertions
+    plugin

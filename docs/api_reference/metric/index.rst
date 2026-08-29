@@ -9,6 +9,8 @@ ragrank.metric
     base
     parse
     claims
+    claims_reliance
+    safety
     retrieval
     heuristic_text
     heuristic_semantic

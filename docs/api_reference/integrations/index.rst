@@ -7,5 +7,6 @@ ragrank.integrations
     :maxdepth: 1
 
     openai/index
+    litellm/index
     langchain/index
     llama_index/index
