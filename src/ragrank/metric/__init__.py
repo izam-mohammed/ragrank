@@ -73,6 +73,17 @@ from ragrank.metric._retrieval.ranking import (
     precision_at_k,
     recall_at_k,
 )
+from ragrank.metric._safety.content import (
+    Answered,
+    Safety,
+    answered,
+    safety,
+)
+from ragrank.metric._safety.pii import (
+    PIIFree,
+    find_pii,
+    pii_free,
+)
 from ragrank.metric.base import (
     BaseMetric,
     ChunkwiseLLMMetric,
@@ -89,6 +100,14 @@ RAG_TRIAD = [
     context_relevancy,
     faithfulness,
     response_relevancy,
+]
+
+#: What the model leaked, what it said, and what it refused to say.
+#: `pii_free` and `answered` cost nothing; `safety` needs one judge call.
+SAFETY_METRICS = [
+    pii_free,
+    answered,
+    safety,
 ]
 
 #: Deterministic ranking metrics. No LLM calls, no cost, no variance.
@@ -152,6 +171,14 @@ __all__ = [
     "recall_at_k",
     "mean_average_precision",
     "ndcg",
+    # safety
+    "PIIFree",
+    "Safety",
+    "Answered",
+    "pii_free",
+    "safety",
+    "answered",
+    "find_pii",
     # custom
     "metric",
     "FunctionMetric",
@@ -165,4 +192,5 @@ __all__ = [
     # presets
     "RAG_TRIAD",
     "RETRIEVAL_METRICS",
+    "SAFETY_METRICS",
 ]
