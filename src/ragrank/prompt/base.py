@@ -92,7 +92,47 @@ class Prompt(BaseModel):
 
         return prompt_str
 
-    def get_examples(self, example_no: int | None = None) -> str:
+    def render(self, values: dict[str, Any]) -> str:
+        """Render the prompt with concrete input values.
+
+        Unlike `to_string()` followed by `str.format()`, this substitutes
+        only the declared `input_keys` and never interprets braces in the
+        instructions, the examples or the values themselves.
+
+        Args:
+            values (dict[str, Any]): Values for each of `input_keys`.
+
+        Returns:
+            str: The rendered prompt.
+
+        Raises:
+            KeyError: If a declared input key has no value.
+        """
+        missing = [key for key in self.input_keys if key not in values]
+        if missing:
+            raise KeyError(
+                f"Prompt {self.name!r} needs {missing} but the data "
+                f"only provides {sorted(values)}."
+            )
+
+        parts = [self.name, "", self.instructions]
+
+        for example in self.examples:
+            parts.append("")
+            parts.extend(
+                f"{key}: {value}" for key, value in example.items()
+            )
+
+        parts.append("")
+        parts.extend(
+            f"{key}: {values[key]}" for key in self.input_keys
+        )
+        parts.append(f"{self.output_key}:")
+        return "\n".join(parts)
+
+    def get_examples(
+        self, example_no: int | None = None
+    ) -> list[Example]:
         """Retrieve examples from the prompt.
 
         Args:
