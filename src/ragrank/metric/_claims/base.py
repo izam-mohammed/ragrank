@@ -17,7 +17,12 @@ from typing import Any
 
 from ragrank.bridge.pydantic import Field
 from ragrank.dataset import DataNode
-from ragrank.metric.base import LLMMetric, MetricResult, MetricType
+from ragrank.metric.base import (
+    CostTier,
+    LLMMetric,
+    MetricResult,
+    MetricType,
+)
 from ragrank.metric.parse import parse_list, parse_score
 from ragrank.prompt import Prompt
 from ragrank.prompt._prompts import (
@@ -63,6 +68,15 @@ class ClaimMetric(LLMMetric):
         repr=False,
         description="Cap on claims verified per row.",
     )
+
+    @property
+    def cost_tier(self) -> CostTier:
+        """One extraction call plus one call per claim.
+
+        Returns:
+            CostTier: Always `CostTier.LLM_HEAVY`.
+        """
+        return CostTier.LLM_HEAVY
 
     def claim_text(self, data: DataNode) -> str:
         """The text to decompose into claims.

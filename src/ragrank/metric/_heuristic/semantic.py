@@ -7,7 +7,11 @@ from time import perf_counter
 from ragrank.bridge.pydantic import Field
 from ragrank.dataset import DataNode
 from ragrank.embedding import BaseEmbedding
-from ragrank.metric.base import DeterministicMetric, MetricResult
+from ragrank.metric.base import (
+    CostTier,
+    DeterministicMetric,
+    MetricResult,
+)
 
 
 class SemanticSimilarity(DeterministicMetric):
@@ -26,6 +30,15 @@ class SemanticSimilarity(DeterministicMetric):
     embedding: BaseEmbedding | None = Field(
         default=None, description="The embedding model to use."
     )
+
+    @property
+    def cost_tier(self) -> CostTier:
+        """Cheap, but it does make a network call.
+
+        Returns:
+            CostTier: Always `CostTier.EMBEDDING`.
+        """
+        return CostTier.EMBEDDING
 
     @property
     def name(self) -> str:

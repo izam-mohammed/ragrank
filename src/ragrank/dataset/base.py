@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import logging
 from collections.abc import Iterator
 from pathlib import Path
@@ -282,6 +283,62 @@ class Dataset(BaseModel):
             DataFrame: data representation
         """
         return DataFrame(self.to_dict())
+
+    def to_records(self) -> list[DATANODE_DICT_TYPE]:
+        """Return the data as one flat mapping per datapoint.
+
+        This is the interchange shape: a list of self-describing
+        records, which is how nearly every other framework hands you its
+        outputs. Columns absent from the dataset are simply absent from
+        each record rather than present and null.
+
+        Returns:
+            list[dict]: One record per datapoint.
+        """
+        return [
+            node.model_dump(exclude_none=True) for node in self
+        ]
+
+    def to_json(
+        self,
+        path: str | Path | None = None,
+        **kwargs: Any,  # noqa: ANN401
+    ) -> str:
+        """Serialise the data as a JSON array of records.
+
+        Args:
+            path (str | Path | None): Write the JSON here as well as
+                returning it.
+            **kwargs: Passed through to `json.dumps`.
+
+        Returns:
+            str: The dataset as JSON.
+        """
+        text = json.dumps(self.to_records(), **kwargs)
+        if path is not None:
+            Path(path).write_text(text, encoding="utf-8")
+        return text
+
+    def to_jsonl(self, path: str | Path | None = None) -> str:
+        """Serialise the data as JSON Lines, one record per line.
+
+        Line-delimited JSON streams and appends, which a single JSON
+        array does not, so it is the better shape for a dataset that
+        grows or one too large to hold in memory.
+
+        Args:
+            path (str | Path | None): Write the JSONL here as well as
+                returning it.
+
+        Returns:
+            str: The dataset as JSON Lines.
+        """
+        text = "\n".join(
+            json.dumps(record) for record in self.to_records()
+        )
+        if path is not None:
+            Path(path).write_text(text, encoding="utf-8")
+        return text
 
     def to_csv(self, path: str | Path, **kwargs: Any) -> None:  # noqa: ANN401
         """Save the data as a csv file

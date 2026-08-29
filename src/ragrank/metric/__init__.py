@@ -76,6 +76,7 @@ from ragrank.metric._retrieval.ranking import (
 from ragrank.metric.base import (
     BaseMetric,
     ChunkwiseLLMMetric,
+    CostTier,
     DeterministicMetric,
     LLMMetric,
     MetricResult,
@@ -107,6 +108,7 @@ __all__ = [
     "DeterministicMetric",
     "MetricResult",
     "MetricType",
+    "CostTier",
     # llm judged
     "ResponseRelevancy",
     "ResponseConciseness",
