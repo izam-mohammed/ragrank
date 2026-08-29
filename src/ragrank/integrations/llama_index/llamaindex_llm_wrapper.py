@@ -14,7 +14,7 @@ except ModuleNotFoundError:
     raise ModuleNotFoundError(
         "Please install `llama-index` module by \n"
         "`pip install llama-index`"
-    ) from ModuleNotFoundError
+    ) from None
 
 from ragrank.bridge.pydantic import (
     Field,
@@ -59,7 +59,7 @@ class LlamaindexLLMWrapper(BaseLLM):
                 "Example:\n\nfrom llama_index.llms.openai import OpenAI\n"
                 "### set your openai key as environment variable\n"
                 "llm = LlamaindexLLMWrapper(llamaindex_llm=OpenAI())\n\n"
-            ) from TypeError
+            ) from None
         return v
 
     @property

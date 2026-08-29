@@ -21,7 +21,7 @@ except ModuleNotFoundError:
     raise ModuleNotFoundError(
         "Please install `langchain-core` module by \n"
         "`pip install langchain-core`"
-    ) from ModuleNotFoundError
+    ) from None
 
 
 class LangchainLLMWrapper(BaseLLM):
@@ -60,7 +60,7 @@ class LangchainLLMWrapper(BaseLLM):
                 "Example:\n\nfrom langchain_openai.llms import OpenAI\n"
                 "### set your openai key as environment variable\n"
                 "llm = LangchainLLMWrapper(langchain_llm=OpenAI())\n\n"
-            ) from TypeError
+            ) from None
         return v
 
     @property

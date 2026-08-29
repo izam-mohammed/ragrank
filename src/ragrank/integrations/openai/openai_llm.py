@@ -10,7 +10,7 @@ try:
 except ModuleNotFoundError:
     raise ModuleNotFoundError(
         "Please install `openai` module by `pip install openai`"
-    ) from ModuleNotFoundError
+    ) from None
 
 
 class OpenaiLLM(BaseLLM):
