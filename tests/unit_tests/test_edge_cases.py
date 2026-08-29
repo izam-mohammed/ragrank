@@ -9,7 +9,7 @@ import pytest
 from ragrank import evaluate
 from ragrank.dataset import DataNode, Dataset
 from ragrank.evaluation import RunConfig
-from ragrank.llm import BaseLLM, FakeLLM, LLMResult
+from ragrank.llm import BaseLLM, LLMResult
 from ragrank.metric import (
     RankingMetric,
     exact_match,
@@ -157,39 +157,6 @@ def test_zero_backoff_does_not_sleep() -> None:
     slept.assert_not_called()
 
 
-# --------------------- degrading without tqdm ---------------------
-
-
-def test_with_progress_works_without_tqdm() -> None:
-    """Dataset iteration must not require an optional dependency."""
-    dataset = Dataset(
-        question=["a", "b"],
-        context=[["c"], ["c"]],
-        response=["r", "s"],
-    )
-    with patch(
-        "ragrank.dataset.base.is_available", return_value=False
-    ):
-        nodes = list(dataset.with_progress())
-    assert len(nodes) == 2
-
-
-def test_runner_works_without_tqdm() -> None:
-    """A run with progress requested but tqdm absent still runs."""
-    dataset = Dataset(
-        question=["q"], context=[["c"]], response=["r"]
-    )
-    with patch(
-        "ragrank.evaluation.runner.is_available", return_value=False
-    ):
-        result = evaluate(
-            dataset,
-            llm=FakeLLM(responses=["0.5"]),
-            run_config=RunConfig(show_progress=True, max_workers=1),
-        )
-    assert result.scores == [[0.5]]
-
-
 # --------------------- not implemented surface ---------------------
 
 
@@ -257,9 +224,13 @@ def test_llm_metric_reason_hook_defaults_to_none() -> None:
     assert response_relevancy.reason(node("r"), 0.5, "raw") is None
 
 
-def test_core_imports_with_optional_dependencies_blocked() -> None:
-    """Belt and braces: the new modules must not need pandas either."""
-    blocked = {"pandas": None, "tqdm": None, "datasets": None}
+def test_core_imports_without_the_provider_extras() -> None:
+    """Only provider SDKs are optional; the core must not need them."""
+    blocked = {
+        "datasets": None,
+        "openai": None,
+        "langchain_core": None,
+    }
     with patch.dict(sys.modules, blocked):
         from ragrank.metric import hit_rate, token_f1
 

@@ -46,13 +46,15 @@ numbers you can put in CI.
 pip install ragrank
 ```
 
-the core pulls pydantic and nothin' else. everything else is an extra:
+that's everything you need to evaluate. extras are only for provider and
+framework sdks ~ the stuff not everyone wants installed:
 
 ```bash
-pip install "ragrank[openai]"    # the openai judge
-pip install "ragrank[pandas]"    # to_dataframe(), from_csv()
-pip install "ragrank[progress]"  # progress bars
-pip install "ragrank[all]"       # all of it
+pip install "ragrank[openai]"       # the openai judge
+pip install "ragrank[langchain]"    # LangchainLLMWrapper
+pip install "ragrank[llama-index]"  # LlamaindexLLMWrapper
+pip install "ragrank[hf]"           # from_hfdataset()
+pip install "ragrank[all]"          # all of them
 ```
 
 from source:

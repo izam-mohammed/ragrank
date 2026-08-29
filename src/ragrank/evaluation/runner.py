@@ -13,12 +13,13 @@ from collections.abc import Iterable, Iterator
 from concurrent.futures import ThreadPoolExecutor
 from time import perf_counter, sleep
 
+from tqdm import tqdm
+
 from ragrank.bridge.pydantic import BaseModel, ConfigDict, Field
 from ragrank.dataset import DataNode, Dataset
 from ragrank.exceptions import ValidationError
 from ragrank.llm import BaseLLM
 from ragrank.metric import BaseMetric, MetricResult
-from ragrank.utils.optional import is_available
 
 logger = logging.getLogger(__name__)
 
@@ -220,11 +221,9 @@ def run_metrics(
 def _with_progress(
     iterable: Iterable[Job], *, total: int, enabled: bool
 ) -> Iterator[Job]:
-    """Wrap an iterable in a progress bar when tqdm is available."""
-    if not enabled or not is_available("tqdm"):
+    """Wrap an iterable in a progress bar unless it is switched off."""
+    if not enabled:
         return iter(iterable)
-
-    from tqdm import tqdm
 
     return tqdm(
         iterable,

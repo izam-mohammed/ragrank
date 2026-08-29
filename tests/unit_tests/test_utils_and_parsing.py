@@ -14,7 +14,7 @@ from ragrank.exceptions import (
 from ragrank.metric.parse import ParsedScore, parse_score
 from ragrank.utils.common import eval_cell
 from ragrank.utils.llm import get_env_var
-from ragrank.utils.optional import is_available, require
+from ragrank.utils.optional import require
 
 # --------------------------- parse_score ---------------------------
 
@@ -171,12 +171,6 @@ def test_require_explains_how_to_install() -> None:
     message = str(caught.value)
     assert "someextra" in message
     assert "pip install" in message
-
-
-def test_is_available() -> None:
-    """Reports installed status without raising."""
-    assert is_available("json") is True
-    assert is_available("definitely_not_installed_xyz") is False
 
 
 # --------------------------- exceptions ---------------------------

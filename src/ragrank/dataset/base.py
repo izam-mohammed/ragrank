@@ -5,13 +5,12 @@ from __future__ import annotations
 import logging
 from collections.abc import Iterator
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, ClassVar
+from typing import Any, ClassVar
+
+from pandas import DataFrame
+from tqdm import tqdm
 
 from ragrank.bridge.pydantic import BaseModel, Field, model_validator
-from ragrank.utils.optional import is_available, require
-
-if TYPE_CHECKING:
-    from pandas import DataFrame
 
 DATANODE_DICT_TYPE = dict[str, list[str] | str]
 DATASET_DICT_TYPE = dict[str, list[str] | list[list[str]]]
@@ -242,8 +241,7 @@ class Dataset(BaseModel):
         self, purpose: str = "Iterating"
     ) -> Iterator[DataNode]:
         """
-        Return an iterator over the dataset, with a progress bar if
-        `tqdm` is installed.
+        Return an iterator over the dataset, with a progress bar.
 
         Args:
             purpose (str): The purpose for iterating over the dataset.
@@ -251,11 +249,6 @@ class Dataset(BaseModel):
         Returns:
             Iterator[DataNode]: An iterator over the data nodes.
         """
-        if not is_available("tqdm"):
-            return iter(self)
-
-        from tqdm import tqdm
-
         return tqdm(
             self,
             ncols=100,
@@ -288,8 +281,7 @@ class Dataset(BaseModel):
         Returns:
             DataFrame: data representation
         """
-        pd = require("pandas", "pandas")
-        return pd.DataFrame(self.to_dict())
+        return DataFrame(self.to_dict())
 
     def to_csv(self, path: str | Path, **kwargs: Any) -> None:  # noqa: ANN401
         """Save the data as a csv file

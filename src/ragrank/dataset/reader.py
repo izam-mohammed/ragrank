@@ -3,15 +3,14 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, ClassVar
+from typing import Any, ClassVar
+
+import pandas as pd
 
 from ragrank.bridge.pydantic import BaseModel, Field
 from ragrank.dataset import DataNode, Dataset
 from ragrank.utils.common import eval_cell
 from ragrank.utils.optional import require
-
-if TYPE_CHECKING:
-    import pandas as pd
 
 DATANODE_TYPE = dict[str, list[str] | str]
 DATASET_TYPE = dict[str, list[str] | list[list[str]]]
@@ -125,8 +124,7 @@ def from_csv(
     if column_map is None:
         column_map = ColumnMap()
 
-    pandas = require("pandas", "pandas")
-    df = pandas.read_csv(filepath_or_buffer=path, **kwargs)
+    df = pd.read_csv(filepath_or_buffer=path, **kwargs)
     return from_dataframe(data=df, column_map=column_map)
 
 

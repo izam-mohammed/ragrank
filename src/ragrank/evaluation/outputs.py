@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import json
 from statistics import fmean, stdev
-from typing import TYPE_CHECKING, Any
+from typing import Any
+
+from pandas import DataFrame
 
 from ragrank.bridge.pydantic import (
     BaseModel,
@@ -16,10 +18,6 @@ from ragrank.dataset import Dataset
 from ragrank.dataset.reader import RAGRANK_DICT_TYPE
 from ragrank.llm import BaseLLM
 from ragrank.metric import BaseMetric, MetricResult
-from ragrank.utils.optional import require
-
-if TYPE_CHECKING:
-    from pandas import DataFrame
 
 
 class MetricSummary(BaseModel):
@@ -217,8 +215,7 @@ class EvalResult(BaseModel):
         Returns:
             DataFrame: A DataFrame containing the evaluation results.
         """
-        pandas = require("pandas", "pandas")
-        return pandas.DataFrame(self.to_dict())
+        return DataFrame(self.to_dict())
 
     def to_json(self, **kwargs: Any) -> str:  # noqa: ANN401
         """Serialise the run, without needing pandas.
