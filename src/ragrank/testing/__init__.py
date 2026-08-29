@@ -5,7 +5,10 @@ by hand. These are plain assertions -- no runner, no plugin, no custom
 CLI -- so they work with pytest, unittest, or anything that understands
 `assert`.
 
+Examples::
+
     from ragrank.testing import assert_metric
+
 
     def test_bot_answers_relevantly():
         assert_metric(

@@ -1,11 +1,10 @@
 ragrank.prompt
 ==============
 
-.. autosummary::
-    ragrank.prompt.base
-
 .. automodule:: ragrank.prompt
-    :members:
 
 .. toctree::
+    :maxdepth: 1
+
     base
+    prompts

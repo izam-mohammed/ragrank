@@ -65,11 +65,6 @@ class BaseLLM(BaseModel, ABC):
 
     Attributes:
         llm_config (LLMConfig): Configuration settings for the LLM.
-
-    Methods:
-        set_config: Set configuration settings for the LLM.
-        generate_text: Generate text based on input text.
-        generate: Generate responses for a sequence of input texts.
     """
 
     model_config: ConfigDict = ConfigDict(

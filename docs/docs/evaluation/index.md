@@ -44,9 +44,51 @@ We are using embedding models internally to calculate the scores. Here, you can 
 
 ````
 
+````{grid}
+:gutter: 2
+
+```{grid-item-card} ⚙️ Run configuration
+:link: run-config
+:link-type: ref
+
+Concurrency, retries, progress and fault tolerance all live in one object. A run survives its failures by default.
+```
+
+```{grid-item-card} 💰 Cost and tokens
+:link: cost-and-tokens
+:link-type: ref
+
+What a run actually cost you, counted per call rather than guessed, with an estimate at the rates you are really paying.
+```
+
+````
+
+````{grid}
+:gutter: 2
+
+```{grid-item-card} 🗄 Caching
+:link: caching
+:link-type: ref
+
+Judges run at temperature 0 over data that barely changes. Cache them and a re-run costs nothing.
+```
+
+```{grid-item-card} 📊 Comparing runs
+:link: comparing-runs
+:link-type: ref
+
+Is v2 better than v1? Including whether the difference is bigger than the noise, and which rows moved.
+```
+
+````
+
 ```{toctree}
 :hidden:
 
+run_config
+cost
+caching
+comparing_runs
 detailed_evaluation
 data_ingestion
 with_metrics

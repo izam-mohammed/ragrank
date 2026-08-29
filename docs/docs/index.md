@@ -5,6 +5,8 @@ get_started/index
 core_concepts/index
 evaluation/index
 metrics/index
+testing/index
+cli/index
 integrations/index
 api_reference/index
 more/index
@@ -39,7 +41,7 @@ Ragrank is a user-friendly Python library created to make evaluating Retrieval A
 :link: quick-start
 :link-type: ref
 
-Master the basics of `ragrank` with a strong step. Evaluate RAG pipelines, generate test sets, and set up online monitoring for RAG apps — all with a few lines of code.
+Master the basics of `ragrank` with a strong step. Evaluate RAG pipelines, generate test sets, and set up online monitoring for RAG apps - all with a few lines of code.
 ```
 
 ```{grid-item-card} 🪩 Core concepts

@@ -37,6 +37,13 @@ Repository = "https://github.com/Auto-Playground/ragrank"
 
 [dependency-groups]
 docs = [
+    # autodoc imports the package, so the optional integrations must be
+    # installed or every integration page builds with a warning
+    "openai>=1.14.2",
+    "langchain-core>=0.1.32",
+    "llama-index>=0.10.20",
+    "datasets>=2.18.0",
+    "pyyaml>=6.0",
     "sphinx>=7.2.6",
     "furo>=2024.1.29",
     "myst-parser>=2.0.0",

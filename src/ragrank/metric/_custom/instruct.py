@@ -30,10 +30,6 @@ class InstructConfig(BaseModel):
         examples (List[PromptExample]): Examples for the Instruction metric.
         input_fields (List[str]): Input fields for the Instruct Metric.
         output_field (str): Output field for the Instruct Metric.
-
-    Methods:
-        to_prompt() -> Prompt: get a Prompt object from the given
-            configuration.
     """
 
     model_config: ConfigDict = ConfigDict(
@@ -90,17 +86,6 @@ class CustomInstruct(LLMMetric):
         llm (BaseLLM): The language model used to generate the response.
         prompt (Prompt): The prompt provided for generating the response.
         config (InstructConfig): Instructions and configuration for the metric.
-
-    Methods:
-        name(self) -> str:
-            Get the name for the metric.
-
-        score(self, data: DataNode) -> MetricResult:
-            Calculate the score for the custom metric based
-            on the provided data.
-
-        _reason(self, data: DataNode, score: float) -> str | None:
-            Determine the reason for the given score. (Not implemented yet)
     """
 
     metric_type: MetricType = Field(

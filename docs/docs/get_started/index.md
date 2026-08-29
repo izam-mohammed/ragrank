@@ -15,7 +15,7 @@ All of this tutorials give a quick look at what you can do with ragrank. You can
 :link: quick-start
 :link-type: ref
 
-Master the basics of `ragrank` with a strong step. Evaluate RAG pipelines, generate test sets, and set up online monitoring for RAG apps — all with a few lines of code.
+Master the basics of `ragrank` with a strong step. Evaluate RAG pipelines, generate test sets, and set up online monitoring for RAG apps - all with a few lines of code.
 ```
 
 ```{grid-item-card} 🍭 Basic Evaluation
