@@ -9,6 +9,17 @@ the developer wrote.
 Installed automatically through the `pytest11` entry point; there is
 nothing to add to a conftest.
 
+This lives outside the `ragrank` package on purpose. pytest imports
+every registered plugin at startup, and importing `ragrank.anything`
+runs `ragrank/__init__.py` and pulls in the library -- which would put
+the full import cost on every pytest run in any project that merely has
+ragrank installed, and would land before coverage starts, making every
+module-level line in the package look unexecuted.
+
+So: no ragrank imports at module level, and no ragrank package in the
+import path to get here. The library is imported inside the fixture,
+when something actually asks for it.
+
 Marking evals::
 
     @pytest.mark.ragrank
@@ -27,16 +38,14 @@ from typing import TYPE_CHECKING, Any
 
 import pytest
 
-from ragrank.dataset import DataNode, Dataset
-from ragrank.evaluation.outputs import EvalResult
-from ragrank.evaluation.runner import RunConfig
-from ragrank.llm import BaseLLM
-from ragrank.metric import BaseMetric
-from ragrank.testing.assertions import assert_evaluation
-
 if TYPE_CHECKING:  # pragma: no cover
     from _pytest.config import Config
     from _pytest.config.argparsing import Parser
+    from ragrank.dataset import DataNode, Dataset
+    from ragrank.evaluation.outputs import EvalResult
+    from ragrank.evaluation.runner import RunConfig
+    from ragrank.llm import BaseLLM
+    from ragrank.metric import BaseMetric
 
 #: Where recorded runs accumulate for the session-end report.
 STASH_KEY = "_ragrank_recorded"
@@ -151,6 +160,8 @@ def ragrank_eval(
         **kwargs: Any,  # noqa: ANN401
     ) -> EvalResult:
         __tracebackhide__ = True
+        from ragrank.testing.assertions import assert_evaluation
+
         result = assert_evaluation(
             data,
             metrics,
@@ -158,9 +169,10 @@ def ragrank_eval(
             run_config=run_config or ragrank_run_config,
             **kwargs,
         )
-        _recorded(request.config).append(
-            (request.node.nodeid, result)
-        )
+        _recorded(request.config).append((
+            request.node.nodeid,
+            result,
+        ))
         return result
 
     yield run

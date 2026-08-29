@@ -37,7 +37,7 @@ ragrank = "ragrank.cli:main"
 # Evals belong next to unit tests. The plugin registers the `ragrank`
 # marker and the --ragrank-report option; it is inert unless used.
 [project.entry-points.pytest11]
-ragrank = "ragrank.testing.plugin"
+ragrank = "ragrank_pytest"
 
 [project.urls]
 Repository = "https://github.com/Auto-Playground/ragrank"
@@ -95,7 +95,10 @@ source = "vcs"
 version-file = "src/ragrank/_version.py"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/ragrank"]
+# ragrank_pytest is the pytest plugin. It sits outside the package so
+# that pytest's startup import does not drag the whole library in.
+sources = ["src"]
+only-include = ["src/ragrank", "src/ragrank_pytest.py"]
 artifacts = ["src/ragrank/py.typed"]
 
 [tool.ruff]
@@ -171,6 +174,9 @@ preview = true
 
 [tool.ruff.lint.per-file-ignores]
 "**/{tests}/*" = ["S101"]
+# A pytest plugin has to be a top-level module, not a package -- see
+# the note in its docstring. INP001 wants an __init__.py it must not have.
+"src/ragrank_pytest.py" = ["INP001"]
 
 [tool.coverage.run]
 source = ["src/ragrank"]
