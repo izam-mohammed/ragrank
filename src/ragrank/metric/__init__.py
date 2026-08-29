@@ -1,5 +1,10 @@
 """Base class for metrics module"""
 
+from ragrank.metric._claims.base import (
+    ClaimMetric,
+    Faithfulness,
+    faithfulness,
+)
 from ragrank.metric._context_related.relevancy import (
     ContextRelevancy,
     context_relevancy,
@@ -12,12 +17,20 @@ from ragrank.metric._custom.instruct import (
     CustomInstruct,
     InstructConfig,
 )
+from ragrank.metric._custom.jury import (
+    Jury,
+    Pairwise,
+)
 from ragrank.metric._custom.metric import CustomMetric
 from ragrank.metric._custom.simple import (
     FunctionMetric,
     Guidelines,
     LLMJudge,
     metric,
+)
+from ragrank.metric._heuristic.semantic import (
+    SemanticSimilarity,
+    semantic_similarity,
 )
 from ragrank.metric._heuristic.text import (
     ExactMatch,
@@ -36,6 +49,10 @@ from ragrank.metric._heuristic.text import (
 from ragrank.metric._response_related.conciseness import (
     ResponseConciseness,
     response_conciseness,
+)
+from ragrank.metric._response_related.correctness import (
+    Correctness,
+    correctness,
 )
 from ragrank.metric._response_related.relevancy import (
     ResponseRelevancy,
@@ -66,10 +83,10 @@ from ragrank.metric.base import (
 )
 
 #: The three metrics that between them localise most RAG failures:
-#: bad retrieval, unused context, and an answer that misses the point.
+#: bad retrieval, an ungrounded answer, and one that misses the point.
 RAG_TRIAD = [
     context_relevancy,
-    context_utilization,
+    faithfulness,
     response_relevancy,
 ]
 
@@ -95,10 +112,15 @@ __all__ = [
     "ResponseConciseness",
     "ContextRelevancy",
     "ContextUtilization",
+    "ClaimMetric",
+    "Faithfulness",
+    "Correctness",
     "response_relevancy",
     "response_conciseness",
     "context_relevancy",
     "context_utilization",
+    "faithfulness",
+    "correctness",
     # heuristic, no llm
     "ExactMatch",
     "StringPresence",
@@ -106,12 +128,14 @@ __all__ = [
     "TokenF1",
     "RougeL",
     "JsonValid",
+    "SemanticSimilarity",
     "exact_match",
     "string_presence",
     "levenshtein_ratio",
     "token_f1",
     "rouge_l",
     "json_valid",
+    "semantic_similarity",
     # retrieval, no llm
     "RankingMetric",
     "HitRate",
@@ -130,6 +154,8 @@ __all__ = [
     "metric",
     "FunctionMetric",
     "LLMJudge",
+    "Jury",
+    "Pairwise",
     "Guidelines",
     "CustomMetric",
     "CustomInstruct",

@@ -87,17 +87,22 @@ def test_evaluate_defaults_to_response_relevancy() -> None:
 
 
 def test_run_metrics_is_usable_directly() -> None:
-    """The runner is public and works without evaluate()."""
+    """The runner is public and works without evaluate().
+
+    It returns (results, usage) -- the usage half was added when token
+    accounting landed, which is a breaking change to this signature.
+    """
     dataset = Dataset(
         question=["q"], context=[["c"]], response=["r"]
     )
-    results = run_metrics(
+    results, usage = run_metrics(
         dataset,
         [response_relevancy],
         llm=FakeLLM(responses=["0.5"]),
         config=SERIAL,
     )
     assert results[0][0].score == 0.5
+    assert usage.calls == 1
 
 
 def test_progress_bar_path_runs() -> None:

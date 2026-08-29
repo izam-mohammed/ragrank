@@ -29,6 +29,9 @@ all = [
     "datasets>=2.18.0",
 ]
 
+[project.scripts]
+ragrank = "ragrank.cli:main"
+
 [project.urls]
 Repository = "https://github.com/Auto-Playground/ragrank"
 

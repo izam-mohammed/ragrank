@@ -11,15 +11,31 @@ from __future__ import annotations
 import logging
 from collections.abc import Iterable, Iterator
 from concurrent.futures import ThreadPoolExecutor
+from statistics import fmean, median, mode, stdev
 from time import perf_counter, sleep
+from typing import Literal
 
 from tqdm import tqdm
 
 from ragrank.bridge.pydantic import BaseModel, ConfigDict, Field
 from ragrank.dataset import DataNode, Dataset
+from ragrank.evaluation.usage import (
+    TokenUsage,
+    TrackedLLM,
+    UsageTracker,
+)
 from ragrank.exceptions import ValidationError
-from ragrank.llm import BaseLLM
-from ragrank.metric import BaseMetric, MetricResult
+from ragrank.llm import BaseLLM, default_llm
+from ragrank.llm.cache import (
+    CacheBackend,
+    CachedLLM,
+    DiskCache,
+)
+from ragrank.metric import (
+    BaseMetric,
+    DeterministicMetric,
+    MetricResult,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -38,12 +54,24 @@ class RunConfig(BaseModel):
             doubling each attempt.
         show_progress (bool): Display a progress bar, if tqdm is
             installed.
-        raise_on_error (bool): Abort the run on the first failure rather
-            than recording it and carrying on. Off by default: one bad
-            row should not destroy a long, paid run.
+        raise_on_error (bool): Abort the run on the first failure
+            rather than recording it and carrying on. Off by default:
+            one bad row should not destroy a long, paid run.
+        repetitions (int): Score each row this many times and reduce.
+            Judges are not deterministic, and repeating makes that
+            visible instead of presenting one sample as the truth.
+        reducer (str): How to reduce repetitions: mean, median or mode.
+        cache (CacheBackend | bool | None): Reuse judge responses for
+            identical prompts. True uses an on-disk cache, or pass a
+            CacheBackend of your own. Judges run at temperature 0 over
+            a dataset that barely changes, so adding one metric would
+            otherwise re-ask the others the same questions and bill you
+            for it.
     """
 
-    model_config: ConfigDict = ConfigDict(frozen=True)
+    model_config: ConfigDict = ConfigDict(
+        frozen=True, arbitrary_types_allowed=True, extra="forbid"
+    )
 
     max_workers: int = Field(
         default=4, ge=1, description="Concurrent metric calls."
@@ -64,6 +92,19 @@ class RunConfig(BaseModel):
     raise_on_error: bool = Field(
         default=False,
         description="Abort the run on the first failure.",
+    )
+    repetitions: int = Field(
+        default=1,
+        ge=1,
+        description="Score each row this many times and reduce.",
+    )
+    reducer: Literal["mean", "median", "mode"] = Field(
+        default="mean",
+        description="How to reduce repetitions.",
+    )
+    cache: CacheBackend | bool | None = Field(
+        default=None,
+        description="Reuse judge responses for identical prompts.",
     )
 
 
@@ -113,6 +154,104 @@ def validate_dataset(
         )
 
 
+def _resolve_cache(
+    cache: CacheBackend | bool | None,
+) -> CacheBackend | None:
+    """Turn the RunConfig setting into a backend, or None.
+
+    Args:
+        cache (CacheBackend | bool | None): The configured value.
+
+    Returns:
+        CacheBackend | None: The backend to use, if any.
+    """
+    if cache is None or cache is False:
+        return None
+    if cache is True:
+        return DiskCache()
+    return cache
+
+
+def _with_tracking(
+    metric: BaseMetric,
+    llm: BaseLLM | None,
+    tracker: UsageTracker,
+    cache: CacheBackend | None,
+) -> BaseMetric:
+    """Bind a metric to a token-counting view of its language model.
+
+    Deterministic metrics make no model calls, so they are left alone
+    and a run using only those still needs no credentials.
+
+    Composite metrics such as `Jury` hold no model of their own and
+    forward through `with_llm`, so their members get the tracked model
+    too and their calls are counted like any other.
+
+    Args:
+        metric (BaseMetric): The metric to bind.
+        llm (BaseLLM | None): The LLM offered by the run.
+        tracker (UsageTracker): Where to record usage.
+        cache (CacheBackend | None): Cache to serve repeats from.
+
+    Returns:
+        BaseMetric: The metric, bound to a tracked model if it uses one.
+    """
+    if isinstance(metric, DeterministicMetric):
+        return metric
+
+    own = getattr(metric, "llm", None)
+    inner = own or llm or default_llm()
+    if cache is not None:
+        inner = CachedLLM(inner=inner, backend=cache)
+    wrapped = TrackedLLM(inner=inner, tracker=tracker)
+
+    if own is not None:
+        return metric.model_copy(update={"llm": wrapped})
+    return metric.with_llm(wrapped)
+
+
+def _score_repeatedly(
+    metric: BaseMetric, node: DataNode, config: RunConfig
+) -> MetricResult:
+    """Score a row `repetitions` times and reduce.
+
+    The spread across repetitions lands in `metadata`, so the variance
+    of the judge itself is visible rather than hidden behind a single
+    sample.
+
+    Args:
+        metric (BaseMetric): The metric to apply.
+        node (DataNode): The row to score.
+        config (RunConfig): The run policy.
+
+    Returns:
+        MetricResult: The reduced result.
+    """
+    if config.repetitions == 1:
+        return metric.score(node)
+
+    runs = [metric.score(node) for _ in range(config.repetitions)]
+    scores = [item.score for item in runs if item.score is not None]
+
+    if not scores:
+        return runs[0]
+
+    reducers = {"mean": fmean, "median": median, "mode": mode}
+    return runs[0].model_copy(
+        update={
+            "score": reducers[config.reducer](scores),
+            "error": None,
+            "metadata": {
+                **runs[0].metadata,
+                "repetitions": scores,
+                "repetition_spread": (
+                    stdev(scores) if len(scores) > 1 else 0.0
+                ),
+            },
+        }
+    )
+
+
 def _score_one(
     metric: BaseMetric, node: DataNode, config: RunConfig
 ) -> MetricResult:
@@ -135,7 +274,7 @@ def _score_one(
 
     for attempt in range(config.max_retries + 1):
         try:
-            return metric.score(node)
+            return _score_repeatedly(metric, node, config)
         except Exception as error:  # noqa: BLE001
             if config.raise_on_error:
                 raise
@@ -166,7 +305,7 @@ def run_metrics(
     *,
     llm: BaseLLM | None = None,
     config: RunConfig | None = None,
-) -> list[list[MetricResult]]:
+) -> tuple[list[list[MetricResult]], TokenUsage]:
     """Score every row of a dataset with every metric.
 
     Args:
@@ -177,12 +316,18 @@ def run_metrics(
         config (RunConfig | None): The run policy.
 
     Returns:
-        list[list[MetricResult]]: Results indexed by metric, then row.
+        tuple[list[list[MetricResult]], TokenUsage]: Results indexed by
+            metric then row, and the tokens the run consumed.
     """
     config = config or RunConfig()
     validate_dataset(dataset, metrics)
 
-    bound = [metric.with_llm(llm) for metric in metrics]
+    tracker = UsageTracker()
+    backend = _resolve_cache(config.cache)
+    bound = [
+        _with_tracking(metric, llm, tracker, backend)
+        for metric in metrics
+    ]
     nodes = list(dataset)
     jobs = [
         (metric_index, row_index)
@@ -215,7 +360,7 @@ def run_metrics(
         ) as pool:
             collect(pool.map(work, jobs))
 
-    return results  # type: ignore[return-value]
+    return results, tracker.usage()  # type: ignore[return-value]
 
 
 def _with_progress(
