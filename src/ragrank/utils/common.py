@@ -30,7 +30,9 @@ def eval_cell(cell_value: str | list[str]) -> str | list[str]:
     except (ValueError, SyntaxError):
         return cell_value
 
-    if not isinstance(parsed, list):
+    # Unreachable while the guard above requires [...] delimiters,
+    # but kept so loosening that guard cannot corrupt the data.
+    if not isinstance(parsed, list):  # pragma: no cover
         return cell_value
     return [
         item if isinstance(item, str) else str(item)

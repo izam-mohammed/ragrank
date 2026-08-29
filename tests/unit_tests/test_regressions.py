@@ -88,8 +88,13 @@ def test_defect_14_makefile_integration_dir_exists() -> None:
     assert (makefile.parent / target).is_dir(), target
 
 
-def test_defect_15_core_requires_only_pydantic() -> None:
-    """Unused and harmful packages must not be required dependencies."""
+def test_defect_15_no_unused_or_harmful_required_deps() -> None:
+    """Unused and harmful packages must not be required dependencies.
+
+    `pathlib` is the abandoned PyPI backport that shadows the stdlib
+    module; the rest were left over from removed telemetry and are
+    imported nowhere.
+    """
     pyproject = (
         Path(__file__).parents[2] / "pyproject.toml"
     ).read_text()
@@ -148,16 +153,24 @@ def test_defect_18_no_raise_from_exception_class() -> None:
     assert not offenders, offenders
 
 
-def test_core_imports_without_optional_dependencies() -> None:
-    """The core must import with pandas, tqdm and datasets blocked."""
+def test_core_imports_without_the_provider_extras() -> None:
+    """Only provider SDKs are optional.
+
+    pandas and tqdm are real dependencies -- `to_dataframe()`,
+    `from_csv()` and a progress bar are core to how the library is
+    used, and making people opt into them was a mistake. Extras cover
+    provider and framework SDKs only.
+    """
     script = (
         "import sys\n"
-        "for name in ('pandas', 'tqdm', 'datasets'):\n"
+        "for name in ('datasets', 'openai', 'langchain_core'):\n"
         "    sys.modules[name] = None\n"
         "import ragrank\n"
         "from ragrank.dataset import Dataset\n"
         "from ragrank.llm import FakeLLM\n"
         "from ragrank.metric import response_relevancy\n"
+        "print(Dataset(question=['q'], context=[['c']], "
+        "response=['r']).to_dataframe().shape)\n"
         "print('ok')\n"
     )
     completed = subprocess.run(

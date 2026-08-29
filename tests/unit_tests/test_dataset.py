@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import os
-from typing import Dict, List
 
 import pandas as pd
 import pytest
@@ -20,7 +19,7 @@ from tqdm import tqdm
 
 
 @pytest.fixture
-def valid_datanode() -> Dict[str, str | List[str]]:
+def valid_datanode() -> dict[str, str | list[str]]:
     """Fixture for a valid data node."""
 
     return {
@@ -31,7 +30,7 @@ def valid_datanode() -> Dict[str, str | List[str]]:
 
 
 @pytest.fixture
-def invalid_datanode() -> Dict[str, str | List[str]]:
+def invalid_datanode() -> dict[str, str | list[str]]:
     """Fixture for an invalid data node with a non-string question."""
 
     return {
@@ -42,7 +41,7 @@ def invalid_datanode() -> Dict[str, str | List[str]]:
 
 
 @pytest.fixture
-def valid_dataset() -> Dict[str, List[str] | List[List[str]]]:
+def valid_dataset() -> dict[str, list[str] | list[list[str]]]:
     """Fixture for a valid dataset."""
 
     return {
@@ -53,7 +52,7 @@ def valid_dataset() -> Dict[str, List[str] | List[List[str]]]:
 
 
 @pytest.fixture
-def invalid_dataset() -> Dict[str, List[str] | List[List[str]]]:
+def invalid_dataset() -> dict[str, list[str] | list[list[str]]]:
     """Fixture for an invalid dataset with a missing response."""
 
     return {
@@ -66,7 +65,7 @@ def invalid_dataset() -> Dict[str, List[str] | List[List[str]]]:
 
 
 def test_valid_datanode(
-    valid_datanode: Dict[str, str | List[str]],
+    valid_datanode: dict[str, str | list[str]],
 ) -> None:
     """Test case for a valid data node."""
 
@@ -77,7 +76,7 @@ def test_valid_datanode(
 
 
 def test_invalid_datanode(
-    invalid_datanode: Dict[str, str | List[str]],
+    invalid_datanode: dict[str, str | list[str]],
 ) -> None:
     """Test case for an invalid data node."""
 
@@ -86,7 +85,7 @@ def test_invalid_datanode(
 
 
 def test_valid_dataset(
-    valid_dataset: Dict[str, List[str] | List[List[str]]],
+    valid_dataset: dict[str, list[str] | list[list[str]]],
 ) -> None:
     """Test case for a valid dataset."""
 
@@ -97,7 +96,7 @@ def test_valid_dataset(
 
 
 def test_invalid_dataset(
-    invalid_dataset: Dict[str, List[str] | List[List[str]]],
+    invalid_dataset: dict[str, list[str] | list[list[str]]],
 ) -> None:
     """Test case for an invalid dataset."""
 
@@ -123,7 +122,7 @@ def test_empty_input_dataset() -> None:
 
 
 def test_datanode_to_dataset(
-    valid_datanode: Dict[str, str | List[str]],
+    valid_datanode: dict[str, str | list[str]],
 ) -> None:
     """Test case for converting a data node to a dataset."""
 
@@ -138,7 +137,7 @@ def test_datanode_to_dataset(
 
 
 def test_dataset_len(
-    valid_dataset: Dict[str, List[str] | List[List[str]]],
+    valid_dataset: dict[str, list[str] | list[list[str]]],
 ) -> None:
     """Test case for getting the length of a dataset."""
 
@@ -147,7 +146,7 @@ def test_dataset_len(
 
 
 def test_dataset_subscription(
-    valid_dataset: Dict[str, List[str] | List[List[str]]],
+    valid_dataset: dict[str, list[str] | list[list[str]]],
 ) -> None:
     """Test case for accessing elements of a dataset."""
 
@@ -164,7 +163,7 @@ def test_dataset_subscription(
 
 
 def test_dataset_append(
-    valid_datanode: Dict[str, str | List[str]],
+    valid_datanode: dict[str, str | list[str]],
 ) -> None:
     """Test case for appending a data node to a dataset."""
 
@@ -179,7 +178,7 @@ def test_dataset_append(
 
 
 def test_dataset_addition(
-    valid_dataset: Dict[str, List[str] | List[List[str]]],
+    valid_dataset: dict[str, list[str] | list[list[str]]],
 ) -> None:
     """Test case for adding two datasets."""
 
@@ -194,7 +193,7 @@ def test_dataset_addition(
 
 
 def test_dataset_with_progress(
-    valid_dataset: Dict[str, List[str] | List[List[str]]],
+    valid_dataset: dict[str, list[str] | list[list[str]]],
 ) -> None:
     """Test case for check the progress bar in the dataset iteration"""
 
@@ -206,7 +205,7 @@ def test_dataset_with_progress(
 
 
 def test_dataset_to_dict(
-    valid_dataset: Dict[str, List[str] | List[List[str]]],
+    valid_dataset: dict[str, list[str] | list[list[str]]],
 ) -> None:
     """Test case for check the to_dict function is working or not"""
     dataset = Dataset(**valid_dataset)
@@ -218,7 +217,7 @@ def test_dataset_to_dict(
 
 
 def test_dataset_to_dataframe(
-    valid_dataset: Dict[str, List[str] | List[List[str]]],
+    valid_dataset: dict[str, list[str] | list[list[str]]],
 ) -> None:
     """Test case for converting a dataset to a pandas DataFrame."""
 
@@ -234,7 +233,7 @@ def test_dataset_to_dataframe(
 
 
 def test_dataset_to_csv(
-    valid_dataset: Dict[str, List[str] | List[List[str]]],
+    valid_dataset: dict[str, list[str] | list[list[str]]],
 ) -> None:
     """Check the to_csv function with some data"""
     dataset = Dataset(**valid_dataset)
@@ -258,7 +257,7 @@ def test_dataset_to_csv(
 
 
 def test_from_dict_datanode(
-    valid_datanode: Dict[str, str | List[str]],
+    valid_datanode: dict[str, str | list[str]],
 ) -> None:
     """Test case for creating a data node from a dictionary."""
 
@@ -269,7 +268,7 @@ def test_from_dict_datanode(
 
 
 def test_from_dict_dataset(
-    valid_dataset: Dict[str, List[str] | List[List[str]]],
+    valid_dataset: dict[str, list[str] | list[list[str]]],
 ) -> None:
     """Test case for creating a dataset from a dictionary."""
 
@@ -281,7 +280,7 @@ def test_from_dict_dataset(
 
 @pytest.fixture
 def valid_dataframe(
-    valid_dataset: Dict[str, List[str] | List[List[str]]],
+    valid_dataset: dict[str, list[str] | list[list[str]]],
 ) -> pd.DataFrame:
     """Returns a valid dataframe"""
 
@@ -300,7 +299,7 @@ def test_from_dataframe(
 
 
 def test_from_csv(
-    valid_dataset: Dict[str, List[str] | List[List[str]]],
+    valid_dataset: dict[str, list[str] | list[list[str]]],
 ) -> None:
     """Check the from csv method"""
 

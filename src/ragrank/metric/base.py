@@ -12,7 +12,7 @@ from typing import Any
 from ragrank.bridge.pydantic import BaseModel, ConfigDict, Field
 from ragrank.dataset import DataNode
 from ragrank.llm import BaseLLM, default_llm
-from ragrank.metric.parse import parse_score
+from ragrank.metric.parse import ParsedScore, parse_score
 from ragrank.prompt import Prompt
 
 logger = logging.getLogger(__name__)
@@ -56,8 +56,12 @@ class BaseMetric(BaseModel, ABC):
         default=None,
         description="The language model associated with the metric.",
     )
-    prompt: Prompt = Field(
-        description="The prompt associated with the metric."
+    prompt: Prompt | None = Field(
+        default=None,
+        description=(
+            "The prompt associated with the metric. None for metrics "
+            "that need no language model."
+        ),
     )
     score_range: tuple[float, float] = Field(
         default=(0.0, 1.0),
@@ -101,7 +105,7 @@ class BaseMetric(BaseModel, ABC):
         Returns:
             set[str]: The required DataNode field names.
         """
-        return set(self.prompt.input_keys)
+        return set(self.prompt.input_keys) if self.prompt else set()
 
     def resolve_llm(self, llm: BaseLLM | None = None) -> BaseLLM:
         """Decide which language model this metric should use.
@@ -204,6 +208,43 @@ class LLMMetric(BaseMetric):
         """
         return data.model_dump()
 
+    def _judge(self, values: dict[str, Any]) -> ParsedScore:
+        """Prompt the judge and parse its answer, with retries.
+
+        Args:
+            values (dict[str, Any]): Values for the prompt's input keys.
+
+        Returns:
+            ParsedScore: The score, or None with an explanation.
+        """
+        llm = self.resolve_llm()
+        base_prompt = self.prompt.render(values)
+        prompt_text = base_prompt
+        parsed = ParsedScore(None, "the metric never ran")
+
+        for attempt in range(self.max_retries + 1):
+            response = llm.generate_text(prompt_text)
+            parsed = parse_score(
+                response.response,
+                score_range=self.score_range,
+                rubric=self.rubric,
+            )
+            if parsed.score is not None:
+                return parsed
+
+            logger.warning(
+                "%s: unusable answer on attempt %d/%d - %s",
+                self.name,
+                attempt + 1,
+                self.max_retries + 1,
+                parsed.error,
+            )
+            prompt_text = base_prompt + RETRY_INSTRUCTION.format(
+                error=parsed.error
+            )
+
+        return parsed
+
     def score(self, data: DataNode) -> MetricResult:
         """Score a single data node.
 
@@ -218,47 +259,12 @@ class LLMMetric(BaseMetric):
             MetricResult: The result of the metric calculation.
         """
         started = perf_counter()
-        llm = self.resolve_llm()
-        base_prompt = self.prompt.render(self.prompt_values(data))
-
-        prompt_text = base_prompt
-        error: str | None = None
-
-        for attempt in range(self.max_retries + 1):
-            response = llm.generate_text(prompt_text)
-            parsed = parse_score(
-                response.response,
-                score_range=self.score_range,
-                rubric=self.rubric,
-            )
-            if parsed.score is not None:
-                return MetricResult(
-                    datanode=data,
-                    metric=self,
-                    score=parsed.score,
-                    reason=self.reason(
-                        data, parsed.score, response.response
-                    ),
-                    process_time=perf_counter() - started,
-                )
-
-            error = parsed.error
-            logger.warning(
-                "%s: unusable answer on attempt %d/%d - %s",
-                self.name,
-                attempt + 1,
-                self.max_retries + 1,
-                error,
-            )
-            prompt_text = base_prompt + RETRY_INSTRUCTION.format(
-                error=error
-            )
-
+        parsed = self._judge(self.prompt_values(data))
         return MetricResult(
             datanode=data,
             metric=self,
-            score=None,
-            error=error,
+            score=parsed.score,
+            error=parsed.error if parsed.score is None else None,
             process_time=perf_counter() - started,
         )
 
@@ -276,6 +282,167 @@ class LLMMetric(BaseMetric):
             str | None: The explanation, if any.
         """
         return None
+
+
+class DeterministicMetric(BaseMetric):
+    """A metric computed in Python, with no language model involved.
+
+    These cost nothing, take microseconds and give the same answer every
+    time. Where one will do, it is a strictly better signal than a
+    judge: if retrieval is broken, `hit_rate=0.31` tells you more than
+    any LLM's opinion of your context, for free.
+    """
+
+    metric_type: MetricType = Field(
+        default=MetricType.NON_BINARY,
+        description="The type of the metric.",
+    )
+    prompt: Prompt | None = Field(
+        default=None,
+        description="Unused; kept for the base contract.",
+    )
+
+    @abstractmethod
+    def compute(self, data: DataNode) -> float | None:
+        """Compute the score for one row.
+
+        Returning None means "not applicable to this row" -- an honest
+        abstention rather than a fabricated zero.
+
+        Args:
+            data (DataNode): The row to score.
+
+        Returns:
+            float | None: The score, or None if not applicable.
+        """
+
+    def score(self, data: DataNode) -> MetricResult:
+        """Compute the score, timing it and bounds-checking the result.
+
+        Args:
+            data (DataNode): The input data to be used for scoring.
+
+        Returns:
+            MetricResult: The result of the metric calculation.
+        """
+        started = perf_counter()
+        value = self.compute(data)
+
+        if value is None:
+            return MetricResult(
+                datanode=data,
+                metric=self,
+                score=None,
+                error="the metric does not apply to this row",
+                process_time=perf_counter() - started,
+            )
+
+        low, high = self.score_range
+        if not low <= value <= high:
+            return MetricResult(
+                datanode=data,
+                metric=self,
+                score=None,
+                error=(
+                    f"score {value} is outside the valid range "
+                    f"[{low}, {high}]"
+                ),
+                process_time=perf_counter() - started,
+            )
+
+        return MetricResult(
+            datanode=data,
+            metric=self,
+            score=value,
+            process_time=perf_counter() - started,
+        )
+
+
+class ChunkwiseLLMMetric(LLMMetric):
+    """An LLM metric that judges each retrieved chunk separately.
+
+    Scoring a whole context list in one prompt hides the thing you most
+    want to know: one irrelevant chunk among nine good ones is invisible
+    in a single averaged verdict. This judges each chunk on its own and
+    reduces, keeping the per chunk scores in `metadata`.
+    """
+
+    def chunk_values(
+        self, data: DataNode, chunk: str
+    ) -> dict[str, Any]:
+        """Build the prompt values for one chunk.
+
+        Args:
+            data (DataNode): The row being scored.
+            chunk (str): The single context chunk to judge.
+
+        Returns:
+            dict[str, Any]: Values keyed by prompt input key.
+        """
+        return {**data.model_dump(), "context": chunk}
+
+    def reduce(self, scores: list[float]) -> float:
+        """Combine per chunk scores into the row's score.
+
+        Args:
+            scores (list[float]): The chunk scores that parsed.
+
+        Returns:
+            float: The reduced score.
+        """
+        return fmean(scores)
+
+    def score(self, data: DataNode) -> MetricResult:
+        """Judge every chunk, then reduce.
+
+        Args:
+            data (DataNode): The input data to be used for scoring.
+
+        Returns:
+            MetricResult: The reduced score, with per chunk detail in
+                `metadata["chunk_scores"]`.
+        """
+        started = perf_counter()
+
+        if not data.context:
+            return MetricResult(
+                datanode=data,
+                metric=self,
+                score=None,
+                error="no context to judge",
+                process_time=perf_counter() - started,
+            )
+
+        chunk_scores: list[float | None] = []
+        errors: list[str] = []
+        for chunk in data.context:
+            parsed = self._judge(self.chunk_values(data, chunk))
+            chunk_scores.append(parsed.score)
+            if parsed.error:
+                errors.append(parsed.error)
+
+        valid = [item for item in chunk_scores if item is not None]
+        metadata = {"chunk_scores": chunk_scores}
+
+        if not valid:
+            return MetricResult(
+                datanode=data,
+                metric=self,
+                score=None,
+                error=errors[0]
+                if errors
+                else "no chunk could be scored",
+                metadata=metadata,
+                process_time=perf_counter() - started,
+            )
+
+        return MetricResult(
+            datanode=data,
+            metric=self,
+            score=self.reduce(valid),
+            metadata=metadata,
+            process_time=perf_counter() - started,
+        )
 
 
 class MetricResult(BaseModel):
@@ -310,6 +477,14 @@ class MetricResult(BaseModel):
     error: str | None = Field(
         default=None,
         description="Why no score was produced, when that happened.",
+    )
+    metadata: dict[str, Any] = Field(
+        default_factory=dict,
+        repr=False,
+        description=(
+            "Metric specific detail -- per chunk scores, the judge's "
+            "raw answer, intermediate values."
+        ),
     )
     process_time: float | None = Field(
         default=None,

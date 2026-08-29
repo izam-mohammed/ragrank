@@ -69,9 +69,7 @@ def evaluate(
         metrics = [metrics]
 
     started = perf_counter()
-    results = run_metrics(
-        data, metrics, llm=llm, config=run_config
-    )
+    results = run_metrics(data, metrics, llm=llm, config=run_config)
     elapsed = perf_counter() - started
 
     logger.info(

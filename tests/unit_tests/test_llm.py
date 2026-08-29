@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Dict, List
+from typing import Any
 
 import pytest
 from ragrank.llm import BaseLLM, LLMConfig, LLMResult, default_llm
@@ -17,7 +17,7 @@ def base_llm() -> BaseLLM:
 
 
 @pytest.fixture
-def llm_config_valid_dict() -> Dict[str, float | List[str]]:
+def llm_config_valid_dict() -> dict[str, float | list[str]]:
     """Fixture to return a valid LLMConfig dictionary."""
 
     return {
@@ -30,7 +30,7 @@ def llm_config_valid_dict() -> Dict[str, float | List[str]]:
 
 
 @pytest.fixture
-def llm_config_invalid_dict() -> Dict[str, float | List[str]]:
+def llm_config_invalid_dict() -> dict[str, float | list[str]]:
     """Fixture to return an invalid LLMConfig dictionary
     with incorrect values."""
 
@@ -44,7 +44,7 @@ def llm_config_invalid_dict() -> Dict[str, float | List[str]]:
 
 
 @pytest.fixture
-def llm_config_invalid_type_dict() -> Dict[str, Any]:
+def llm_config_invalid_type_dict() -> dict[str, Any]:
     """Fixture to return an invalid LLMConfig dictionary
     with incorrect data types."""
 
@@ -59,7 +59,7 @@ def llm_config_invalid_type_dict() -> Dict[str, Any]:
 
 @pytest.fixture
 def llm_result_valid_dict() -> (
-    Dict[str, str | float | BaseLLM | LLMConfig]
+    dict[str, str | float | BaseLLM | LLMConfig]
 ):
     """Fixture to return a valid LLMResult dictionary."""
 
@@ -74,7 +74,7 @@ def llm_result_valid_dict() -> (
 
 
 @pytest.fixture
-def llm_result_invalid_dict() -> Dict[str, int | str]:
+def llm_result_invalid_dict() -> dict[str, int | str]:
     """Fixture to return an invalid LLMResult dictionary
     with incorrect values or types."""
 
@@ -89,7 +89,7 @@ def llm_result_invalid_dict() -> Dict[str, int | str]:
 
 
 def test_llm_config_initialization_valid(
-    llm_config_valid_dict: Dict[str, float | List[str]],
+    llm_config_valid_dict: dict[str, float | list[str]],
 ) -> None:
     """Test case to validate the initialization of LLMConfig
     with valid parameters."""
@@ -108,8 +108,8 @@ def test_llm_config_initialization_valid(
 
 
 def test_llm_config_initialization_invalid(
-    llm_config_invalid_dict: Dict[str, float | List[str]],
-    llm_config_invalid_type_dict: Dict[str, Any],
+    llm_config_invalid_dict: dict[str, float | list[str]],
+    llm_config_invalid_type_dict: dict[str, Any],
 ) -> None:
     """Test case to validate the initializationof LLMConfig
     with invalid parameters."""
@@ -139,7 +139,7 @@ def test_llm_config_default_check() -> None:
 
 
 def test_llm_result_initialization_valid(
-    llm_result_valid_dict: Dict[
+    llm_result_valid_dict: dict[
         str, str | float | BaseLLM | LLMConfig
     ],
 ) -> None:
@@ -168,7 +168,7 @@ def test_llm_result_initialization_valid(
 
 
 def test_llm_result_initialization_invalid(
-    llm_result_invalid_dict: Dict[str, int | str],
+    llm_result_invalid_dict: dict[str, int | str],
 ) -> None:
     """Test case to validate the initialization of LLMResult
     with invalid parameters."""
@@ -201,7 +201,7 @@ def test_llm_result_default_check() -> None:
 
 def test_base_llm_set_config(
     base_llm: BaseLLM,
-    llm_config_valid_dict: Dict[str, float | List[str]],
+    llm_config_valid_dict: dict[str, float | list[str]],
 ) -> None:
     """Test case to set configuration for BaseLLM."""
 

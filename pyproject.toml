@@ -10,19 +10,22 @@ keywords = ["rag", "evaluation", "llmops"]
 dependencies = [
     "pydantic>=2.6.3",
     "typing-extensions>=4.9.0",
-]
-
-[project.optional-dependencies]
-pandas = ["pandas>=2.2.1"]
-progress = ["tqdm>=4.66.2"]
-openai = ["openai>=1.14.2"]
-hf = ["datasets>=2.18.0"]
-langchain = ["langchain-core>=0.1.32"]
-llama-index = ["llama-index>=0.10.20"]
-all = [
     "pandas>=2.2.1",
     "tqdm>=4.66.2",
+]
+
+# Extras are for provider and framework SDKs only -- things that are
+# heavy, that conflict with each other, or that only some users need.
+# Anything the core API touches belongs in `dependencies` above.
+[project.optional-dependencies]
+openai = ["openai>=1.14.2"]
+langchain = ["langchain-core>=0.1.32"]
+llama-index = ["llama-index>=0.10.20"]
+hf = ["datasets>=2.18.0"]
+all = [
     "openai>=1.14.2",
+    "langchain-core>=0.1.32",
+    "llama-index>=0.10.20",
     "datasets>=2.18.0",
 ]
 
@@ -151,3 +154,16 @@ preview = true
 
 [tool.ruff.lint.per-file-ignores]
 "**/{tests}/*" = ["S101"]
+
+[tool.coverage.run]
+source = ["src/ragrank"]
+omit = ["*/_version.py"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "raise NotImplementedError",
+    "if TYPE_CHECKING:",
+    "@abstractmethod",
+    "\\.\\.\\.",
+]

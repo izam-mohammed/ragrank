@@ -13,12 +13,13 @@ from collections.abc import Iterable, Iterator
 from concurrent.futures import ThreadPoolExecutor
 from time import perf_counter, sleep
 
+from tqdm import tqdm
+
 from ragrank.bridge.pydantic import BaseModel, ConfigDict, Field
 from ragrank.dataset import DataNode, Dataset
 from ragrank.exceptions import ValidationError
 from ragrank.llm import BaseLLM
 from ragrank.metric import BaseMetric, MetricResult
-from ragrank.utils.optional import is_available
 
 logger = logging.getLogger(__name__)
 
@@ -48,10 +49,14 @@ class RunConfig(BaseModel):
         default=4, ge=1, description="Concurrent metric calls."
     )
     max_retries: int = Field(
-        default=2, ge=0, description="Retries after a failing LLM call."
+        default=2,
+        ge=0,
+        description="Retries after a failing LLM call.",
     )
     backoff: float = Field(
-        default=0.5, ge=0.0, description="Initial retry delay, seconds."
+        default=0.5,
+        ge=0.0,
+        description="Initial retry delay, seconds.",
     )
     show_progress: bool = Field(
         default=True, description="Display a progress bar."
@@ -77,17 +82,34 @@ def validate_dataset(
     if not len(dataset):
         raise ValidationError("The dataset is empty.")
 
-    available = set(DataNode.model_fields)
-    problems = [
-        f"{metric.name!r} needs {sorted(missing)}"
-        for metric in metrics
-        if (missing := metric.required_columns - available)
-    ]
+    known = set(DataNode.model_fields)
+    # An optional column exists on the model but may hold no data.
+    populated = {
+        name
+        for name in known
+        if getattr(dataset, name, None) is not None
+    }
+
+    problems = []
+    for metric in metrics:
+        unknown = metric.required_columns - known
+        if unknown:
+            problems.append(
+                f"{metric.name!r} needs unknown field(s) {sorted(unknown)}"
+            )
+            continue
+        empty = metric.required_columns - populated
+        if empty:
+            problems.append(
+                f"{metric.name!r} needs {sorted(empty)}, "
+                "which the dataset does not provide"
+            )
+
     if problems:
         raise ValidationError(
             "The dataset cannot satisfy every metric: "
             + "; ".join(problems)
-            + f". Available fields are {sorted(available)}."
+            + f". Available fields are {sorted(populated)}."
         )
 
 
@@ -199,11 +221,9 @@ def run_metrics(
 def _with_progress(
     iterable: Iterable[Job], *, total: int, enabled: bool
 ) -> Iterator[Job]:
-    """Wrap an iterable in a progress bar when tqdm is available."""
-    if not enabled or not is_available("tqdm"):
+    """Wrap an iterable in a progress bar unless it is switched off."""
+    if not enabled:
         return iter(iterable)
-
-    from tqdm import tqdm
 
     return tqdm(
         iterable,

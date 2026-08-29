@@ -32,7 +32,7 @@ logging.basicConfig(
 
 
 def benchmark(
-    metrics: List[BaseMetric] | BaseMetric | None = None,
+    metrics: list[BaseMetric] | BaseMetric | None = None,
     data: Dataset | None = None,
 ) -> None:
     """Check the benchmarks of the metrics"""

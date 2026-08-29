@@ -2,7 +2,6 @@
 
 import logging
 from time import time
-from typing import List
 
 import pytest
 from ragrank import evaluate
@@ -46,7 +45,7 @@ def sample_dataset() -> Dataset:
 
 
 @pytest.fixture
-def metrics() -> List[BaseMetric]:
+def metrics() -> list[BaseMetric]:
     """List of metrics"""
 
     return [
@@ -59,7 +58,7 @@ def metrics() -> List[BaseMetric]:
 
 @pytest.mark.openai
 def test_metrics(
-    metrics: List[BaseMetric], sample_dataset: Dataset
+    metrics: list[BaseMetric], sample_dataset: Dataset
 ) -> None:
     """Test the dataset with each metric."""
 
@@ -67,9 +66,7 @@ def test_metrics(
     for metric in metrics:
         start = time()
         try:
-            result = evaluate(
-                data=sample_dataset, metrics=[metric]
-            )
+            result = evaluate(data=sample_dataset, metrics=[metric])
             logger.info(f"result - {result}")
         except Exception as e:  # noqa: BLE001
             logger.error(

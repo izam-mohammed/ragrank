@@ -5,13 +5,12 @@ from __future__ import annotations
 import logging
 from collections.abc import Iterator
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import Any, ClassVar
+
+from pandas import DataFrame
+from tqdm import tqdm
 
 from ragrank.bridge.pydantic import BaseModel, Field, model_validator
-from ragrank.utils.optional import is_available, require
-
-if TYPE_CHECKING:
-    from pandas import DataFrame
 
 DATANODE_DICT_TYPE = dict[str, list[str] | str]
 DATASET_DICT_TYPE = dict[str, list[str] | list[list[str]]]
@@ -28,6 +27,14 @@ class DataNode(BaseModel):
         context (list[str]): The context or background
             nformation related to the question.
         response (str): The response or answer to the question.
+        reference (str | None): The ground truth answer, when one is
+            known. Metrics that measure correctness need it; metrics
+            that are reference-free ignore it.
+        retrieved_ids (list[str] | None): Identifiers of the documents
+            the retriever returned, in rank order.
+        reference_ids (list[str] | None): Identifiers of the documents
+            that *should* have been retrieved. With `retrieved_ids`
+            this enables the ranking metrics, which cost no LLM calls.
     """
 
     question: str = Field(
@@ -39,6 +46,18 @@ class DataNode(BaseModel):
     response: str = Field(
         description="The response or answer to the question"
     )
+    reference: str | None = Field(
+        default=None,
+        description="The ground truth answer, when one is known",
+    )
+    retrieved_ids: list[str] | None = Field(
+        default=None,
+        description="Ids of the retrieved documents, in rank order",
+    )
+    reference_ids: list[str] | None = Field(
+        default=None,
+        description="Ids of the documents that should be retrieved",
+    )
 
     def to_dataset(self) -> Dataset:
         """
@@ -47,11 +66,12 @@ class DataNode(BaseModel):
         Returns:
             Dataset: A Dataset instance containing the current data node.
         """
-        dataset = Dataset(
-            question=[self.question],
-            context=[self.context],
-            response=[self.response],
-        )
+        dataset = Dataset(**{
+            field: [value]
+            for field, value in self.model_dump(
+                exclude_none=True
+            ).items()
+        })
         logger.info("DataNode converted to Dataset succesfully !")
         return dataset
 
@@ -65,12 +85,7 @@ class DataNode(BaseModel):
         Returns:
             Dataset: The concatenated dataset.
         """
-        combined_dataset = Dataset(
-            question=[self.question, other.question],
-            context=[self.context, other.context],
-            response=[self.response, other.response],
-        )
-        return combined_dataset
+        return self.to_dataset() + other.to_dataset()
 
 
 class Dataset(BaseModel):
@@ -84,6 +99,9 @@ class Dataset(BaseModel):
             each represented as a list of strings.
         response (list[str]): A list of responses
             corresponding to the questions.
+        reference (list[str] | None): Ground truth answers, if known.
+        retrieved_ids (list[list[str]] | None): Retrieved document ids.
+        reference_ids (list[list[str]] | None): Expected document ids.
     """
 
     question: list[str] = Field(
@@ -94,6 +112,21 @@ class Dataset(BaseModel):
     )
     response: list[str] = Field(
         description="A list of responses corresponding to the questions"
+    )
+    reference: list[str] | None = Field(
+        default=None, description="Ground truth answers, if known"
+    )
+    retrieved_ids: list[list[str]] | None = Field(
+        default=None, description="Retrieved document ids"
+    )
+    reference_ids: list[list[str]] | None = Field(
+        default=None, description="Expected document ids"
+    )
+
+    OPTIONAL_FIELDS: ClassVar[tuple[str, ...]] = (
+        "reference",
+        "retrieved_ids",
+        "reference_ids",
     )
 
     @model_validator(mode="after")
@@ -110,13 +143,18 @@ class Dataset(BaseModel):
             "context": len(self.context),
             "response": len(self.response),
         }
+        for name in self.OPTIONAL_FIELDS:
+            value = getattr(self, name)
+            if value is not None:
+                lengths[name] = len(value)
+
         if len(set(lengths.values())) != 1:
             detail = ", ".join(
                 f"{name}={size}" for name, size in lengths.items()
             )
             raise ValueError(
-                "The number of datapoints in question, context and "
-                "response should be equal. \n"
+                "Every column of a dataset must have the same number "
+                "of datapoints. \n"
                 f"Got {detail}. Ensure that all lists contain the "
                 "same number of datapoints."
             )
@@ -142,11 +180,16 @@ class Dataset(BaseModel):
         Returns:
             dataNode: The question, context, and response of the data point.
         """
-        return DataNode(
-            question=self.question[index],
-            context=self.context[index],
-            response=self.response[index],
-        )
+        fields: dict[str, Any] = {
+            "question": self.question[index],
+            "context": self.context[index],
+            "response": self.response[index],
+        }
+        for name in self.OPTIONAL_FIELDS:
+            value = getattr(self, name)
+            if value is not None:
+                fields[name] = value[index]
+        return DataNode(**fields)
 
     def __iter__(self) -> Iterator[DataNode]:
         """
@@ -168,6 +211,10 @@ class Dataset(BaseModel):
         self.question.append(data_node.question)
         self.context.append(data_node.context)
         self.response.append(data_node.response)
+        for name in self.OPTIONAL_FIELDS:
+            column = getattr(self, name)
+            if column is not None:
+                column.append(getattr(data_node, name))
 
     def __add__(self, other: Dataset) -> Dataset:
         """
@@ -179,19 +226,22 @@ class Dataset(BaseModel):
         Returns:
             Dataset: The concatenated dataset.
         """
-        combined_dataset = Dataset(
-            question=self.question + other.question,
-            context=self.context + other.context,
-            response=self.response + other.response,
-        )
-        return combined_dataset
+        fields: dict[str, Any] = {
+            "question": self.question + other.question,
+            "context": self.context + other.context,
+            "response": self.response + other.response,
+        }
+        for name in self.OPTIONAL_FIELDS:
+            mine, theirs = getattr(self, name), getattr(other, name)
+            if mine is not None and theirs is not None:
+                fields[name] = mine + theirs
+        return Dataset(**fields)
 
     def with_progress(
         self, purpose: str = "Iterating"
     ) -> Iterator[DataNode]:
         """
-        Return an iterator over the dataset, with a progress bar if
-        `tqdm` is installed.
+        Return an iterator over the dataset, with a progress bar.
 
         Args:
             purpose (str): The purpose for iterating over the dataset.
@@ -199,11 +249,6 @@ class Dataset(BaseModel):
         Returns:
             Iterator[DataNode]: An iterator over the data nodes.
         """
-        if not is_available("tqdm"):
-            return iter(self)
-
-        from tqdm import tqdm
-
         return tqdm(
             self,
             ncols=100,
@@ -225,7 +270,7 @@ class Dataset(BaseModel):
         Returns:
             dict: data representation
         """
-        return self.model_dump()
+        return self.model_dump(exclude_none=True)
 
     def to_dataframe(self) -> DataFrame:
         """Return a pandas dataframe of the data
@@ -236,8 +281,7 @@ class Dataset(BaseModel):
         Returns:
             DataFrame: data representation
         """
-        pd = require("pandas", "pandas")
-        return pd.DataFrame(self.to_dict())
+        return DataFrame(self.to_dict())
 
     def to_csv(self, path: str | Path, **kwargs: Any) -> None:  # noqa: ANN401
         """Save the data as a csv file

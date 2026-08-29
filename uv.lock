@@ -3019,17 +3019,19 @@ wheels = [
 name = "ragrank"
 source = { editable = "." }
 dependencies = [
+    { name = "pandas", version = "2.3.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
+    { name = "pandas", version = "3.0.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "pydantic" },
+    { name = "tqdm" },
     { name = "typing-extensions" },
 ]
 
 [package.optional-dependencies]
 all = [
     { name = "datasets" },
+    { name = "langchain-core" },
+    { name = "llama-index" },
     { name = "openai" },
-    { name = "pandas", version = "2.3.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
-    { name = "pandas", version = "3.0.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
-    { name = "tqdm" },
 ]
 hf = [
     { name = "datasets" },
@@ -3042,13 +3044,6 @@ llama-index = [
 ]
 openai = [
     { name = "openai" },
-]
-pandas = [
-    { name = "pandas", version = "2.3.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
-    { name = "pandas", version = "3.0.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
-]
-progress = [
-    { name = "tqdm" },
 ]
 
 [package.dev-dependencies]
@@ -3092,18 +3087,18 @@ docs = [
 requires-dist = [
     { name = "datasets", marker = "extra == 'all'", specifier = ">=2.18.0" },
     { name = "datasets", marker = "extra == 'hf'", specifier = ">=2.18.0" },
+    { name = "langchain-core", marker = "extra == 'all'", specifier = ">=0.1.32" },
     { name = "langchain-core", marker = "extra == 'langchain'", specifier = ">=0.1.32" },
+    { name = "llama-index", marker = "extra == 'all'", specifier = ">=0.10.20" },
     { name = "llama-index", marker = "extra == 'llama-index'", specifier = ">=0.10.20" },
     { name = "openai", marker = "extra == 'all'", specifier = ">=1.14.2" },
     { name = "openai", marker = "extra == 'openai'", specifier = ">=1.14.2" },
-    { name = "pandas", marker = "extra == 'all'", specifier = ">=2.2.1" },
-    { name = "pandas", marker = "extra == 'pandas'", specifier = ">=2.2.1" },
+    { name = "pandas", specifier = ">=2.2.1" },
     { name = "pydantic", specifier = ">=2.6.3" },
-    { name = "tqdm", marker = "extra == 'all'", specifier = ">=4.66.2" },
-    { name = "tqdm", marker = "extra == 'progress'", specifier = ">=4.66.2" },
+    { name = "tqdm", specifier = ">=4.66.2" },
     { name = "typing-extensions", specifier = ">=4.9.0" },
 ]
-provides-extras = ["all", "hf", "langchain", "llama-index", "openai", "pandas", "progress"]
+provides-extras = ["all", "hf", "langchain", "llama-index", "openai"]
 
 [package.metadata.requires-dev]
 dev = [

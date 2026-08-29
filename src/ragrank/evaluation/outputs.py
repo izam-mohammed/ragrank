@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import json
 from statistics import fmean, stdev
-from typing import TYPE_CHECKING, Any
+from typing import Any
+
+from pandas import DataFrame
 
 from ragrank.bridge.pydantic import (
     BaseModel,
@@ -16,10 +18,6 @@ from ragrank.dataset import Dataset
 from ragrank.dataset.reader import RAGRANK_DICT_TYPE
 from ragrank.llm import BaseLLM
 from ragrank.metric import BaseMetric, MetricResult
-from ragrank.utils.optional import require
-
-if TYPE_CHECKING:
-    from pandas import DataFrame
 
 
 class MetricSummary(BaseModel):
@@ -131,7 +129,9 @@ class EvalResult(BaseModel):
                 where the metric has a threshold, a pass rate.
         """
         summaries = []
-        for metric, row in zip(self.metrics, self.scores, strict=False):
+        for metric, row in zip(
+            self.metrics, self.scores, strict=False
+        ):
             valid = [score for score in row if score is not None]
             value = metric.aggregate(valid)
 
@@ -188,7 +188,10 @@ class EvalResult(BaseModel):
             int: The number of unscored pairs.
         """
         return sum(
-            1 for row in self.scores for score in row if score is None
+            1
+            for row in self.scores
+            for score in row
+            if score is None
         )
 
     def to_dict(self) -> RAGRANK_DICT_TYPE:
@@ -199,7 +202,9 @@ class EvalResult(BaseModel):
             dict: A dict containing the evaluation results.
         """
         dict_data = self.dataset.to_dict()
-        for metric, row in zip(self.metrics, self.scores, strict=False):
+        for metric, row in zip(
+            self.metrics, self.scores, strict=False
+        ):
             dict_data[metric.name] = row
         return dict_data
 
@@ -210,8 +215,7 @@ class EvalResult(BaseModel):
         Returns:
             DataFrame: A DataFrame containing the evaluation results.
         """
-        pandas = require("pandas", "pandas")
-        return pandas.DataFrame(self.to_dict())
+        return DataFrame(self.to_dict())
 
     def to_json(self, **kwargs: Any) -> str:  # noqa: ANN401
         """Serialise the run, without needing pandas.
@@ -226,7 +230,9 @@ class EvalResult(BaseModel):
             "llm": self.llm.name,
             "response_time": self.response_time,
             "data": self.to_dict(),
-            "summary": [item.model_dump() for item in self.summary()],
+            "summary": [
+                item.model_dump() for item in self.summary()
+            ],
         }
         return json.dumps(payload, **kwargs)
 

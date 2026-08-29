@@ -3,18 +3,27 @@
 from __future__ import annotations
 
 from ragrank.bridge.pydantic import Field
-from ragrank.metric.base import LLMMetric, MetricType
+from ragrank.metric.base import ChunkwiseLLMMetric, MetricType
 from ragrank.prompt import Prompt
-from ragrank.prompt._prompts import CONTEXT_RELEVANCY_PROMPT
+from ragrank.prompt._prompts import (
+    CONTEXT_RELEVANCY_PROMPT,
+    CONTEXT_RELEVANCY_RUBRIC,
+)
 
 
-class ContextRelevancy(LLMMetric):
+class ContextRelevancy(ChunkwiseLLMMetric):
     """How relevant the retrieved context is to the question.
+
+    Each retrieved chunk is judged on its own and the verdicts are
+    averaged, so a single irrelevant chunk among several good ones is
+    visible in `metadata["chunk_scores"]` rather than being smoothed
+    away by one whole-list verdict.
 
     Attributes:
         metric_type (MetricType): The type of metric, which is non-binary.
         llm (BaseLLM | None): The language model used to judge.
         prompt (Prompt): The prompt used to elicit the score.
+        rubric (dict[str, float]): Choice labels the judge picks from.
     """
 
     metric_type: MetricType = Field(
@@ -24,6 +33,10 @@ class ContextRelevancy(LLMMetric):
     prompt: Prompt = Field(
         default=CONTEXT_RELEVANCY_PROMPT,
         description="The prompt provided for generating the response",
+    )
+    rubric: dict[str, float] | None = Field(
+        default_factory=lambda: dict(CONTEXT_RELEVANCY_RUBRIC),
+        description="Choice labels the judge picks from.",
     )
 
     @property

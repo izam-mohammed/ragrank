@@ -2,15 +2,13 @@
 
 from __future__ import annotations
 
-from typing import Dict, List
-
 import pytest
 from ragrank.prompt import Prompt
 
 
 @pytest.fixture
 def valid_prompt_dict() -> (
-    Dict[str, str | List[str] | List[Dict[str, str]]]
+    dict[str, str | list[str] | list[dict[str, str]]]
 ):
     """Fixture to provide a valid prompt dictionary."""
 
@@ -27,7 +25,7 @@ def valid_prompt_dict() -> (
 
 @pytest.fixture
 def invalid_prompt_empty_input_keys_dict() -> (
-    Dict[str, str | List[str] | List[Dict[str, str]]]
+    dict[str, str | list[str] | list[dict[str, str]]]
 ):
     """Fixture to provide a prompt dictionary with empty input keys."""
 
@@ -44,7 +42,7 @@ def invalid_prompt_empty_input_keys_dict() -> (
 
 @pytest.fixture
 def invalid_prompt_mismatched_keys_dict() -> (
-    Dict[str, str | List[str] | List[Dict[str, str]]]
+    dict[str, str | list[str] | list[dict[str, str]]]
 ):
     """Fixture to provide a prompt dictionary with mismatched keys."""
 
@@ -59,7 +57,7 @@ def invalid_prompt_mismatched_keys_dict() -> (
 
 @pytest.fixture
 def example_prompt_dict() -> (
-    Dict[str, str | List[str] | List[Dict[str, str]]]
+    dict[str, str | list[str] | list[dict[str, str]]]
 ):
     """Fixture to provide an example prompt dictionary."""
 
@@ -82,14 +80,14 @@ def example_prompt_dict() -> (
 
 
 def test_validate_prompt(
-    valid_prompt_dict: Dict[
-        str, str | List[str] | List[Dict[str, str]]
+    valid_prompt_dict: dict[
+        str, str | list[str] | list[dict[str, str]]
     ],
-    invalid_prompt_empty_input_keys_dict: Dict[
-        str, str | List[str] | List[Dict[str, str]]
+    invalid_prompt_empty_input_keys_dict: dict[
+        str, str | list[str] | list[dict[str, str]]
     ],
-    invalid_prompt_mismatched_keys_dict: Dict[
-        str, str | List[str] | List[Dict[str, str]]
+    invalid_prompt_mismatched_keys_dict: dict[
+        str, str | list[str] | list[dict[str, str]]
     ],
 ) -> None:
     """Test validation of prompts."""
@@ -104,8 +102,8 @@ def test_validate_prompt(
 
 
 def test_to_string(
-    example_prompt_dict: Dict[
-        str, str | List[str] | List[Dict[str, str]]
+    example_prompt_dict: dict[
+        str, str | list[str] | list[dict[str, str]]
     ],
 ) -> None:
     """Test conversion of prompt to string."""
@@ -124,8 +122,8 @@ def test_to_string(
 
 
 def test_get_examples(
-    example_prompt_dict: Dict[
-        str, str | List[str] | List[Dict[str, str]]
+    example_prompt_dict: dict[
+        str, str | list[str] | list[dict[str, str]]
     ],
 ) -> None:
     """Test retrieval of examples from prompt."""
