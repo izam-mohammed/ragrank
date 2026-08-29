@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from collections.abc import Callable, Iterator
 from itertools import cycle
+from threading import Lock
 
 from ragrank.bridge.pydantic import ConfigDict, Field, PrivateAttr
 from ragrank.llm.base import BaseLLM, LLMResult
@@ -19,6 +20,9 @@ class FakeLLM(BaseLLM):
     Attributes:
         responses (list[str]): Responses handed out in order. Once exhausted
             the list repeats, so a single-element script answers every call.
+            Which row receives which response is only deterministic when
+            the run is serial; use `response_fn` to key answers on the
+            prompt instead.
         response_fn (Callable[[str], str] | None): Takes precedence over
             `responses` when set; receives the prompt and returns the
             response.
@@ -47,6 +51,7 @@ class FakeLLM(BaseLLM):
 
     _cursor: Iterator[str] | None = PrivateAttr(default=None)
     _prompts: list[str] = PrivateAttr(default_factory=list)
+    _lock: Lock = PrivateAttr(default_factory=Lock)
 
     @property
     def name(self) -> str:
@@ -75,18 +80,20 @@ class FakeLLM(BaseLLM):
         Returns:
             LLMResult: The scripted result.
         """
-        self._prompts.append(text)
-
         if self.response_fn is not None:
+            with self._lock:
+                self._prompts.append(text)
             message = self.response_fn(text)
         else:
-            if self._cursor is None:
-                if not self.responses:
-                    raise ValueError(
-                        "FakeLLM needs at least one response."
-                    )
-                self._cursor = cycle(self.responses)
-            message = next(self._cursor)
+            with self._lock:
+                self._prompts.append(text)
+                if self._cursor is None:
+                    if not self.responses:
+                        raise ValueError(
+                            "FakeLLM needs at least one response."
+                        )
+                    self._cursor = cycle(self.responses)
+                message = next(self._cursor)
 
         return LLMResult(
             response=message,
