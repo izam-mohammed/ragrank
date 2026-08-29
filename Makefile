@@ -10,7 +10,7 @@ DOCS_DIR ?= docs
 TESTS_DIR ?= tests
 
 CORE_TEST_DIR ?= tests/unit_tests
-INTEGRATION_TEST_DIR ?= tests/integration_tests
+INTEGRATION_TEST_DIR ?= tests/integrations_tests
 
 PACKAGE_NAME ?= ragrank
 
