@@ -11,7 +11,7 @@ from ragrank.llm import BaseLLM, FakeLLM, LLMResult
 from ragrank.metric import (
     InstructConfig,
     MetricType,
-    context_relevancy,
+    response_conciseness,
     response_relevancy,
 )
 
@@ -156,19 +156,23 @@ def test_concurrency_matches_serial_results(
     serial = evaluate(
         dataset,
         llm=FakeLLM(response_fn=answer),
-        metrics=[response_relevancy, context_relevancy],
+        metrics=[response_relevancy, response_conciseness],
         run_config=SERIAL,
     )
     parallel = evaluate(
         dataset,
         llm=FakeLLM(response_fn=answer),
-        metrics=[response_relevancy, context_relevancy],
+        metrics=[response_relevancy, response_conciseness],
         run_config=RunConfig(show_progress=False, max_workers=4),
     )
-    assert serial.scores == parallel.scores == [
-        [0.1, 0.5, 0.9],
-        [0.1, 0.5, 0.9],
-    ]
+    assert (
+        serial.scores
+        == parallel.scores
+        == [
+            [0.1, 0.5, 0.9],
+            [0.1, 0.5, 0.9],
+        ]
+    )
 
 
 def test_empty_dataset_is_rejected_before_spending_tokens() -> None:
@@ -230,9 +234,7 @@ def test_threshold_gives_a_pass_fail_verdict(
     dataset: Dataset,
 ) -> None:
     """A score nobody can gate on is a score nobody acts on."""
-    strict = response_relevancy.model_copy(
-        update={"threshold": 0.8}
-    )
+    strict = response_relevancy.model_copy(update={"threshold": 0.8})
     lenient = response_relevancy.model_copy(
         update={"threshold": 0.1}
     )

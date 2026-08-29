@@ -91,39 +91,29 @@ RESPONSE_CONCISENESS_PROMPT = Prompt(
 
 CONTEXT_RELEVANCY_PROMPT = Prompt(
     name="Context Relevancy",
-    instructions="You are tasked with determining the relevancy of a context provided for a given question. Provide a score between 0 and 1, indicating how relevant the context is to the given question. You don't need to explain your score, just provide a single float value. Your response to this should be a number.",
+    instructions="You are judging whether a retrieved context passage is relevant to a question. Relevance means the passage contains information that helps answer the question. Ignore whether the passage is well written, and ignore any answer you might already know. Reply with exactly one letter and nothing else.\n(A) The passage directly answers the question, or contains the key facts needed to answer it.\n(B) The passage is on the same topic and contributes something partially useful, but does not contain what is needed to answer.\n(C) The passage is unrelated to the question, or merely mentions the topic without any useful information.",
     examples=[
         {
             "question": "What are some common interview questions for data science positions?",
-            "context": [
-                "I'm currently preparing for data science job interviews and I want to make sure I'm ready for common questions."
-                "I've already gone through some online resources, but I'm looking for more insights."
-            ],
-            "response": "Common interview questions for data science positions often include topics like machine learning algorithms, data cleaning techniques, and statistical analysis methods. You may also be asked to explain your past projects and how you handled specific challenges.",
-            "relevancy": 0.92,
+            "context": "Data science interviews typically cover machine learning algorithms, data cleaning techniques, and statistical analysis. Candidates are usually also asked to walk through a past project.",
+            "relevancy": "A",
         },
         {
-            "question": "What's the best restaurant in town?",
-            "context": [
-                "I'm planning a romantic dinner for my anniversary and I want to impress my partner with the perfect restaurant."
-                "I've been searching online for reviews, but I'm still unsure where to go."
-            ],
-            "response": "I don't know",
-            "relevancy": 0.05,
+            "question": "What are some common interview questions for data science positions?",
+            "context": "I'm currently preparing for data science job interviews and I want to make sure I'm ready. I've gone through some online resources already.",
+            "relevancy": "B",
         },
         {
             "question": "How do I implement gradient descent in Python?",
-            "context": [
-                "I'm currently studying optimization algorithms in machine learning and I want to understand how gradient descent works in Python."
-                "I've already reviewed the theory behind gradient descent and now I'm looking for practical examples."
-            ],
-            "response": "To implement gradient descent in Python, you can start by defining a cost function and its gradient. Then, initialize the parameters and update them iteratively using the gradient descent formula. Finally, monitor the convergence of the algorithm and adjust hyperparameters as needed.",
-            "relevancy": 0.96,
+            "context": "The restaurant on the corner serves an excellent seafood pasta, and the queue is usually shortest on weekday evenings.",
+            "relevancy": "C",
         },
     ],
-    input_keys=["question", "context", "response"],
+    input_keys=["question", "context"],
     output_key="relevancy",
 )
+
+CONTEXT_RELEVANCY_RUBRIC = {"A": 1.0, "B": 0.5, "C": 0.0}
 
 CONTEXT_UTILIZATION_PROMPT = Prompt(
     name="Context Utilization",
