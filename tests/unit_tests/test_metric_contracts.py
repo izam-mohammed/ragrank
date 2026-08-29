@@ -74,11 +74,16 @@ def test_judged_metrics_required_columns_are_real_fields(
 
 
 def test_rag_triad_is_the_three_diagnostic_metrics() -> None:
-    """The preset must stay meaningful."""
+    """One leg per failure mode: retrieval, grounding, relevance.
+
+    Faithfulness rather than context utilization, because "did the
+    model invent this?" localises a failure and "was the context used?"
+    does not.
+    """
     names = [item.name for item in RAG_TRIAD]
     assert names == [
         "Context Relevancy",
-        "Context Utilization",
+        "Faithfulness",
         "Response Relevancy",
     ]
 

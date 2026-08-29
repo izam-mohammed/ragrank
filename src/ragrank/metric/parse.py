@@ -7,6 +7,7 @@ either a number or an honest `None` -- it never raises.
 
 from __future__ import annotations
 
+import json
 import re
 from typing import NamedTuple
 
@@ -104,3 +105,61 @@ def _parse_number(
             f"score {value} is outside the valid range [{low}, {high}]",
         )
     return ParsedScore(value, None)
+
+
+_BULLET = re.compile(r"^\s*(?:[-*\u2022]|\d+[.)])\s*")
+
+
+def parse_list(text: str) -> list[str]:
+    """Extract a list of statements from an LLM response.
+
+    Models asked for a list answer with a JSON array, a numbered list,
+    a bulleted list, or bare lines, depending on the model and the day.
+    All four are accepted; anything unusable yields an empty list
+    rather than an exception.
+
+    Args:
+        text (str): The raw LLM response.
+
+    Returns:
+        list[str]: The extracted items, in order, without duplicates.
+    """
+    if not text:
+        return []
+
+    cleaned = _FENCE.sub("", text).strip()
+    if not cleaned:
+        return []
+
+    items = _from_json(cleaned)
+    if items is None:
+        items = [
+            _BULLET.sub("", line).strip().strip('"')
+            for line in cleaned.splitlines()
+        ]
+
+    seen: set[str] = set()
+    unique = []
+    for item in items:
+        stripped = item.strip()
+        if stripped and stripped.casefold() not in seen:
+            seen.add(stripped.casefold())
+            unique.append(stripped)
+    return unique
+
+
+def _from_json(text: str) -> list[str] | None:
+    """Try to read the response as a JSON array of strings."""
+    start, end = text.find("["), text.rfind("]")
+    if start == -1 or end <= start:
+        return None
+    try:
+        parsed = json.loads(text[start : end + 1])
+    except ValueError:
+        return None
+    if not isinstance(parsed, list):
+        return None
+    return [
+        item if isinstance(item, str) else str(item)
+        for item in parsed
+    ]

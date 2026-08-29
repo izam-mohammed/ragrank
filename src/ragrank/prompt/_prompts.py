@@ -155,3 +155,77 @@ CONTEXT_UTILIZATION_PROMPT = Prompt(
     input_keys=["question", "context", "response"],
     output_key="utilization",
 )
+
+
+CLAIM_EXTRACTION_PROMPT = Prompt(
+    name="Claim Extraction",
+    instructions="Break the text into its individual factual claims. Each claim must be a single, self-contained statement that could be checked on its own -- resolve pronouns and references so that no claim depends on reading the others. Ignore questions, opinions, greetings and filler. Reply with a JSON array of strings and nothing else. If the text makes no factual claims at all, reply with [].",
+    examples=[
+        {
+            "text": "The Eiffel Tower is in Paris and was completed in 1889. It is made of wrought iron.",
+            "claims": '["The Eiffel Tower is in Paris.", "The Eiffel Tower was completed in 1889.", "The Eiffel Tower is made of wrought iron."]',
+        },
+        {
+            "text": "I think that's a great question, thanks for asking!",
+            "claims": "[]",
+        },
+    ],
+    input_keys=["text"],
+    output_key="claims",
+)
+
+CLAIM_VERIFICATION_PROMPT = Prompt(
+    name="Claim Verification",
+    instructions="Decide whether the source text supports the claim. Judge only against the source -- ignore anything you happen to know yourself, and do not penalise a claim for being incomplete. Reply with exactly one letter and nothing else.\n(A) The source states or directly implies the claim.\n(B) The source neither supports nor contradicts the claim -- it simply does not say.\n(C) The source contradicts the claim.",
+    examples=[
+        {
+            "source": "The Eiffel Tower, completed in 1889, stands on the Champ de Mars in Paris.",
+            "claim": "The Eiffel Tower is in Paris.",
+            "verdict": "A",
+        },
+        {
+            "source": "The Eiffel Tower, completed in 1889, stands on the Champ de Mars in Paris.",
+            "claim": "The Eiffel Tower is repainted every seven years.",
+            "verdict": "B",
+        },
+        {
+            "source": "The Eiffel Tower was completed in 1889.",
+            "claim": "The Eiffel Tower was completed in 1920.",
+            "verdict": "C",
+        },
+    ],
+    input_keys=["source", "claim"],
+    output_key="verdict",
+)
+
+#: Supported claims count; unsupported and contradicted do not.
+CLAIM_VERIFICATION_RUBRIC = {"A": 1.0, "B": 0.0, "C": 0.0}
+
+CORRECTNESS_PROMPT = Prompt(
+    name="Correctness",
+    instructions="Compare the response to the reference answer and judge whether it is correct. Differences in wording, length, formatting or extra detail do not matter -- only whether the response conveys the same answer. Reply with exactly one letter and nothing else.\n(A) The response says the same thing as the reference, or contains it along with consistent extra detail.\n(B) The response is partly right -- it captures some of the reference but omits or garbles part of it.\n(C) The response disagrees with the reference, or fails to answer at all.",
+    examples=[
+        {
+            "question": "What is the capital of France?",
+            "reference": "Paris",
+            "response": "The capital of France is Paris.",
+            "verdict": "A",
+        },
+        {
+            "question": "Name the three primary colours.",
+            "reference": "Red, blue and yellow",
+            "response": "Red and blue.",
+            "verdict": "B",
+        },
+        {
+            "question": "What is the capital of France?",
+            "reference": "Paris",
+            "response": "I don't know.",
+            "verdict": "C",
+        },
+    ],
+    input_keys=["question", "reference", "response"],
+    output_key="verdict",
+)
+
+CORRECTNESS_RUBRIC = {"A": 1.0, "B": 0.5, "C": 0.0}
