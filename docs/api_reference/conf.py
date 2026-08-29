@@ -58,3 +58,7 @@ ogp_custom_meta_tags = [
 ]
 
 ogp_enable_meta_description = True
+
+# Render Attributes: as ivars rather than separate object
+# descriptions, which would duplicate the autodoc entries.
+napoleon_use_ivar = True

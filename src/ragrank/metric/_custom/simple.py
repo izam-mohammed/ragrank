@@ -1,10 +1,11 @@
 """Defining a metric without writing a class.
 
-Three ways in, in rough order of how much you need:
+Three ways in, in rough order of how much you need::
 
-    @metric(name="Has citation")          # any Python you like
+    @metric(name="Has citation")  # any Python you like
     def has_citation(response: str) -> bool:
         return "[" in response
+
 
     LLMJudge(name="Tone", instructions=..., rubric={"A": 1.0, "B": 0.0})
 

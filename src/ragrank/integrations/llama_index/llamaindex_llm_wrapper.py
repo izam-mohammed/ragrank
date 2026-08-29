@@ -32,9 +32,6 @@ class LlamaindexLLMWrapper(BaseLLM):
     Properties:
         name (str): Get the name of the Llamaindex LLM Wrapper.
         llm_name (str): Get the name of the wrapped Llamaindex LLM.
-
-    Methods:
-        generate_text(): Generate text using the Llamaindex LLM.
     """
 
     llm: cast(LlamaindexBaseLLM, Any) = Field(  # type: ignore

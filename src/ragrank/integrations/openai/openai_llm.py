@@ -26,9 +26,6 @@ class OpenaiLLM(BaseLLM):
     Attributes:
         model (str): The OpenAI model to use.
         system_message (str): The system message sent with each request.
-
-    Methods:
-        generate_text: Generates text using the OpenAI language model.
     """
 
     model: str = Field(

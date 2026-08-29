@@ -33,9 +33,6 @@ class LangchainLLMWrapper(BaseLLM):
     Properties:
         name (str): Get the name of the Langchain LLM Wrapper.
         llm_name (str): Get the name of the wrapped Langchain LLM.
-
-    Methods:
-        generate_text(): Generate text using the Langchain LLM.
     """
 
     llm: cast(LangchainBaseLanguageModel, Any) = Field(  # type: ignore

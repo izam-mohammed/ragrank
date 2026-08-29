@@ -23,21 +23,6 @@ class CustomMetric(BaseMetric, ABC):
     Attributes:
         llm (BaseLLM): The language model used to generate the response.
         prompt (Prompt): The prompt provided for generating the response.
-
-    Methods:
-        name(self) -> str:
-            Get the name for the metric.
-
-        score(self, data: DataNode) -> MetricResult:
-            Calculate the score for the custom metric based on
-                the provided data.
-
-        metric_score(self, data: DataNode) -> float:
-            Calculate the score for the custom metric based on
-                the provided data.
-
-        reason(self, data: DataNode, score: float) -> str | None:
-            Determine the reason for the given score.
     """
 
     metric_type: MetricType = Field(
