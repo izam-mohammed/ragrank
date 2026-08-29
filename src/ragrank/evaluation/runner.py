@@ -11,7 +11,9 @@ from __future__ import annotations
 import logging
 from collections.abc import Iterable, Iterator
 from concurrent.futures import ThreadPoolExecutor
+from statistics import fmean, median, mode, stdev
 from time import perf_counter, sleep
+from typing import Literal
 
 from tqdm import tqdm
 
@@ -48,13 +50,23 @@ class RunConfig(BaseModel):
             doubling each attempt.
         show_progress (bool): Display a progress bar, if tqdm is
             installed.
-        raise_on_error (bool): Abort the run on the first failure rather
-            than recording it and carrying on. Off by default: one bad
-            row should not destroy a long, paid run.
+        raise_on_error (bool): Abort the run on the first failure
+            rather than recording it and carrying on. Off by default:
+            one bad row should not destroy a long, paid run.
+        repetitions (int): Score each row this many times and reduce.
+            Judges are not deterministic, and repeating makes that
+            visible instead of presenting one sample as the truth.
+        reducer (str): How to reduce repetitions: mean, median or mode.
+        cache (CacheBackend | bool | None): Reuse judge responses for
+            identical prompts. True uses an on-disk cache, or pass a
+            CacheBackend of your own. Judges run at temperature 0 over
+            a dataset that barely changes, so adding one metric would
+            otherwise re-ask the others the same questions and bill you
+            for it.
     """
 
     model_config: ConfigDict = ConfigDict(
-        frozen=True, arbitrary_types_allowed=True
+        frozen=True, arbitrary_types_allowed=True, extra="forbid"
     )
 
     max_workers: int = Field(
@@ -77,12 +89,18 @@ class RunConfig(BaseModel):
         default=False,
         description="Abort the run on the first failure.",
     )
+    repetitions: int = Field(
+        default=1,
+        ge=1,
+        description="Score each row this many times and reduce.",
+    )
+    reducer: Literal["mean", "median", "mode"] = Field(
+        default="mean",
+        description="How to reduce repetitions.",
+    )
     cache: CacheBackend | bool | None = Field(
         default=None,
-        description=(
-            "Cache judge responses. True uses an on-disk cache, or "
-            "pass a CacheBackend of your own. None disables caching."
-        ),
+        description="Reuse judge responses for identical prompts.",
     )
 
 
@@ -181,6 +199,48 @@ def _with_tracking(
     )
 
 
+def _score_repeatedly(
+    metric: BaseMetric, node: DataNode, config: RunConfig
+) -> MetricResult:
+    """Score a row `repetitions` times and reduce.
+
+    The spread across repetitions lands in `metadata`, so the variance
+    of the judge itself is visible rather than hidden behind a single
+    sample.
+
+    Args:
+        metric (BaseMetric): The metric to apply.
+        node (DataNode): The row to score.
+        config (RunConfig): The run policy.
+
+    Returns:
+        MetricResult: The reduced result.
+    """
+    if config.repetitions == 1:
+        return metric.score(node)
+
+    runs = [metric.score(node) for _ in range(config.repetitions)]
+    scores = [item.score for item in runs if item.score is not None]
+
+    if not scores:
+        return runs[0]
+
+    reducers = {"mean": fmean, "median": median, "mode": mode}
+    return runs[0].model_copy(
+        update={
+            "score": reducers[config.reducer](scores),
+            "error": None,
+            "metadata": {
+                **runs[0].metadata,
+                "repetitions": scores,
+                "repetition_spread": (
+                    stdev(scores) if len(scores) > 1 else 0.0
+                ),
+            },
+        }
+    )
+
+
 def _score_one(
     metric: BaseMetric, node: DataNode, config: RunConfig
 ) -> MetricResult:
@@ -203,7 +263,7 @@ def _score_one(
 
     for attempt in range(config.max_retries + 1):
         try:
-            return metric.score(node)
+            return _score_repeatedly(metric, node, config)
         except Exception as error:  # noqa: BLE001
             if config.raise_on_error:
                 raise
