@@ -48,10 +48,14 @@ class RunConfig(BaseModel):
         default=4, ge=1, description="Concurrent metric calls."
     )
     max_retries: int = Field(
-        default=2, ge=0, description="Retries after a failing LLM call."
+        default=2,
+        ge=0,
+        description="Retries after a failing LLM call.",
     )
     backoff: float = Field(
-        default=0.5, ge=0.0, description="Initial retry delay, seconds."
+        default=0.5,
+        ge=0.0,
+        description="Initial retry delay, seconds.",
     )
     show_progress: bool = Field(
         default=True, description="Display a progress bar."
@@ -77,17 +81,34 @@ def validate_dataset(
     if not len(dataset):
         raise ValidationError("The dataset is empty.")
 
-    available = set(DataNode.model_fields)
-    problems = [
-        f"{metric.name!r} needs {sorted(missing)}"
-        for metric in metrics
-        if (missing := metric.required_columns - available)
-    ]
+    known = set(DataNode.model_fields)
+    # An optional column exists on the model but may hold no data.
+    populated = {
+        name
+        for name in known
+        if getattr(dataset, name, None) is not None
+    }
+
+    problems = []
+    for metric in metrics:
+        unknown = metric.required_columns - known
+        if unknown:
+            problems.append(
+                f"{metric.name!r} needs unknown field(s) {sorted(unknown)}"
+            )
+            continue
+        empty = metric.required_columns - populated
+        if empty:
+            problems.append(
+                f"{metric.name!r} needs {sorted(empty)}, "
+                "which the dataset does not provide"
+            )
+
     if problems:
         raise ValidationError(
             "The dataset cannot satisfy every metric: "
             + "; ".join(problems)
-            + f". Available fields are {sorted(available)}."
+            + f". Available fields are {sorted(populated)}."
         )
 
 
