@@ -21,7 +21,7 @@ except ModuleNotFoundError:
     raise ModuleNotFoundError(
         "Please install `langchain-core` module by \n"
         "`pip install langchain-core`"
-    ) from ModuleNotFoundError
+    ) from None
 
 
 class LangchainLLMWrapper(BaseLLM):
@@ -60,7 +60,7 @@ class LangchainLLMWrapper(BaseLLM):
                 "Example:\n\nfrom langchain_openai.llms import OpenAI\n"
                 "### set your openai key as environment variable\n"
                 "llm = LangchainLLMWrapper(langchain_llm=OpenAI())\n\n"
-            ) from TypeError
+            ) from None
         return v
 
     @property
@@ -94,9 +94,7 @@ class LangchainLLMWrapper(BaseLLM):
             self.llm.generate_prompt(prompts=[prompt])
         )
         message = langchain_result.generations[0][0].text
-        response_tokens = langchain_result.llm_output["token_usage"][
-            "completion_tokens"
-        ]
+        response_tokens = _completion_tokens(langchain_result)
         response_time = time() - start_time
 
         result = LLMResult(
@@ -127,3 +125,21 @@ class RagrankPromptValue(PromptValue):
         """Convert the prompt to a string."""
 
         return self.prompt_str
+
+
+def _completion_tokens(result: LangchainLLMResult) -> int | None:
+    """Read the completion token count, if this model reports one.
+
+    Only some LangChain models populate `llm_output["token_usage"]`;
+    local models served through Ollama and friends leave `llm_output`
+    empty. Reading it unconditionally raised KeyError for everyone else.
+
+    Args:
+        result (LangchainLLMResult): The LangChain generation result.
+
+    Returns:
+        int | None: The completion token count, or None if unreported.
+    """
+    usage = (result.llm_output or {}).get("token_usage") or {}
+    tokens = usage.get("completion_tokens")
+    return tokens if isinstance(tokens, int) else None

@@ -4,11 +4,11 @@ from __future__ import annotations
 
 import logging
 from abc import ABC, abstractmethod
-from time import time
+from time import perf_counter
 
 from ragrank.bridge.pydantic import Field
 from ragrank.dataset import DataNode
-from ragrank.llm import BaseLLM, default_llm
+from ragrank.llm import BaseLLM
 from ragrank.metric.base import BaseMetric, MetricResult
 from ragrank.prompt import Prompt
 from ragrank.prompt._prompts import NONE_PROMPT
@@ -40,8 +40,8 @@ class CustomMetric(BaseMetric, ABC):
             Determine the reason for the given score.
     """
 
-    llm: BaseLLM = Field(
-        default_factory=lambda: default_llm(),
+    llm: BaseLLM | None = Field(
+        default=None,
         description="The language model used to generate the response.",
     )
     prompt: Prompt = Field(
@@ -79,25 +79,41 @@ class CustomMetric(BaseMetric, ABC):
             MetricResult: The result of the metric calculation.
         """
 
-        tm = time()
-        response = self.metric_score(data=data)
+        started = perf_counter()
+        raw = self.metric_score(data=data)
         try:
-            score = float(response)
-        except ValueError:
+            score: float | None = float(raw)
+        except (TypeError, ValueError):
             logger.error(
-                f"Got unexpected LLM response - '{response}'"
+                "%s produced a non-numeric score: %r", self.name, raw
             )
-            raise ValueError(
-                "Got unexpected response from the LLM"
-            ) from ValueError
-        delta = tm - time()
-        reason = self._reason(data=data, score=score)
+            return MetricResult(
+                datanode=data,
+                metric=self,
+                score=None,
+                error=f"metric_score returned {raw!r}, which is not a number",
+                process_time=perf_counter() - started,
+            )
+
+        low, high = self.score_range
+        if not low <= score <= high:
+            return MetricResult(
+                datanode=data,
+                metric=self,
+                score=None,
+                error=(
+                    f"score {score} is outside the valid range "
+                    f"[{low}, {high}]"
+                ),
+                process_time=perf_counter() - started,
+            )
+
         return MetricResult(
             datanode=data,
             metric=self,
             score=score,
-            reason=reason,
-            process_time=delta,
+            reason=self._reason(data=data, score=score),
+            process_time=perf_counter() - started,
         )
 
     @abstractmethod

@@ -6,5 +6,12 @@ from ragrank.llm.base import (
     LLMResult,
     default_llm,
 )
+from ragrank.llm.fake import FakeLLM
 
-__all__ = ["LLMConfig", "LLMResult", "BaseLLM", "default_llm"]
+__all__ = [
+    "LLMConfig",
+    "LLMResult",
+    "BaseLLM",
+    "FakeLLM",
+    "default_llm",
+]

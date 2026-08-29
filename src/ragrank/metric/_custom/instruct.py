@@ -3,13 +3,11 @@
 from __future__ import annotations
 
 import logging
-from time import time
 from typing import Any
 
 from ragrank.bridge.pydantic import BaseModel, ConfigDict, Field
-from ragrank.dataset import DataNode
-from ragrank.llm import BaseLLM, default_llm
-from ragrank.metric.base import BaseMetric, MetricResult, MetricType
+from ragrank.llm import BaseLLM
+from ragrank.metric.base import LLMMetric, MetricType
 from ragrank.prompt import Prompt
 from ragrank.prompt._prompts import (
     BINARY_PROMPT_ADDON,
@@ -84,7 +82,7 @@ class InstructConfig(BaseModel):
         return f"Instruct Config - {self.name}"
 
 
-class CustomInstruct(BaseMetric):
+class CustomInstruct(LLMMetric):
     """
     A custom metric for evaluating responses based on instructions.
 
@@ -109,8 +107,8 @@ class CustomInstruct(BaseMetric):
         default_factory=lambda: MetricType.NON_BINARY,
         description="The type of metric, which is non-binary.",
     )
-    llm: BaseLLM = Field(
-        default_factory=lambda: default_llm(),
+    llm: BaseLLM | None = Field(
+        default=None,
         description="The language model used to generate the response.",
     )
     prompt: Prompt = Field(
@@ -127,9 +125,12 @@ class CustomInstruct(BaseMetric):
         self.prompt = Prompt(
             name=self.config.name,
             instructions=(
-                self.config.instructions + BINARY_PROMPT_ADDON
-                if self.config.metric_type == MetricType.BINARY
-                else NON_BINARY_PROMPT_ADDON
+                self.config.instructions
+                + (
+                    BINARY_PROMPT_ADDON
+                    if self.config.metric_type == MetricType.BINARY
+                    else NON_BINARY_PROMPT_ADDON
+                )
             ),
             examples=self.config.examples,
             input_keys=self.config.input_fields,
@@ -145,53 +146,3 @@ class CustomInstruct(BaseMetric):
         """
 
         return f"Custom Instruct - {self.config.name}"
-
-    def score(self, data: DataNode) -> MetricResult:
-        """Calculate the score for the custom metric based
-        on the provided data.
-
-        Args:
-            data (DataNode): The input data to be used for scoring.
-
-        Returns:
-            MetricResult: The result of the metric calculation.
-        """
-
-        tm = time()
-        prompt_str = self.prompt.to_string()
-        prompt_dt = prompt_str.format(**data.model_dump())
-        response = self.llm.generate_text(
-            prompt_dt,
-        )
-        try:
-            score = float(response.response)
-        except ValueError:
-            logger.error(
-                f"Got unexpected LLM response - '{response.response}'"
-            )
-            raise ValueError(
-                "Got unexpected response from the LLM"
-            ) from ValueError
-        delta = tm - time()
-        return MetricResult(
-            datanode=data,
-            metric=self,
-            score=score,
-            reason=None,
-            process_time=delta,
-        )
-
-    def _reason(self, data: DataNode, score: float) -> str | None:
-        """Determine the reason for the given score.
-        Not implemented yet.
-
-        Args:
-            data (DataNode): The input data used for scoring.
-            score (float): The score indicating the
-                relevancy of the response.
-
-        Returns:
-            str: The reason for the given score.
-        """
-
-        raise NotImplementedError

@@ -19,7 +19,7 @@ class LLMConfig(BaseModel):
 
     Attributes:
         temperature (float): Sampling temperature for text generation.
-            Default is 1.0.
+            Default is 0.0, so that scoring is reproducible.
         max_tokens (int): Maximum number of tokens to generate.
             Default is 300.
         seed (int): Random seed for text generation. Default is 44.
@@ -30,10 +30,13 @@ class LLMConfig(BaseModel):
     """
 
     temperature: float = Field(
-        default=1.0,
+        default=0.0,
         ge=0.0,
         le=1.0,
-        description="Sampling temperature for text generation.",
+        description=(
+            "Sampling temperature. Defaults to 0.0 because a judge "
+            "should be as reproducible as the provider allows."
+        ),
     )
     max_tokens: int = Field(
         default=300,

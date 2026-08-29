@@ -1,29 +1,28 @@
->This repo is under development ❄️
+> still under development ~ the api moves around a bit
 
 <p align="center">
     <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Auto-Playground/Ragrank/main/docs/docs/_static/imgs/ragrank_dark.png">
     <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/Auto-Playground/Ragrank/main/docs/docs/_static/imgs/ragrank_light.png">
-    <img alt="Hashnode logo" src="https://raw.githubusercontent.com/Auto-Playground/Ragrank/main/docs/docs/_static/imgs/ragrank_light.png" height="130">
+    <img alt="ragrank" src="https://raw.githubusercontent.com/Auto-Playground/Ragrank/main/docs/docs/_static/imgs/ragrank_light.png" height="130">
     </picture>
-
 </p>
 
 <p align="center">
     <a href="">
-        <img alt="GitHub" src="https://img.shields.io/github/license/Auto-Playground/ragrank">
+        <img alt="license" src="https://img.shields.io/github/license/Auto-Playground/ragrank">
     </a>
     <a href="https://pypi.org/project/ragrank/">
-        <img alt="Build" src="https://img.shields.io/pypi/pyversions/ragrank">
+        <img alt="python versions" src="https://img.shields.io/pypi/pyversions/ragrank">
     </a>
     <a href="https://ragrank.readthedocs.io/latest/">
-        <img alt="GitHub" src="https://img.shields.io/readthedocs/ragrank">
+        <img alt="docs" src="https://img.shields.io/readthedocs/ragrank">
     </a>
     <a href="https://pypi.org/project/ragrank/">
-        <img alt="GitHub" src="https://img.shields.io/github/v/release/Auto-Playground/Ragrank?color=orange">
+        <img alt="release" src="https://img.shields.io/github/v/release/Auto-Playground/Ragrank?color=orange">
     </a>
     <a href="https://github.com/Auto-Playground/Ragrank/actions">
-        <img alt="GitHub" src="https://img.shields.io/github/actions/workflow/status/Auto-Playground/ragrank/.github%2Fworkflows%2Ftests.yml">
+        <img alt="tests" src="https://img.shields.io/github/actions/workflow/status/Auto-Playground/ragrank/.github%2Fworkflows%2Ftests.yml">
     </a>
 </p>
 
@@ -32,66 +31,184 @@
         <a href="https://ragrank.readthedocs.io/latest/">Documentation</a> |
         <a href="https://api-ragrank.readthedocs.io/">API reference</a> |
         <a href="https://ragrank.readthedocs.io/latest/get_started/basic_evaluation.html">Quickstart</a> |
-        <a href="https://discord.gg/zDzM5hFS">Join the Community</a> |
-        <a href="https://pypi.org/project/ragrank/">Pypi</a> |
+        <a href="https://discord.gg/zDzM5hFS">Discord</a> |
+        <a href="https://pypi.org/project/ragrank/">PyPI</a>
     <p>
 </h4>
 
-Welcome to Ragrank! This toolkit is designed to assist you in evaluating the performance of your Retrieval-Augmented Generation (RAG) applications. You will get proper metrics for evaluate RAG model. The product is still in `beta` stage.
+ragrank scores your RAG pipeline so you don't have to squint at outputs and go "yeah, that
+looks about right". you hand it questions, retrieved context and responses ~ it hands back
+numbers you can put in CI.
 
-## 🔥 Installation
-
-Ragrank is available as a PyPi package. To install it, simply run:
+## install
 
 ```bash
 pip install ragrank
 ```
 
-If you prefer to install it from the source:
+the core pulls pydantic and nothin' else. everything else is an extra:
+
+```bash
+pip install "ragrank[openai]"    # the openai judge
+pip install "ragrank[pandas]"    # to_dataframe(), from_csv()
+pip install "ragrank[progress]"  # progress bars
+pip install "ragrank[all]"       # all of it
+```
+
+from source:
 
 ```bash
 git clone https://github.com/Auto-Playground/ragrank.git && cd ragrank
-uv sync
+uv sync --group dev
 ```
 
-## 🚀 Quick Start
+## quick start
 
-Set your `OPENAI_API_KEY` as an environment variable (you can also evaluate using your own custom model, refer [docs](https://ragrank.readthedocs.io/)):
 ```bash
 export OPENAI_API_KEY="..."
 ```
-
-Here's a quick example of how you can use Ragrank to evaluate the relevance of generated responses:
 
 ```python
 from ragrank import evaluate
 from ragrank.dataset import from_dict
 from ragrank.metric import response_relevancy
 
-# Define your dataset
 data = from_dict({
     "question": "What is the capital of France?",
-    "context": ["France is famous for its iconic landmarks such as the Eiffel Tower and its rich culinary tradition."],
+    "context": ["France is famous for the Eiffel Tower and its food."],
     "response": "The capital of France is Paris.",
 })
 
-# Evaluate the response relevance metric
 result = evaluate(data, metrics=[response_relevancy])
-
-# Display the evaluation results
-result.to_dataframe()
+print(result)
 ```
 
-For more information on how to use Ragrank and its various features, please refer to the [documentation](https://ragrank.readthedocs.io/). 📚
+```
+Response Relevancy: 0.850
+```
 
-## License
+`result.to_dataframe()` if you want a table, `result.to_json()` if you don't want pandas.
 
-This project is licensed under the [Apache License](https://github.com/Auto-Playground/Ragrank/blob/main/LICENSE). Feel free to use and modify it according to your needs.
+## bring your own model
 
-## Feedback and Support
+any model, not just openai. pass it once and every metric uses it:
 
-If you encounter any issues, have questions, or would like to provide feedback, please don't hesitate to open an issue on the GitHub repository. Your contributions and suggestions are highly appreciated!
+```python
+from ragrank.integrations.langchain import LangchainLLMWrapper
+from langchain_community.chat_models import ChatOllama
 
-Join our community on Discord to connect with other users, ask questions, and share your experiences with Ragrank. We're here to help you make the most out of your NLP projects! 💬
+result = evaluate(data, llm=LangchainLLMWrapper(llm=ChatOllama(model="gemma:2b")))
+```
 
-> Happy evaluating! 🙂
+or write your own ~ subclass `BaseLLM`, implement `generate_text`, done.
+
+## no key, no problem
+
+there's a `FakeLLM` in the box, so you can wire up your whole eval pipeline before spending a
+cent:
+
+```python
+from ragrank.llm import FakeLLM
+
+evaluate(data, llm=FakeLLM(responses=["0.8", "0.3"]))
+```
+
+it also takes a `response_fn` if you want the answer to depend on the prompt. handy for tests.
+
+## metrics
+
+| metric | what it's askin' |
+| --- | --- |
+| `response_relevancy` | does the answer actually answer the question |
+| `response_conciseness` | or does it waffle |
+| `context_relevancy` | did retrieval pull back anything useful |
+| `context_utilization` | did the model bother to read it |
+
+`RAG_TRIAD` is the three that between them tell you *where* it broke:
+
+```python
+from ragrank.metric import RAG_TRIAD
+
+evaluate(data, metrics=RAG_TRIAD)
+```
+
+roll your own with `CustomInstruct`:
+
+```python
+from ragrank.metric import CustomInstruct, InstructConfig, MetricType
+
+politeness = CustomInstruct(config=InstructConfig(
+    metric_type=MetricType.NON_BINARY,
+    name="Politeness",
+    instructions="Score how polite the response is.",
+    input_fields=["question", "response"],
+))
+```
+
+## gating in ci
+
+give a metric a threshold and the result knows whether it passed:
+
+```python
+strict = response_relevancy.model_copy(update={"threshold": 0.7})
+result = evaluate(dataset, metrics=[strict])
+
+assert result.passed, result
+```
+
+## running it properly
+
+`RunConfig` is the one place run behaviour lives:
+
+```python
+from ragrank.evaluation import RunConfig
+
+evaluate(dataset, run_config=RunConfig(
+    max_workers=8,        # concurrent metric calls
+    max_retries=2,        # retries on a failing llm call, with backoff
+    show_progress=True,
+    raise_on_error=False, # one bad row shouldn't kill a 5000-row run
+))
+```
+
+**by default a run finishes even when rows fail.** a row the judge fluffs comes back with
+`score=None` and an `error` explainin' why, instead of taking down the whole thing forty
+minutes and twelve dollars in. flip `raise_on_error=True` if you'd rather it stop.
+
+```python
+result.summary()      # mean, stderr, min, max, pass rate, per metric
+result.failed_count   # how many (row, metric) pairs came back empty
+```
+
+`summary()` reports standard error, not just a mean. a 0.72 over eleven rows with no error
+bar isn't really a 0.72.
+
+## data in
+
+```python
+from ragrank.dataset import from_dict, from_csv, from_dataframe, from_hfdataset, ColumnMap
+
+from_csv("evals.csv", column_map=ColumnMap(question="query", response="answer"))
+```
+
+## development
+
+```bash
+make test-offline   # no api key needed
+make test           # needs OPENAI_API_KEY
+make lint
+make format
+```
+
+`test-offline` runs the whole thing against `FakeLLM` ~ no network, no spend.
+
+## license
+
+[apache 2.0](https://github.com/Auto-Playground/Ragrank/blob/main/LICENSE). do what you like
+with it.
+
+## contributing
+
+issues and PRs welcome. if somethin' is broken, an issue with the traceback is genuinely
+useful ~ two of the bugs fixed recently were sitting in the tracker for two years because
+nobody re-tested them after they got closed.
