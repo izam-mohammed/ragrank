@@ -13,6 +13,12 @@ from ragrank.metric._custom.instruct import (
     InstructConfig,
 )
 from ragrank.metric._custom.metric import CustomMetric
+from ragrank.metric._custom.simple import (
+    FunctionMetric,
+    Guidelines,
+    LLMJudge,
+    metric,
+)
 from ragrank.metric._heuristic.text import (
     ExactMatch,
     JsonValid,
@@ -121,6 +127,10 @@ __all__ = [
     "mean_average_precision",
     "ndcg",
     # custom
+    "metric",
+    "FunctionMetric",
+    "LLMJudge",
+    "Guidelines",
     "CustomMetric",
     "CustomInstruct",
     "InstructConfig",
