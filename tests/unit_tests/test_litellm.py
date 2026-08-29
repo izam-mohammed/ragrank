@@ -6,7 +6,6 @@ from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
 
 import pytest
-
 from ragrank.integrations.litellm import LiteLLM
 from ragrank.llm import LLMConfig
 
@@ -198,7 +197,7 @@ def test_a_missing_litellm_explains_the_extra() -> None:
             side_effect=ModuleNotFoundError,
         ),
         pytest.raises(
-            ModuleNotFoundError, match=r'ragrank\[litellm\]'
+            ModuleNotFoundError, match=r"ragrank\[litellm\]"
         ),
     ):
         LiteLLM().generate_text("hi")

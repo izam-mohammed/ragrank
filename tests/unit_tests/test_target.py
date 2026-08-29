@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import pytest
-
 from ragrank import evaluate
 from ragrank.dataset import Dataset, from_dict
 from ragrank.llm import FakeLLM
@@ -134,7 +133,9 @@ def test_run_target_reuses_a_datasets_questions() -> None:
     ]
 
 
-def test_retrieved_ids_come_through_when_every_row_has_them() -> None:
+def test_retrieved_ids_come_through_when_every_row_has_them() -> (
+    None
+):
     def with_ids(question: str) -> dict:
         return {
             "response": "a",
@@ -146,10 +147,16 @@ def test_retrieved_ids_come_through_when_every_row_has_them() -> None:
     assert dataset.retrieved_ids == [["d1"], ["d1"]]
 
 
-def test_partial_retrieved_ids_are_dropped_rather_than_faked() -> None:
+def test_partial_retrieved_ids_are_dropped_rather_than_faked() -> (
+    None
+):
     def sometimes(question: str) -> dict:
         ids = ["d1"] if question == QUESTIONS[0] else None
-        return {"response": "a", "context": ["c"], "retrieved_ids": ids}
+        return {
+            "response": "a",
+            "context": ["c"],
+            "retrieved_ids": ids,
+        }
 
     dataset = run_target(QUESTIONS, sometimes, max_workers=1)
     assert dataset.retrieved_ids is None

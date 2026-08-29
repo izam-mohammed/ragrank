@@ -67,6 +67,7 @@ class Jury(BaseMetric):
             CostTier: Always `CostTier.LLM_HEAVY`.
         """
         return CostTier.LLM_HEAVY
+
     aggregation: Literal["mean", "median"] = Field(
         default="median",
         description="How to combine the judges' scores.",

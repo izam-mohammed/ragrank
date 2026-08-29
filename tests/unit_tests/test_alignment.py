@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import pytest
-
 from ragrank import evaluate
 from ragrank.dataset import from_dict
 from ragrank.evaluation import align

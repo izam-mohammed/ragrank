@@ -133,7 +133,9 @@ class Alignment(BaseModel):
         return self.__repr__()
 
 
-def pearson(left: Sequence[float], right: Sequence[float]) -> float | None:
+def pearson(
+    left: Sequence[float], right: Sequence[float]
+) -> float | None:
     """Pearson correlation of two equal-length sequences.
 
     Args:
@@ -222,12 +224,9 @@ def cohens_kappa(
     if not total:
         return None
 
-    observed = fmean(
-        [
-            float(a == b)
-            for a, b in zip(left, right, strict=True)
-        ]
-    )
+    observed = fmean([
+        float(a == b) for a, b in zip(left, right, strict=True)
+    ])
     positive_left = fmean([float(item) for item in left])
     positive_right = fmean([float(item) for item in right])
     expected = positive_left * positive_right + (
@@ -360,8 +359,7 @@ def align(
         pearson=pearson(judged, labelled),
         spearman=spearman(judged, labelled),
         mean_absolute_error=fmean([
-            abs(a - b)
-            for a, b in zip(judged, labelled, strict=True)
+            abs(a - b) for a, b in zip(judged, labelled, strict=True)
         ]),
         bias=fmean([
             a - b for a, b in zip(judged, labelled, strict=True)

@@ -6,7 +6,6 @@ import json
 from pathlib import Path
 
 import pytest
-
 from ragrank.dataset import (
     ColumnMap,
     Dataset,
@@ -198,7 +197,6 @@ def test_a_jury_is_always_the_heavy_tier() -> None:
 
 def test_every_metric_declares_a_tier() -> None:
     import ragrank.metric as registry
-
     from ragrank.metric import BaseMetric
 
     metrics = [

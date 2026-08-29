@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import pytest
-
 from ragrank.dataset import DataNode
 from ragrank.llm import FakeLLM
 from ragrank.metric import (
@@ -19,7 +18,9 @@ from ragrank.metric import (
 from ragrank.metric._safety.pii import luhn
 
 
-def node(response: str, context: list[str] | None = None) -> DataNode:
+def node(
+    response: str, context: list[str] | None = None
+) -> DataNode:
     return DataNode(
         question="q", context=context or ["c"], response=response
     )
@@ -179,7 +180,8 @@ def test_an_empty_response_abstains_rather_than_guessing() -> None:
 def test_a_late_caveat_does_not_make_an_answer_a_refusal() -> None:
     long_answer = (
         "Ada Lovelace wrote the first published algorithm, in her "
-        "notes on the Analytical Engine. " * 4
+        "notes on the Analytical Engine. "
+        * 4
         + "I cannot confirm the exact date."
     )
     assert answered.score(node(long_answer)).score == 1.0

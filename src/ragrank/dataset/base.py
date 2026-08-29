@@ -295,9 +295,7 @@ class Dataset(BaseModel):
         Returns:
             list[dict]: One record per datapoint.
         """
-        return [
-            node.model_dump(exclude_none=True) for node in self
-        ]
+        return [node.model_dump(exclude_none=True) for node in self]
 
     def to_json(
         self,

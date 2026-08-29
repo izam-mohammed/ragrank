@@ -24,9 +24,7 @@ def node(
     )
 
 
-def scripted(
-    *, correct: list[str], supported: list[str]
-) -> FakeLLM:
+def scripted(*, correct: list[str], supported: list[str]) -> FakeLLM:
     """A judge that answers extraction, then correctness, then support.
 
     Verdicts are popped per call, so each claim can be given a
@@ -60,7 +58,9 @@ def test_everything_correct_came_from_the_context() -> None:
     assert result.metadata["correct_count"] == 2
 
 
-def test_correct_but_unsupported_is_the_models_own_knowledge() -> None:
+def test_correct_but_unsupported_is_the_models_own_knowledge() -> (
+    None
+):
     llm = scripted(correct=["A", "A"], supported=["B", "B"])
     result = judged(llm).score(node())
 

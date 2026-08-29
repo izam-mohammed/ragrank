@@ -106,7 +106,9 @@ def _summary_table(result: EvalResult) -> str:
         "<h2>Metrics</h2><div class='scroll'><table><thead><tr>"
         "<th>Metric</th><th>Score</th><th>Scored</th>"
         "<th>Pass rate</th><th>Verdict</th>"
-        "</tr></thead><tbody>" + "".join(rows) + "</tbody></table></div>"
+        "</tr></thead><tbody>"
+        + "".join(rows)
+        + "</tbody></table></div>"
     )
 
 
@@ -210,7 +212,9 @@ def combined_html(
         str: A complete HTML document.
     """
     if not entries:
-        return _document(title, "<p class='meta'>No evaluations ran.</p>")
+        return _document(
+            title, "<p class='meta'>No evaluations ran.</p>"
+        )
 
     sections = [
         f"<h2>{escape(name)}</h2>"
@@ -222,7 +226,9 @@ def combined_html(
     return _document(title, "".join(sections))
 
 
-def to_html(result: EvalResult, title: str = "ragrank report") -> str:
+def to_html(
+    result: EvalResult, title: str = "ragrank report"
+) -> str:
     """Render a finished run as a standalone HTML document.
 
     Args:

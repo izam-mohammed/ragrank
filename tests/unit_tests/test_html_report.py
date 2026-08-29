@@ -5,7 +5,6 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-
 from ragrank import evaluate
 from ragrank.dataset import from_dict
 from ragrank.llm import FakeLLM
