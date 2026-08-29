@@ -31,7 +31,11 @@ from ragrank.llm.cache import (
     CachedLLM,
     DiskCache,
 )
-from ragrank.metric import BaseMetric, LLMMetric, MetricResult
+from ragrank.metric import (
+    BaseMetric,
+    DeterministicMetric,
+    MetricResult,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -179,6 +183,10 @@ def _with_tracking(
     Deterministic metrics make no model calls, so they are left alone
     and a run using only those still needs no credentials.
 
+    Composite metrics such as `Jury` hold no model of their own and
+    forward through `with_llm`, so their members get the tracked model
+    too and their calls are counted like any other.
+
     Args:
         metric (BaseMetric): The metric to bind.
         llm (BaseLLM | None): The LLM offered by the run.
@@ -188,15 +196,18 @@ def _with_tracking(
     Returns:
         BaseMetric: The metric, bound to a tracked model if it uses one.
     """
-    if not isinstance(metric, LLMMetric):
+    if isinstance(metric, DeterministicMetric):
         return metric
 
-    inner = metric.llm or llm or default_llm()
+    own = getattr(metric, "llm", None)
+    inner = own or llm or default_llm()
     if cache is not None:
         inner = CachedLLM(inner=inner, backend=cache)
-    return metric.model_copy(
-        update={"llm": TrackedLLM(inner=inner, tracker=tracker)}
-    )
+    wrapped = TrackedLLM(inner=inner, tracker=tracker)
+
+    if own is not None:
+        return metric.model_copy(update={"llm": wrapped})
+    return metric.with_llm(wrapped)
 
 
 def _score_repeatedly(

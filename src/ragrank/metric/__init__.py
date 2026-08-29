@@ -17,6 +17,10 @@ from ragrank.metric._custom.instruct import (
     CustomInstruct,
     InstructConfig,
 )
+from ragrank.metric._custom.jury import (
+    Jury,
+    Pairwise,
+)
 from ragrank.metric._custom.metric import CustomMetric
 from ragrank.metric._custom.simple import (
     FunctionMetric,
@@ -144,6 +148,8 @@ __all__ = [
     "metric",
     "FunctionMetric",
     "LLMJudge",
+    "Jury",
+    "Pairwise",
     "Guidelines",
     "CustomMetric",
     "CustomInstruct",
