@@ -35,6 +35,21 @@ from ragrank.metric._response_related.relevancy import (
     ResponseRelevancy,
     response_relevancy,
 )
+from ragrank.metric._retrieval.ranking import (
+    MAP,
+    MRR,
+    NDCG,
+    HitRate,
+    PrecisionAtK,
+    RankingMetric,
+    RecallAtK,
+    hit_rate,
+    mean_average_precision,
+    mrr,
+    ndcg,
+    precision_at_k,
+    recall_at_k,
+)
 from ragrank.metric.base import (
     BaseMetric,
     ChunkwiseLLMMetric,
@@ -50,6 +65,15 @@ RAG_TRIAD = [
     context_relevancy,
     context_utilization,
     response_relevancy,
+]
+
+#: Deterministic ranking metrics. No LLM calls, no cost, no variance.
+RETRIEVAL_METRICS = [
+    hit_rate,
+    mrr,
+    precision_at_k,
+    recall_at_k,
+    ndcg,
 ]
 
 __all__ = [
@@ -83,10 +107,24 @@ __all__ = [
     "rouge_l",
     "json_valid",
     # retrieval, no llm
+    "RankingMetric",
+    "HitRate",
+    "MRR",
+    "PrecisionAtK",
+    "RecallAtK",
+    "MAP",
+    "NDCG",
+    "hit_rate",
+    "mrr",
+    "precision_at_k",
+    "recall_at_k",
+    "mean_average_precision",
+    "ndcg",
     # custom
     "CustomMetric",
     "CustomInstruct",
     "InstructConfig",
     # presets
     "RAG_TRIAD",
+    "RETRIEVAL_METRICS",
 ]
