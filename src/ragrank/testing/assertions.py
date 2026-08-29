@@ -44,6 +44,7 @@ def assert_metric(
 
         assert_metric(node, response_relevancy, threshold=0.7)
     """
+    __tracebackhide__ = True
     if threshold is not None:
         metric = metric.model_copy(update={"threshold": threshold})
     if metric.threshold is None:
@@ -94,6 +95,7 @@ def assert_evaluation(
 
         result = assert_evaluation(dataset, [strict_relevancy])
     """
+    __tracebackhide__ = True
     result = evaluate(
         data, llm=llm, metrics=metrics, run_config=run_config
     )
@@ -135,6 +137,7 @@ def assert_no_regression(
 
         assert_no_regression(last_release, this_branch)
     """
+    __tracebackhide__ = True
     diff = compare(baseline, candidate)
     if diff.regressed:
         raise MetricAssertionError(

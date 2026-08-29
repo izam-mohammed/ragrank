@@ -26,4 +26,5 @@ This measures how effectively the response uses the surrounding context to provi
 
 context_relevancy
 context_utilization
+context_reliance
 ```

@@ -20,9 +20,12 @@ def test_the_bot_stays_grounded():
 ```
 
 Run it with `pytest`, or `unittest`, or anything else that understands
-an assertion. There is no custom runner, no plugin and no `ragrank test
-run` command, which means every pytest flag and plugin you already use
-keeps working.
+an assertion. There is no custom runner and no `ragrank test run`
+command, so every pytest flag and plugin you already use keeps working.
+
+Installing ragrank also registers a small [pytest plugin](#the-pytest-plugin),
+which adds a marker and a report. It is optional - the assertions above
+work with or without it.
 
 ## The three helpers
 
@@ -34,6 +37,7 @@ from ragrank.testing import assert_metric
 assert_metric(node, response_relevancy, threshold=0.7)
 ```
 
+(a-whole-dataset)=
 ### A whole dataset
 
 ```python
@@ -81,6 +85,83 @@ attached.
 **Asserting with no threshold is an error.** A test that cannot fail is
 worse than no test, so `assert_metric` raises `ValueError` rather than
 passing vacuously.
+
+(the-pytest-plugin)=
+## The pytest plugin
+
+Installing ragrank registers it automatically. There is nothing to add
+to a conftest.
+
+### Marking evals
+
+Evaluations are slow and cost money; unit tests are neither. The
+`ragrank` marker lets you keep them apart:
+
+```python
+import pytest
+
+
+@pytest.mark.ragrank
+def test_the_bot_stays_grounded(ragrank_eval):
+    ragrank_eval(dataset, [faithfulness_gate])
+```
+
+```bash
+pytest -m "not ragrank"     # the fast suite, on every commit
+pytest -m ragrank           # the evals, nightly
+```
+
+### The `ragrank_eval` fixture
+
+Wraps [`assert_evaluation`](#a-whole-dataset) with the suite's judge and
+run config already applied, and records the result for the report.
+
+```python
+def test_it_answers_well(ragrank_eval):
+    result = ragrank_eval(dataset, [strict_relevancy])
+    assert result.usage.total_tokens < 10_000
+```
+
+### Setting the judge once
+
+Two session fixtures, overridden in a `conftest.py`, configure every
+eval in the suite:
+
+```python
+import pytest
+
+from ragrank.evaluation import RunConfig
+from ragrank.integrations.litellm import LiteLLM
+
+
+@pytest.fixture(scope="session")
+def ragrank_llm():
+    return LiteLLM(model="anthropic/claude-sonnet-4-5")
+
+
+@pytest.fixture(scope="session")
+def ragrank_run_config():
+    return RunConfig(max_workers=8, cache=True)
+```
+
+A single test can still override either by passing `llm=` or
+`run_config=` to `ragrank_eval`.
+
+### A report for the whole session
+
+```bash
+pytest -m ragrank --ragrank-report=evals.html
+```
+
+Every evaluation becomes a section of one
+[HTML report](../evaluation/reports.md), named by its test. Useful as a
+CI artefact when a nightly eval run fails and somebody has to work out
+which rows caused it.
+
+### Tracebacks point at your test
+
+The assertion helpers hide their own frames, so a failed eval reports
+the line you wrote rather than the inside of `assertions.py`.
 
 ## Testing without spending anything
 

@@ -1,5 +1,6 @@
 """The main module for ragrank"""
 
+from ragrank.evaluation.alignment import Alignment, align
 from ragrank.evaluation.base import evaluate
 from ragrank.evaluation.compare import (
     Comparison,
@@ -12,6 +13,8 @@ from ragrank.evaluation.usage import TokenUsage, TrackedLLM
 
 __all__ = [
     "evaluate",
+    "align",
+    "Alignment",
     "compare",
     "Comparison",
     "MetricDelta",

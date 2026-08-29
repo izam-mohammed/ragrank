@@ -30,6 +30,29 @@ class MetricType(Enum):
     NON_BINARY = "non_binary"
 
 
+class CostTier(Enum):
+    """What one row of this metric costs to compute.
+
+    The cheap tiers are not consolation prizes. An ensemble of
+    deterministic and embedding metrics tracks human judgement about as
+    well as a single large judge, for a fraction of the money, so the
+    tier is worth knowing before you pick a metric -- and worth
+    filtering on when a suite gets expensive.
+
+    Attributes:
+        FREE: Pure Python. No network, no key, microseconds.
+        EMBEDDING: One embedding call. Cheap, but not free.
+        LLM: One judge call per row.
+        LLM_HEAVY: Several judge calls per row -- per chunk, per claim,
+            or per member of a jury.
+    """
+
+    FREE = "free"
+    EMBEDDING = "embedding"
+    LLM = "llm"
+    LLM_HEAVY = "llm_heavy"
+
+
 class BaseMetric(BaseModel, ABC):
     """Base class for defining metrics.
 
@@ -93,6 +116,15 @@ class BaseMetric(BaseModel, ABC):
         Returns:
             MetricResult: The computed score.
         """
+
+    @property
+    def cost_tier(self) -> CostTier:
+        """What one row of this metric costs to compute.
+
+        Returns:
+            CostTier: The metric's cost tier.
+        """
+        return CostTier.LLM
 
     @property
     def required_columns(self) -> set[str]:
@@ -302,6 +334,15 @@ class DeterministicMetric(BaseMetric):
         description="Unused; kept for the base contract.",
     )
 
+    @property
+    def cost_tier(self) -> CostTier:
+        """Deterministic metrics cost nothing.
+
+        Returns:
+            CostTier: Always `CostTier.FREE`.
+        """
+        return CostTier.FREE
+
     @abstractmethod
     def compute(self, data: DataNode) -> float | None:
         """Compute the score for one row.
@@ -366,6 +407,15 @@ class ChunkwiseLLMMetric(LLMMetric):
     in a single averaged verdict. This judges each chunk on its own and
     reduces, keeping the per chunk scores in `metadata`.
     """
+
+    @property
+    def cost_tier(self) -> CostTier:
+        """One judge call per chunk, so the cost scales with retrieval.
+
+        Returns:
+            CostTier: Always `CostTier.LLM_HEAVY`.
+        """
+        return CostTier.LLM_HEAVY
 
     def chunk_values(
         self, data: DataNode, chunk: str

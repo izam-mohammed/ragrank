@@ -20,6 +20,7 @@ from ragrank.bridge.pydantic import Field
 from ragrank.dataset import DataNode
 from ragrank.metric.base import (
     BaseMetric,
+    CostTier,
     LLMMetric,
     MetricResult,
     MetricType,
@@ -56,6 +57,17 @@ class Jury(BaseMetric):
     judges: list[BaseMetric] = Field(
         description="The metrics to poll."
     )
+
+    @property
+    def cost_tier(self) -> CostTier:
+        """A jury costs whatever its most expensive member costs, times
+        the number of members.
+
+        Returns:
+            CostTier: Always `CostTier.LLM_HEAVY`.
+        """
+        return CostTier.LLM_HEAVY
+
     aggregation: Literal["mean", "median"] = Field(
         default="median",
         description="How to combine the judges' scores.",

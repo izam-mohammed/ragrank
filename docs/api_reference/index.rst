@@ -20,5 +20,6 @@ Retrieval Augmented Generation (RAG) models easier.
    llm/index
    metric/index
    prompt/index
+   target/index
    testing/index
    utils/index

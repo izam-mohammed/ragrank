@@ -11,3 +11,5 @@ ragrank.evaluation
     outputs
     usage
     compare
+    alignment
+    report

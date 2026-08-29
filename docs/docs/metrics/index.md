@@ -18,6 +18,8 @@ comparison can, and every call has a price and some variance.
 | [`response_conciseness`](./response_related/response_conciseness.md) | Or does it waffle? |
 | [`context_relevancy`](./context_related/context_relevancy.md) | Did retrieval return anything useful? |
 | [`context_utilization`](./context_related/context_utilization.md) | Did the model use what it was given? |
+| [`context_reliance`](./context_related/context_reliance.md) | Is the retriever earning its keep, or is the model? |
+| [`safety`](./safety_metrics/index.md#safety) | Is anything in the answer harmful? |
 
 ## Free metrics cost nothing
 
@@ -30,6 +32,7 @@ the same answer every time.
 | [Text](./heuristic_metrics/index.md) | `exact_match`, `token_f1`, `rouge_l`, `levenshtein_ratio`, `string_presence` | `reference` |
 | [Semantic](./heuristic_metrics/index.md#semantic-similarity) | `semantic_similarity` | `reference` and an embedding model |
 | [Format](./heuristic_metrics/index.md#format-checking) | `json_valid` | nothing |
+| [Safety](./safety_metrics/index.md) | `pii_free`, `answered` | nothing |
 
 ## Start with the free ones
 
@@ -82,6 +85,26 @@ actively working to improve them, and none of them yet ship with
 published benchmark numbers.
 ```
 
+## Every metric declares what it costs
+
+```python
+from ragrank.metric import faithfulness, hit_rate
+
+hit_rate.cost_tier       # CostTier.FREE
+faithfulness.cost_tier   # CostTier.LLM_HEAVY
+```
+
+| Tier | Means |
+| --- | --- |
+| `FREE` | Pure Python. No network, no key, microseconds |
+| `EMBEDDING` | One embedding call. Cheap, not free |
+| `LLM` | One judge call per row |
+| `LLM_HEAVY` | Several per row - per chunk, per claim, or per juror |
+
+Useful when a suite gets expensive and you want to know what to drop
+first, and shown in the [HTML report](../evaluation/reports.md) next to
+each metric.
+
 ```{toctree}
 :hidden:
 
@@ -89,5 +112,6 @@ response_related/index
 context_related/index
 retrieval_metrics/index
 heuristic_metrics/index
+safety_metrics/index
 custom_metrics/index
 ```

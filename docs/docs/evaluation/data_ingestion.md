@@ -134,3 +134,61 @@ There are multiple data readers availble in Ragrank.
         split="train", 
         column_map=None # specify if any
     )
+
+## Scoring output from somewhere else
+
+The shape most frameworks hand you is a list of records - one
+self-describing mapping per datapoint. Ragrank reads that directly, so
+there is nothing to reshape first.
+
+- **from_records**: Ingesting a list of flat mappings.
+    ```python
+    from ragrank.dataset import from_records
+
+    data = from_records([
+        {
+            "question": "What is the largest mammal on Earth?",
+            "context": ["The blue whale holds the title."],
+            "response": "The blue whale.",
+        },
+    ])
+    ```
+
+    A `context` given as a single string is wrapped into a one-chunk
+    list. Fields ragrank does not recognise - a trace id, a timestamp -
+    are ignored rather than rejected. Every record must carry the same
+    fields, and a ragged one is named in the error.
+
+- **from_json**: Ingesting JSON, in either common shape.
+    ```python
+    from ragrank.dataset import from_json
+
+    data = from_json("outputs.json")
+    ```
+
+    Accepts a path, a JSON document, or already-parsed data, and reads
+    both a list of records and a mapping of columns. Different tools
+    emit different ones and neither is worth arguing about.
+
+- **from_jsonl**: Ingesting JSON Lines, one record per line.
+    ```python
+    from ragrank.dataset import from_jsonl
+
+    data = from_jsonl("outputs.jsonl")
+    ```
+
+    Line-delimited JSON streams and appends, which a single JSON array
+    does not, so it is the better shape for a dataset that grows. Blank
+    lines are skipped; a line that will not parse is reported by number.
+
+### Writing it back out
+
+```python
+data.to_records()              # list of dicts
+data.to_json("data.json")      # returns the string too
+data.to_jsonl("data.jsonl")
+data.to_csv("data.csv")
+```
+
+Which makes ragrank a way to move a dataset between tools, not only a
+way to score one.

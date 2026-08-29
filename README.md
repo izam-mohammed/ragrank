@@ -50,6 +50,7 @@ that's everything you need to evaluate. extras are only for provider and
 framework sdks ~ the stuff not everyone wants installed:
 
 ```bash
+pip install "ragrank[litellm]"      # claude, gemini, ollama, ~100 more
 pip install "ragrank[openai]"       # the openai judge
 pip install "ragrank[langchain]"    # LangchainLLMWrapper
 pip install "ragrank[llama-index]"  # LlamaindexLLMWrapper
@@ -96,13 +97,14 @@ Response Relevancy: 0.850
 any model, not just openai. pass it once and every metric uses it:
 
 ```python
-from ragrank.integrations.langchain import LangchainLLMWrapper
-from langchain_community.chat_models import ChatOllama
+from ragrank.integrations.litellm import LiteLLM
 
-result = evaluate(data, llm=LangchainLLMWrapper(llm=ChatOllama(model="gemma:2b")))
+result = evaluate(data, llm=LiteLLM(model="ollama/llama3"))
 ```
 
-or write your own ~ subclass `BaseLLM`, implement `generate_text`, done.
+there are langchain and llamaindex wrappers too if you're already in one
+of those. or write your own ~ subclass `BaseLLM`, implement
+`generate_text`, done.
 
 ## no key, no problem
 
@@ -129,6 +131,8 @@ it also takes a `response_fn` if you want the answer to depend on the prompt. ha
 | `response_conciseness` | or does it waffle |
 | `context_relevancy` | did retrieval pull back anything useful |
 | `context_utilization` | did the model bother to read it |
+| `context_reliance` | is the retriever earnin' its keep, or is the model |
+| `safety` | is there anythin' harmful in there |
 
 **free** ~ no llm, no cost, same answer every time
 
@@ -138,6 +142,7 @@ it also takes a `response_fn` if you want the answer to depend on the prompt. ha
 | `exact_match` `token_f1` `rouge_l` `levenshtein_ratio` `string_presence` | `reference` |
 | `semantic_similarity` | `reference` + an embedding model |
 | `json_valid` | nothin' |
+| `pii_free` `answered` | nothin' |
 
 if retrieval is broken, `hit_rate=0.31` tells you more than any judge's
 opinion of your context ~ and it's free. start there.
@@ -152,13 +157,57 @@ result.metadata["claims"]
 #  {"claim": "It was built in 1750.",   "supported": 0.0}]
 ```
 
-`RAG_TRIAD` is the three that between them tell you *where* it broke, and
-`RETRIEVAL_METRICS` is the free ranking set:
+`RAG_TRIAD` is the three that between them tell you *where* it broke,
+`RETRIEVAL_METRICS` is the free ranking set, and `SAFETY_METRICS` is the
+three that ask whether you can ship it at all:
 
 ```python
-from ragrank.metric import RAG_TRIAD, RETRIEVAL_METRICS
+from ragrank.metric import RAG_TRIAD, RETRIEVAL_METRICS, SAFETY_METRICS
 evaluate(data, metrics=RAG_TRIAD)
 ```
+
+every metric says what it costs before you run it:
+
+```python
+hit_rate.cost_tier       # CostTier.FREE
+faithfulness.cost_tier   # CostTier.LLM_HEAVY
+```
+
+## point it at your actual pipeline
+
+everythin' above scores responses you already have. hand it a `target`
+and it runs your rag for you ~ so the questions stay fixed and the
+pipeline is the thing that changes:
+
+```python
+def my_rag(question: str) -> tuple[str, list[str]]:
+    chunks = retriever.search(question)
+    return generator(question, chunks), chunks
+
+result = evaluate(questions, target=my_rag, metrics=[faithfulness])
+```
+
+pass a dataset instead of a list and it reuses the questions and
+references, throws away the stale answers, and you've got a regression
+test.
+
+## is the judge any good
+
+the number a judge gives you is worth exactly as much as its agreement
+with a person, which almost nobody measures. label thirty rows by hand:
+
+```python
+from ragrank.evaluation import align
+
+print(align(result, human_labels, threshold=0.5))
+# Faithfulness vs human labels (n=40)
+#   spearman: +0.799
+#   bias: +0.115        <- generous by a consistent 0.115
+#   kappa: +0.694
+```
+
+`bias` is the one to look at. generous by a constant is a prompt you can
+fix. correlatin' at 0.1 means the metric isn't measurin' what you think.
 
 ## rolling your own
 
@@ -294,11 +343,12 @@ def test_bot_stays_grounded():
     assert_metric(node, faithfulness, threshold=0.9)
 ```
 
-plain assertions ~ no custom runner, no plugin. works with pytest,
-unittest, or anythin' that understands `assert`, and every pytest flag
-keeps workin' because nothin' got wrapped.
+plain assertions, no custom runner. works with pytest, unittest, or
+anythin' that understands `assert`, and every pytest flag keeps workin'
+because nothin' got wrapped.
 
-failures carry the diagnosis the metric already computed:
+failures carry the diagnosis the metric already computed, and point at
+your line rather than at ours:
 
 ```
 Faithfulness scored 0.500, below the threshold of 0.900.
@@ -306,11 +356,19 @@ Faithfulness scored 0.500, below the threshold of 0.900.
     - It was built in 1750.
 ```
 
+installin' ragrank also registers a small pytest plugin. evals are slow
+and cost money, so it gives you a way to keep them out of the fast run:
+
+```bash
+pytest -m "not ragrank"                        # every commit
+pytest -m ragrank --ragrank-report=evals.html  # nightly, with a report
+```
+
 ## from the command line
 
 ```bash
 ragrank eval ragrank.yaml
-ragrank eval config.json --output result.json
+ragrank eval config.json --output result.json --html report.html
 ragrank compare before.json after.json
 ```
 
@@ -335,6 +393,29 @@ from ragrank.dataset import from_dict, from_csv, from_dataframe, from_hfdataset,
 
 from_csv("evals.csv", column_map=ColumnMap(question="query", response="answer"))
 ```
+
+already got output from some other tool? hand it the records it already
+gives you, no reshapin':
+
+```python
+from ragrank.dataset import from_records, from_json, from_jsonl
+
+from_json("outputs.json")
+from_records([{"question": "...", "context": ["..."], "response": "..."}])
+```
+
+and back out again ~ `to_records()`, `to_json()`, `to_jsonl()`,
+`to_csv()`.
+
+## a report somebody else will read
+
+```python
+result.to_html("report.html")
+```
+
+one file, no assets, nothin' to serve. every row, every score, and what
+the judge said about it. attach it to the pr and let the reviewer see
+which rows broke instead of takin' your word for it.
 
 ## development
 

@@ -85,8 +85,11 @@ Is v2 better than v1? Including whether the difference is bigger than the noise,
 ```{toctree}
 :hidden:
 
+target
 run_config
 cost
+alignment
+reports
 caching
 comparing_runs
 detailed_evaluation
