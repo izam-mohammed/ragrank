@@ -166,7 +166,7 @@ def run_eval(args: argparse.Namespace) -> int:
         dataset, metrics=metrics, run_config=run_config
     )
 
-    _emit(result, args.output)
+    _emit(result, args.output, getattr(args, "html", None))
 
     if result.passed is False:
         logger.error("Evaluation failed its thresholds")
@@ -226,8 +226,12 @@ def _summary_diff(
     return lines or ["no shared metrics"]
 
 
-def _emit(result: EvalResult, output: str | None) -> None:
-    """Write the result to stdout, and to a file if asked.
+def _emit(
+    result: EvalResult,
+    output: str | None,
+    html: str | None = None,
+) -> None:
+    """Write the result to stdout, and to files if asked.
 
     stdout here is the command's *output*, not logging -- a CLI is
     expected to print its results, and this is the one place in the
@@ -236,6 +240,7 @@ def _emit(result: EvalResult, output: str | None) -> None:
     Args:
         result (EvalResult): The result to write.
         output (str | None): Optional path for a JSON copy.
+        html (str | None): Optional path for an HTML report.
     """
     for item in result.summary():
         value = "n/a" if item.value is None else f"{item.value:.3f}"
@@ -253,6 +258,10 @@ def _emit(result: EvalResult, output: str | None) -> None:
             result.to_json(indent=2), encoding="utf-8"
         )
         sys.stdout.write(f"written to {output}\n")
+
+    if html:
+        result.to_html(html)
+        sys.stdout.write(f"report written to {html}\n")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -277,6 +286,9 @@ def build_parser() -> argparse.ArgumentParser:
     )
     evaluate_cmd.add_argument(
         "-o", "--output", help="write the full result to this file"
+    )
+    evaluate_cmd.add_argument(
+        "--html", help="write a standalone HTML report to this file"
     )
     evaluate_cmd.set_defaults(handler=run_eval)
 

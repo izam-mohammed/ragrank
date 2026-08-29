@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 from statistics import fmean, stdev
 from typing import Any
 
@@ -267,6 +268,38 @@ class EvalResult(BaseModel):
             ],
         }
         return json.dumps(payload, **kwargs)
+
+    def to_html(
+        self,
+        path: str | Path | None = None,
+        *,
+        title: str = "ragrank report",
+    ) -> str:
+        """Render the run as a standalone HTML report.
+
+        One file with no external assets, so it opens anywhere and can
+        be attached to a pull request. Every metric's per-row score,
+        reason and error is included, folded into disclosures so the
+        page stays readable.
+
+        Args:
+            path (str | Path | None): Write the report here as well as
+                returning it.
+            title (str): Title for the document.
+
+        Returns:
+            str: The complete HTML document.
+
+        Examples::
+
+            result.to_html("report.html")
+        """
+        from ragrank.evaluation.report import to_html
+
+        document = to_html(self, title=title)
+        if path is not None:
+            Path(path).write_text(document, encoding="utf-8")
+        return document
 
     def __repr__(self) -> str:
         """
