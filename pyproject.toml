@@ -34,6 +34,11 @@ all = [
 [project.scripts]
 ragrank = "ragrank.cli:main"
 
+# Evals belong next to unit tests. The plugin registers the `ragrank`
+# marker and the --ragrank-report option; it is inert unless used.
+[project.entry-points.pytest11]
+ragrank = "ragrank.testing.plugin"
+
 [project.urls]
 Repository = "https://github.com/Auto-Playground/ragrank"
 

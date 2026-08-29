@@ -162,6 +162,66 @@ def _rows_table(result: EvalResult) -> str:
     )
 
 
+def _document(title: str, body: str) -> str:
+    """Wrap rendered sections in a complete HTML document."""
+    return (
+        "<!DOCTYPE html><html lang='en'><head>"
+        "<meta charset='utf-8'>"
+        "<meta name='viewport' content='width=device-width,"
+        "initial-scale=1'>"
+        f"<title>{escape(title)}</title>"
+        f"<style>{STYLE}</style></head><body>"
+        f"<h1>{escape(title)}</h1>"
+        f"{body}</body></html>"
+    )
+
+
+def _meta(result: EvalResult) -> str:
+    """One line describing how the run went."""
+    verdict = (
+        ""
+        if result.passed is None
+        else f" &middot; {_verdict(result.passed)}"
+    )
+    return (
+        f"{len(result.dataset)} rows &middot; "
+        f"{len(result.metrics)} metrics &middot; "
+        f"judged by {escape(result.llm.name)} &middot; "
+        f"{result.response_time:.2f}s &middot; "
+        f"{result.usage.total_tokens:,} tokens"
+        f"{verdict}"
+    )
+
+
+def combined_html(
+    entries: list[tuple[str, EvalResult]],
+    title: str = "ragrank report",
+) -> str:
+    """Render several runs into one document, one section each.
+
+    Used by the pytest plugin, where each eval test contributes a run
+    and the useful artefact is all of them together.
+
+    Args:
+        entries (list[tuple[str, EvalResult]]): Named runs, in order.
+        title (str): Title for the document.
+
+    Returns:
+        str: A complete HTML document.
+    """
+    if not entries:
+        return _document(title, "<p class='meta'>No evaluations ran.</p>")
+
+    sections = [
+        f"<h2>{escape(name)}</h2>"
+        f"<p class='meta'>{_meta(result)}</p>"
+        + _summary_table(result)
+        + _rows_table(result)
+        for name, result in entries
+    ]
+    return _document(title, "".join(sections))
+
+
 def to_html(result: EvalResult, title: str = "ragrank report") -> str:
     """Render a finished run as a standalone HTML document.
 
@@ -172,30 +232,9 @@ def to_html(result: EvalResult, title: str = "ragrank report") -> str:
     Returns:
         str: A complete HTML document, with no external assets.
     """
-    verdict = (
-        ""
-        if result.passed is None
-        else f" &middot; {_verdict(result.passed)}"
-    )
-    meta = (
-        f"{len(result.dataset)} rows &middot; "
-        f"{len(result.metrics)} metrics &middot; "
-        f"judged by {escape(result.llm.name)} &middot; "
-        f"{result.response_time:.2f}s &middot; "
-        f"{result.usage.total_tokens:,} tokens"
-        f"{verdict}"
-    )
-
-    return (
-        "<!DOCTYPE html><html lang='en'><head>"
-        "<meta charset='utf-8'>"
-        "<meta name='viewport' content='width=device-width,"
-        "initial-scale=1'>"
-        f"<title>{escape(title)}</title>"
-        f"<style>{STYLE}</style></head><body>"
-        f"<h1>{escape(title)}</h1>"
-        f"<p class='meta'>{meta}</p>"
+    return _document(
+        title,
+        f"<p class='meta'>{_meta(result)}</p>"
         + _summary_table(result)
-        + _rows_table(result)
-        + "</body></html>"
+        + _rows_table(result),
     )
