@@ -28,6 +28,10 @@ from ragrank.metric._custom.simple import (
     LLMJudge,
     metric,
 )
+from ragrank.metric._heuristic.semantic import (
+    SemanticSimilarity,
+    semantic_similarity,
+)
 from ragrank.metric._heuristic.text import (
     ExactMatch,
     JsonValid,
@@ -124,12 +128,14 @@ __all__ = [
     "TokenF1",
     "RougeL",
     "JsonValid",
+    "SemanticSimilarity",
     "exact_match",
     "string_presence",
     "levenshtein_ratio",
     "token_f1",
     "rouge_l",
     "json_valid",
+    "semantic_similarity",
     # retrieval, no llm
     "RankingMetric",
     "HitRate",

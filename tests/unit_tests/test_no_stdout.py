@@ -65,7 +65,15 @@ def test_no_executable_print_calls(path: Path) -> None:
     "path", source_files(), ids=lambda p: p.name
 )
 def test_no_direct_stdout_writes(path: Path) -> None:
-    """No module may reach for sys.stdout or sys.stderr directly."""
+    """No library module may reach for sys.stdout or sys.stderr.
+
+    cli.py is the deliberate exception: a command line tool is expected
+    to write its results to stdout. Everything it emits there is the
+    command's output; its diagnostics still go through logging.
+    """
+    if path.name == "cli.py":
+        pytest.skip("the CLI writes its results to stdout by design")
+
     text = path.read_text(encoding="utf-8")
     for banned in ("sys.stdout", "sys.stderr"):
         assert banned not in text, f"{banned} in {path.name}"
