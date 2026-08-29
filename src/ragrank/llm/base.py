@@ -147,6 +147,7 @@ class LLMResult(BaseModel):
             text generation.
         response_tokens (int | None): Number of tokens in the
             generated response.
+        prompt_tokens (int | None): Number of tokens in the prompt.
         llm (BaseLLM | None): Instance of the LLM used for generation.
         llm_config (LLMConfig | None): Configuration settings
             used for generation.
@@ -167,6 +168,10 @@ class LLMResult(BaseModel):
     response_tokens: int | None = Field(
         default=None,
         description="Number of tokens in the generated response.",
+    )
+    prompt_tokens: int | None = Field(
+        default=None,
+        description="Number of tokens in the prompt sent to the model.",
     )
     llm: BaseLLM | None = Field(
         default=None,

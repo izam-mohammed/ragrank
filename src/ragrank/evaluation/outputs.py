@@ -16,6 +16,7 @@ from ragrank.bridge.pydantic import (
 )
 from ragrank.dataset import Dataset
 from ragrank.dataset.reader import RAGRANK_DICT_TYPE
+from ragrank.evaluation.usage import TokenUsage
 from ragrank.llm import BaseLLM
 from ragrank.metric import BaseMetric, MetricResult
 
@@ -67,6 +68,7 @@ class EvalResult(BaseModel):
         results (List[List[MetricResult]] | None): Full per-row results,
             including reasons, errors and timings.
         response_time (float): Response time for the evaluation process.
+        usage (TokenUsage): Tokens the run consumed.
     """
 
     model_config: ConfigDict = ConfigDict(
@@ -93,6 +95,10 @@ class EvalResult(BaseModel):
     )
     response_time: float = Field(
         gt=0, description="Response time for the evaluation process."
+    )
+    usage: TokenUsage = Field(
+        default_factory=TokenUsage,
+        description="Tokens the run consumed.",
     )
 
     @model_validator(mode="after")
@@ -194,6 +200,31 @@ class EvalResult(BaseModel):
             if score is None
         )
 
+    def cost(
+        self,
+        *,
+        per_prompt_token: float,
+        per_response_token: float,
+    ) -> float:
+        """Estimate what this run cost, at the given rates.
+
+        Rates are per single token, so $5 per million input tokens is
+        `5 / 1e6`. Prices change and vary by provider, so ragrank does
+        not ship a price table -- you supply the numbers you are
+        actually paying.
+
+        Args:
+            per_prompt_token (float): Price of one prompt token.
+            per_response_token (float): Price of one response token.
+
+        Returns:
+            float: The estimated cost of the run.
+        """
+        return self.usage.cost(
+            per_prompt_token=per_prompt_token,
+            per_response_token=per_response_token,
+        )
+
     def to_dict(self) -> RAGRANK_DICT_TYPE:
         """
         Convert the evaluation result to a dict.
@@ -229,6 +260,7 @@ class EvalResult(BaseModel):
         payload = {
             "llm": self.llm.name,
             "response_time": self.response_time,
+            "usage": self.usage.model_dump(),
             "data": self.to_dict(),
             "summary": [
                 item.model_dump() for item in self.summary()

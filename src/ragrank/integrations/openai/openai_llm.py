@@ -108,4 +108,5 @@ class OpenaiLLM(BaseLLM):
             response_tokens=(
                 usage.completion_tokens if usage else None
             ),
+            prompt_tokens=usage.prompt_tokens if usage else None,
         )

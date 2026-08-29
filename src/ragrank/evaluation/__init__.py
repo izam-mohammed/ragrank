@@ -3,6 +3,7 @@
 from ragrank.evaluation.base import evaluate
 from ragrank.evaluation.outputs import EvalResult, MetricSummary
 from ragrank.evaluation.runner import RunConfig, run_metrics
+from ragrank.evaluation.usage import TokenUsage, TrackedLLM
 
 __all__ = [
     "evaluate",
@@ -10,4 +11,6 @@ __all__ = [
     "MetricSummary",
     "RunConfig",
     "run_metrics",
+    "TokenUsage",
+    "TrackedLLM",
 ]

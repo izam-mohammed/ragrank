@@ -100,6 +100,7 @@ class FakeLLM(BaseLLM):
             response_time=0.0,
             finish_reason="stop",
             response_tokens=len(message.split()),
+            prompt_tokens=len(text.split()),
             llm=self,
             llm_config=self.llm_config,
         )

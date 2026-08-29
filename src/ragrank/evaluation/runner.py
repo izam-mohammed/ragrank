@@ -17,9 +17,14 @@ from tqdm import tqdm
 
 from ragrank.bridge.pydantic import BaseModel, ConfigDict, Field
 from ragrank.dataset import DataNode, Dataset
+from ragrank.evaluation.usage import (
+    TokenUsage,
+    TrackedLLM,
+    UsageTracker,
+)
 from ragrank.exceptions import ValidationError
-from ragrank.llm import BaseLLM
-from ragrank.metric import BaseMetric, MetricResult
+from ragrank.llm import BaseLLM, default_llm
+from ragrank.metric import BaseMetric, LLMMetric, MetricResult
 
 logger = logging.getLogger(__name__)
 
@@ -113,6 +118,33 @@ def validate_dataset(
         )
 
 
+def _with_tracking(
+    metric: BaseMetric,
+    llm: BaseLLM | None,
+    tracker: UsageTracker,
+) -> BaseMetric:
+    """Bind a metric to a token-counting view of its language model.
+
+    Deterministic metrics make no model calls, so they are left alone
+    and a run using only those still needs no credentials.
+
+    Args:
+        metric (BaseMetric): The metric to bind.
+        llm (BaseLLM | None): The LLM offered by the run.
+        tracker (UsageTracker): Where to record usage.
+
+    Returns:
+        BaseMetric: The metric, bound to a tracked model if it uses one.
+    """
+    if not isinstance(metric, LLMMetric):
+        return metric
+
+    inner = metric.llm or llm or default_llm()
+    return metric.model_copy(
+        update={"llm": TrackedLLM(inner=inner, tracker=tracker)}
+    )
+
+
 def _score_one(
     metric: BaseMetric, node: DataNode, config: RunConfig
 ) -> MetricResult:
@@ -166,7 +198,7 @@ def run_metrics(
     *,
     llm: BaseLLM | None = None,
     config: RunConfig | None = None,
-) -> list[list[MetricResult]]:
+) -> tuple[list[list[MetricResult]], TokenUsage]:
     """Score every row of a dataset with every metric.
 
     Args:
@@ -177,12 +209,16 @@ def run_metrics(
         config (RunConfig | None): The run policy.
 
     Returns:
-        list[list[MetricResult]]: Results indexed by metric, then row.
+        tuple[list[list[MetricResult]], TokenUsage]: Results indexed by
+            metric then row, and the tokens the run consumed.
     """
     config = config or RunConfig()
     validate_dataset(dataset, metrics)
 
-    bound = [metric.with_llm(llm) for metric in metrics]
+    tracker = UsageTracker()
+    bound = [
+        _with_tracking(metric, llm, tracker) for metric in metrics
+    ]
     nodes = list(dataset)
     jobs = [
         (metric_index, row_index)
@@ -215,7 +251,7 @@ def run_metrics(
         ) as pool:
             collect(pool.map(work, jobs))
 
-    return results  # type: ignore[return-value]
+    return results, tracker.usage()  # type: ignore[return-value]
 
 
 def _with_progress(
