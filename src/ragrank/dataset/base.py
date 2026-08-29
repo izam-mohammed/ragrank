@@ -5,12 +5,13 @@ from __future__ import annotations
 import logging
 from collections.abc import Iterator
 from pathlib import Path
-from typing import Any
-
-from pandas import DataFrame
-from tqdm import tqdm
+from typing import TYPE_CHECKING, Any
 
 from ragrank.bridge.pydantic import BaseModel, Field, model_validator
+from ragrank.utils.optional import is_available, require
+
+if TYPE_CHECKING:
+    from pandas import DataFrame
 
 DATANODE_DICT_TYPE = dict[str, list[str] | str]
 DATASET_DICT_TYPE = dict[str, list[str] | list[list[str]]]
@@ -104,11 +105,20 @@ class Dataset(BaseModel):
             ValueError: If the number of data points is not consistent
                 across question, context, and response.
         """
-        if not len(self.question) == len(self.response):
+        lengths = {
+            "question": len(self.question),
+            "context": len(self.context),
+            "response": len(self.response),
+        }
+        if len(set(lengths.values())) != 1:
+            detail = ", ".join(
+                f"{name}={size}" for name, size in lengths.items()
+            )
             raise ValueError(
-                "The number of datapoints in question "
-                "and response should be equal. \n"
-                "Ensure that all lists contain the same number of datapoints."
+                "The number of datapoints in question, context and "
+                "response should be equal. \n"
+                f"Got {detail}. Ensure that all lists contain the "
+                "same number of datapoints."
             )
 
         return self
@@ -176,16 +186,24 @@ class Dataset(BaseModel):
         )
         return combined_dataset
 
-    def with_progress(self, purpose: str = "Iterating") -> tqdm:
+    def with_progress(
+        self, purpose: str = "Iterating"
+    ) -> Iterator[DataNode]:
         """
-        Return a tqdm progress bar for iterating over the dataset.
+        Return an iterator over the dataset, with a progress bar if
+        `tqdm` is installed.
 
         Args:
             purpose (str): The purpose for iterating over the dataset.
 
         Returns:
-            tqdm: A tqdm progress bar.
+            Iterator[DataNode]: An iterator over the data nodes.
         """
+        if not is_available("tqdm"):
+            return iter(self)
+
+        from tqdm import tqdm
+
         return tqdm(
             self,
             ncols=100,
@@ -218,7 +236,8 @@ class Dataset(BaseModel):
         Returns:
             DataFrame: data representation
         """
-        return DataFrame(self.to_dict())
+        pd = require("pandas", "pandas")
+        return pd.DataFrame(self.to_dict())
 
     def to_csv(self, path: str | Path, **kwargs: Any) -> None:  # noqa: ANN401
         """Save the data as a csv file
