@@ -1,6 +1,8 @@
 """Contains the ouputs of evaluation"""
 
-from pandas import DataFrame
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 from ragrank.bridge.pydantic import (
     BaseModel,
@@ -12,6 +14,10 @@ from ragrank.dataset import Dataset
 from ragrank.dataset.reader import RAGRANK_DICT_TYPE
 from ragrank.llm import BaseLLM
 from ragrank.metric import BaseMetric
+from ragrank.utils.optional import require
+
+if TYPE_CHECKING:
+    from pandas import DataFrame
 
 
 class EvalResult(BaseModel):
@@ -61,7 +67,7 @@ class EvalResult(BaseModel):
             raise ValueError(
                 "The number of metrics and number of scores is not equal. \n"
                 "Ensure that each metric has a corresponding score."
-            ) from ValueError
+            ) from None
 
         dataset_size = len(self.dataset)
         for score in self.scores:
@@ -70,7 +76,7 @@ class EvalResult(BaseModel):
                     "The number of datapoints and scores are not balanced. \n"
                     "Ensure that each score list has the same "
                     "length as dataset."
-                ) from ValueError
+                ) from None
 
         return self
 
@@ -93,6 +99,7 @@ class EvalResult(BaseModel):
         Returns:
             DataFrame: A DataFrame containing the evaluation results.
         """
+        require("pandas", "pandas")
         df = self.dataset.to_dataframe()
         for i in range(len(self.metrics)):
             df[self.metrics[i].name] = self.scores[i]

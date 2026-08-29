@@ -8,16 +8,22 @@ readme = "README.md"
 requires-python = ">=3.10,<4.0"
 keywords = ["rag", "evaluation", "llmops"]
 dependencies = [
-    "numpy>=1.26.4",
-    "pathlib>=1.0.1",
-    "urllib3>=2.2.1",
-    "requests-toolbelt>=1.0.0",
-    "requests>=2.28.2,!=2.30.0",
     "pydantic>=2.6.3",
+    "typing-extensions>=4.9.0",
+]
+
+[project.optional-dependencies]
+pandas = ["pandas>=2.2.1"]
+progress = ["tqdm>=4.66.2"]
+openai = ["openai>=1.14.2"]
+hf = ["datasets>=2.18.0"]
+langchain = ["langchain-core>=0.1.32"]
+llama-index = ["llama-index>=0.10.20"]
+all = [
     "pandas>=2.2.1",
     "tqdm>=4.66.2",
-    "datasets>=2.18.0",
     "openai>=1.14.2",
+    "datasets>=2.18.0",
 ]
 
 [project.urls]
@@ -39,6 +45,9 @@ docs = [
 ]
 dev = [
     "pytest>=8.0.1",
+    "pandas>=2.2.1",
+    "tqdm>=4.66.2",
+    "datasets>=2.18.0",
     "isort>=5.13.2",
     "ruff==0.2.2",
     "codespell>=2.2.6",
@@ -67,6 +76,7 @@ version-file = "src/ragrank/_version.py"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/ragrank"]
+artifacts = ["src/ragrank/py.typed"]
 
 [tool.ruff]
 line-length = 69

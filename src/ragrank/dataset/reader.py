@@ -3,15 +3,15 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any
-
-import datasets as hf_datasets
-import pandas as pd
-from datasets.arrow_dataset import Dataset as HF_Arrow_Dataset
+from typing import TYPE_CHECKING, Any
 
 from ragrank.bridge.pydantic import BaseModel, Field
 from ragrank.dataset import DataNode, Dataset
 from ragrank.utils.common import eval_cell
+from ragrank.utils.optional import require
+
+if TYPE_CHECKING:
+    import pandas as pd
 
 DATANODE_TYPE = dict[str, list[str] | str]
 DATASET_TYPE = dict[str, list[str] | list[list[str]]]
@@ -50,7 +50,7 @@ def from_dict(
         if value not in data:
             raise ValueError(
                 f"The column {value} not in the data"
-            ) from ValueError
+            ) from None
     data = {
         key: data[value]
         for key, value in column_map.model_dump().items()
@@ -118,7 +118,8 @@ def from_csv(
     if column_map is None:
         column_map = ColumnMap()
 
-    df: pd.DataFrame = pd.read_csv(filepath_or_buffer=path, **kwargs)
+    pandas = require("pandas", "pandas")
+    df = pandas.read_csv(filepath_or_buffer=path, **kwargs)
     return from_dataframe(data=df, column_map=column_map)
 
 
@@ -143,12 +144,13 @@ def from_hfdataset(
     """
     if column_map is None:
         column_map = ColumnMap()
+    hf_datasets = require("datasets", "hf")
     dataset = (
         hf_datasets.load_dataset(url)
         if isinstance(url, str)
         else hf_datasets.load_dataset(*url)
     )
-    data: HF_Arrow_Dataset = dataset[split]
+    data = dataset[split]
     data_dict = {
         column: data[column] for column in data.column_names
     }
