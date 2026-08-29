@@ -5,6 +5,10 @@ from ragrank.metric._claims.base import (
     Faithfulness,
     faithfulness,
 )
+from ragrank.metric._claims.reliance import (
+    ContextReliance,
+    context_reliance,
+)
 from ragrank.metric._context_related.relevancy import (
     ContextRelevancy,
     context_relevancy,
@@ -136,12 +140,14 @@ __all__ = [
     "ClaimMetric",
     "Faithfulness",
     "Correctness",
+    "ContextReliance",
     "response_relevancy",
     "response_conciseness",
     "context_relevancy",
     "context_utilization",
     "faithfulness",
     "correctness",
+    "context_reliance",
     # heuristic, no llm
     "ExactMatch",
     "StringPresence",
