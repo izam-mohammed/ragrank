@@ -19,11 +19,13 @@ dependencies = [
 # Anything the core API touches belongs in `dependencies` above.
 [project.optional-dependencies]
 openai = ["openai>=1.14.2"]
+litellm = ["litellm>=1.40.0"]
 langchain = ["langchain-core>=0.1.32"]
 llama-index = ["llama-index>=0.10.20"]
 hf = ["datasets>=2.18.0"]
 all = [
     "openai>=1.14.2",
+    "litellm>=1.40.0",
     "langchain-core>=0.1.32",
     "llama-index>=0.10.20",
     "datasets>=2.18.0",
