@@ -236,7 +236,9 @@ class LLMMetric(BaseMetric):
                     datanode=data,
                     metric=self,
                     score=parsed.score,
-                    reason=self.reason(data, parsed.score, response.response),
+                    reason=self.reason(
+                        data, parsed.score, response.response
+                    ),
                     process_time=perf_counter() - started,
                 )
 

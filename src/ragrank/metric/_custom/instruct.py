@@ -3,11 +3,9 @@
 from __future__ import annotations
 
 import logging
-from time import time
 from typing import Any
 
 from ragrank.bridge.pydantic import BaseModel, ConfigDict, Field
-from ragrank.dataset import DataNode
 from ragrank.llm import BaseLLM
 from ragrank.metric.base import LLMMetric, MetricType
 from ragrank.prompt import Prompt

@@ -33,5 +33,6 @@ def eval_cell(cell_value: str | list[str]) -> str | list[str]:
     if not isinstance(parsed, list):
         return cell_value
     return [
-        item if isinstance(item, str) else str(item) for item in parsed
+        item if isinstance(item, str) else str(item)
+        for item in parsed
     ]

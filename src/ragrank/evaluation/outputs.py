@@ -55,7 +55,7 @@ class EvalResult(BaseModel):
     )
 
     @model_validator(mode="after")
-    def validator(self) -> "EvalResult":
+    def validator(self) -> EvalResult:
         """
         Validate the evaluation result after instantiation.
 

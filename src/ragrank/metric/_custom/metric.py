@@ -84,7 +84,9 @@ class CustomMetric(BaseMetric, ABC):
         try:
             score: float | None = float(raw)
         except (TypeError, ValueError):
-            logger.error("%s produced a non-numeric score: %r", self.name, raw)
+            logger.error(
+                "%s produced a non-numeric score: %r", self.name, raw
+            )
             return MetricResult(
                 datanode=data,
                 metric=self,

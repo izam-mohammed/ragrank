@@ -13,8 +13,10 @@ from pathlib import Path
 import pytest
 from ragrank.dataset import DataNode, Dataset
 from ragrank.llm import FakeLLM
-from ragrank.metric import CustomInstruct, InstructConfig
-from ragrank.metric._response_related.relevancy import ResponseRelevancy
+from ragrank.metric import CustomInstruct, InstructConfig, MetricType
+from ragrank.metric._response_related.relevancy import (
+    ResponseRelevancy,
+)
 from ragrank.prompt import Prompt
 from ragrank.utils.common import eval_cell
 
@@ -42,9 +44,7 @@ def test_defect_2_balanced_dataset_still_constructs() -> None:
 def test_defect_3_custom_instruct_keeps_instructions() -> None:
     """NON_BINARY metrics must not discard the user's instructions."""
     config = InstructConfig(
-        metric_type=__import__(
-            "ragrank.metric.base", fromlist=["MetricType"]
-        ).MetricType.NON_BINARY,
+        metric_type=MetricType.NON_BINARY,
         name="Politeness",
         instructions="SENTINEL_INSTRUCTION_TEXT",
         input_fields=["question"],
@@ -139,9 +139,10 @@ def test_defect_18_no_raise_from_exception_class() -> None:
         for number, line in enumerate(
             path.read_text().splitlines(), start=1
         )
-        if line.strip().endswith(
-            ("from ValueError", "from TypeError")
-        )
+        if line.strip().endswith((
+            "from ValueError",
+            "from TypeError",
+        ))
         or line.strip().endswith("from ModuleNotFoundError")
     ]
     assert not offenders, offenders
@@ -159,8 +160,8 @@ def test_core_imports_without_optional_dependencies() -> None:
         "from ragrank.metric import response_relevancy\n"
         "print('ok')\n"
     )
-    completed = subprocess.run(  # noqa: S603
-        [sys.executable, "-c", script],
+    completed = subprocess.run(
+        [sys.executable, "-c", script],  # noqa: S603
         capture_output=True,
         text=True,
         check=False,

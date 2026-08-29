@@ -55,7 +55,9 @@ def parse_score(
 
     cleaned = _FENCE.sub("", text).strip()
     if not cleaned:
-        return ParsedScore(None, "the LLM returned an empty response")
+        return ParsedScore(
+            None, "the LLM returned an empty response"
+        )
 
     if rubric:
         return _parse_choice(cleaned, rubric)
@@ -93,9 +95,7 @@ def _parse_number(
 
     match = _NUMBER.search(text)
     if match is None:
-        return ParsedScore(
-            None, f"no number found in {text[:80]!r}"
-        )
+        return ParsedScore(None, f"no number found in {text[:80]!r}")
 
     value = float(match.group())
     if not low <= value <= high:

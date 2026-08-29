@@ -108,7 +108,9 @@ class Prompt(BaseModel):
         Raises:
             KeyError: If a declared input key has no value.
         """
-        missing = [key for key in self.input_keys if key not in values]
+        missing = [
+            key for key in self.input_keys if key not in values
+        ]
         if missing:
             raise KeyError(
                 f"Prompt {self.name!r} needs {missing} but the data "

@@ -6,8 +6,8 @@ library can be exercised end to end without an API key.
 
 from __future__ import annotations
 
+from collections.abc import Callable, Iterator
 from itertools import cycle
-from typing import Callable, Iterator
 
 from ragrank.bridge.pydantic import ConfigDict, Field, PrivateAttr
 from ragrank.llm.base import BaseLLM, LLMResult
