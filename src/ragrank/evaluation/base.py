@@ -3,11 +3,12 @@
 from __future__ import annotations
 
 import logging
-from time import time
+from time import perf_counter
 
 from ragrank.bridge.pydantic import validate_call
 from ragrank.dataset import DataNode, Dataset, from_dict
 from ragrank.evaluation.outputs import EvalResult
+from ragrank.evaluation.runner import RunConfig, run_metrics
 from ragrank.llm import BaseLLM, default_llm
 from ragrank.metric import BaseMetric, response_relevancy
 
@@ -20,19 +21,23 @@ def evaluate(
     *,
     llm: BaseLLM | None = None,
     metrics: BaseMetric | list[BaseMetric] | None = None,
+    run_config: RunConfig | None = None,
 ) -> EvalResult:
     """
     Evaluate the performance of a given dataset using specified metrics.
 
     Parameters:
-        dataset (Union[Dataset, DataNode, dict]): The dataset to be evaluated.
+        data (Union[Dataset, DataNode, dict]): The dataset to be evaluated.
             It can be provided either as a `Dataset` object, `DataNode` object,
             or a `dict` representing the dataset.
         llm (Optional[BaseLLM]): The LLM (Language Model) used for evaluation.
-            If None, a default LLM will be used.
+            Metrics that do not carry their own LLM use this one. If None,
+            a default LLM will be used.
         metrics (Optional[Union[BaseMetric, List[BaseMetric]]]): The metric or
             list of metrics used for evaluation. If None,
             response relevancy metric will be used.
+        run_config (Optional[RunConfig]): How the run executes --
+            concurrency, retries, progress. Defaults to `RunConfig()`.
 
     Returns:
         EvalResult: An object containing the evaluation results.
@@ -58,27 +63,29 @@ def evaluate(
         data = from_dict(data)
     if isinstance(data, DataNode):
         data = data.to_dataset()
-    if llm is None:
-        llm = default_llm()
     if metrics is None:
         metrics = [response_relevancy]
     if isinstance(metrics, BaseMetric):
         metrics = [metrics]
 
-    dt = time()
-    scores = [[] for _ in metrics]
-    for datanode in data.with_progress("Evaluating"):
-        for i, metric in enumerate(metrics):
-            scores[i].append(metric.score(datanode).score)
-    logger.info(f"Evaluation completed with {len(metrics)} metrics")
-    delta = time() - dt
+    started = perf_counter()
+    results = run_metrics(
+        data, metrics, llm=llm, config=run_config
+    )
+    elapsed = perf_counter() - started
 
-    result = EvalResult(
-        llm=llm,
-        metrics=metrics,
-        dataset=data,
-        response_time=delta,
-        scores=scores,
+    logger.info(
+        "Evaluated %d datapoints with %d metrics in %.2fs",
+        len(data),
+        len(metrics),
+        elapsed,
     )
 
-    return result
+    return EvalResult(
+        llm=llm or default_llm(),
+        metrics=metrics,
+        dataset=data,
+        response_time=elapsed,
+        scores=[[item.score for item in row] for row in results],
+        results=results,
+    )
