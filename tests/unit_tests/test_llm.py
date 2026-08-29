@@ -126,8 +126,8 @@ def test_llm_config_default_check() -> None:
 
     config = LLMConfig()
     assert (
-        config.temperature == 1.0
-    ), "Expected default temperature to be 1.0"
+        config.temperature == 0.0
+    ), "Expected default temperature to be 0.0 for reproducible judging"
     assert (
         config.max_tokens == 300
     ), "Expected default max tokens to be 300"
