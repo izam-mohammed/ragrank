@@ -9,7 +9,7 @@ from time import perf_counter
 from ragrank.bridge.pydantic import Field
 from ragrank.dataset import DataNode
 from ragrank.llm import BaseLLM
-from ragrank.metric.base import BaseMetric, MetricResult
+from ragrank.metric.base import BaseMetric, MetricResult, MetricType
 from ragrank.prompt import Prompt
 from ragrank.prompt._prompts import NONE_PROMPT
 
@@ -40,6 +40,10 @@ class CustomMetric(BaseMetric, ABC):
             Determine the reason for the given score.
     """
 
+    metric_type: MetricType = Field(
+        default=MetricType.NON_BINARY,
+        description="The type of the metric.",
+    )
     llm: BaseLLM | None = Field(
         default=None,
         description="The language model used to generate the response.",
