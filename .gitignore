@@ -77,6 +77,8 @@ docs/_build/
 # PyBuilder
 .pybuilder/
 target/
+# ...but ragrank.target is a package, not build output.
+!src/ragrank/target/
 
 # Jupyter Notebook
 .ipynb_checkpoints
