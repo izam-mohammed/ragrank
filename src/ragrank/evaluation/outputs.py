@@ -131,7 +131,9 @@ class EvalResult(BaseModel):
                 where the metric has a threshold, a pass rate.
         """
         summaries = []
-        for metric, row in zip(self.metrics, self.scores, strict=False):
+        for metric, row in zip(
+            self.metrics, self.scores, strict=False
+        ):
             valid = [score for score in row if score is not None]
             value = metric.aggregate(valid)
 
@@ -188,7 +190,10 @@ class EvalResult(BaseModel):
             int: The number of unscored pairs.
         """
         return sum(
-            1 for row in self.scores for score in row if score is None
+            1
+            for row in self.scores
+            for score in row
+            if score is None
         )
 
     def to_dict(self) -> RAGRANK_DICT_TYPE:
@@ -199,7 +204,9 @@ class EvalResult(BaseModel):
             dict: A dict containing the evaluation results.
         """
         dict_data = self.dataset.to_dict()
-        for metric, row in zip(self.metrics, self.scores, strict=False):
+        for metric, row in zip(
+            self.metrics, self.scores, strict=False
+        ):
             dict_data[metric.name] = row
         return dict_data
 
@@ -226,7 +233,9 @@ class EvalResult(BaseModel):
             "llm": self.llm.name,
             "response_time": self.response_time,
             "data": self.to_dict(),
-            "summary": [item.model_dump() for item in self.summary()],
+            "summary": [
+                item.model_dump() for item in self.summary()
+            ],
         }
         return json.dumps(payload, **kwargs)
 
