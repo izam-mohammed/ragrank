@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, ClassVar
 
 from ragrank.bridge.pydantic import BaseModel, Field
 from ragrank.dataset import DataNode, Dataset
@@ -45,16 +45,23 @@ def from_dict(
     if column_map is None:
         column_map = ColumnMap()
 
-    for item in column_map:
-        value = item[1]
-        if value not in data:
-            raise ValueError(
-                f"The column {value} not in the data"
-            ) from None
+    mapping = column_map.model_dump()
+    missing = [
+        mapping[field]
+        for field in ColumnMap.REQUIRED
+        if mapping[field] not in data
+    ]
+    if missing:
+        raise ValueError(
+            f"The column {missing[0]} not in the data"
+        ) from None
+
+    # Optional columns are used only when the caller supplied them.
     data = {
         key: data[value]
-        for key, value in column_map.model_dump().items()
-    }  # mapping col
+        for key, value in mapping.items()
+        if value in data
+    }
 
     if any(isinstance(i, str) for i in data.values()):
         if return_as_dataset:
@@ -184,4 +191,22 @@ class ColumnMap(BaseModel):
     response: str = Field(
         default="response",
         description="The name of the column containing responses",
+    )
+    reference: str = Field(
+        default="reference",
+        description="The name of the column containing ground truths",
+    )
+    retrieved_ids: str = Field(
+        default="retrieved_ids",
+        description="The name of the column containing retrieved ids",
+    )
+    reference_ids: str = Field(
+        default="reference_ids",
+        description="The name of the column containing expected ids",
+    )
+
+    REQUIRED: ClassVar[tuple[str, ...]] = (
+        "question",
+        "context",
+        "response",
     )
