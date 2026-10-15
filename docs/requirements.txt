@@ -28,7 +28,7 @@ attrs==26.1.0
     # via aiohttp
 babel==2.18.0
     # via sphinx
-banks==2.5.0
+banks==2.5.1
     # via llama-index-core
 beautifulsoup4==4.15.0
     # via furo
