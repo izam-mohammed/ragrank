@@ -423,7 +423,7 @@ tzdata==2026.3 ; python_full_version < '3.11' or sys_platform == 'emscripten' or
     # via pandas
 uc-micro-py==2.0.0
     # via linkify-it-py
-urllib3==2.7.0
+urllib3==2.8.0
     # via requests
 uuid-utils==0.17.0
     # via
