@@ -73,8 +73,7 @@ Rough cut first: the page itself, opened from the file, then published.
   points taken from the README (free retrieval metrics, judge agreement
   with `align`, gating in CI), and a footer with the licence. No figure
   that the README or a test does not already back.
-- The banner from `plans/02-readme-banner.md` is reused as the hero art if
-  it has landed; otherwise the page ships with text only.
+- The README's existing banner is reused as the hero art.
 - `.github/workflows/pages.yml` publishes `site/` with
   `actions/upload-pages-artifact` and `actions/deploy-pages`, pinned by
   SHA, on `push` to `main` touching `site/**` and on `workflow_dispatch`.
