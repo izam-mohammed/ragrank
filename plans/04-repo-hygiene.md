@@ -100,18 +100,18 @@ that pointed reporters at an address that does not match its link.
 
 ### Phase 1: topics
 
-- [ ] Topics kept as `evaluation`, `language-model`, `llm`, `llm-eval`,
+- [x] Topics kept as `evaluation`, `language-model`, `llm`, `llm-eval`,
   `llmops`, `machine-learning`, `prompt-engineering`, `rag`, with `python`
   added; check: `gh repo view --json repositoryTopics` lists them.
 
 ### Phase 2: Dependabot
 
-- [ ] `.github/dependabot.yml` added with `github-actions` and `uv`
+- [x] `.github/dependabot.yml` added with `github-actions` and `uv`
   (weekly, 7-day cooldown, one group each); check: the YAML parses.
 
 ### Phase 3: security policy
 
-- [ ] `SECURITY.md` rewritten: supported versions, private reporting link,
+- [x] `SECURITY.md` rewritten: supported versions, private reporting link,
   what happens next, scope; check: no email address or response time is
   invented in it.
 
