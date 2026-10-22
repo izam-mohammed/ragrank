@@ -6,6 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Ragrank is a Python evaluation library for RAG (Retrieval-Augmented Generation) models. It provides metrics and an evaluation pipeline to assess RAG system output quality. Uses uv for dependency management, source lives in `src/ragrank/`.
 
+Standards: docs/standards.md
+
 ## Commands
 
 ```bash
