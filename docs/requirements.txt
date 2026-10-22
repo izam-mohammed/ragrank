@@ -5,7 +5,7 @@ accessible-pygments==0.0.5
     # via furo
 aiohappyeyeballs==2.7.1
     # via aiohttp
-aiohttp==3.14.3
+aiohttp==3.14.4
     # via
     #   fsspec
     #   llama-index-core
