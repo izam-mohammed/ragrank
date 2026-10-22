@@ -3,7 +3,8 @@
 ragrank is already usable and on PyPI; what is built is in
 `docs/built/BUILT-2026-10-22-1829.md`. These plans bring the repository up
 to the shared standard: the check first, so every later PR runs it, then
-the README, then the site.
+the site. The README and its banner stay as they are: judged good enough
+on 22/10/2026, so no README plan.
 
 ### Phase 1: one check on every pull request
 
@@ -13,7 +14,5 @@ the README, then the site.
 
 ### Phase 2: the front door
 
-- [ ] `plans/02-readme-banner.md` - a one-screen README with a themed SVG
-  banner, the detail moved to the docs.
 - [ ] `plans/03-site.md` - a one-page site in `site/`, published on GitHub
   Pages.
