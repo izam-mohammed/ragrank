@@ -83,7 +83,6 @@ build_dist: ## Build distribution packages
 	@$(UV_CMD) build
 
 build_docs: ## Build the documentation
-	@$(UV_CMD) export --group docs --no-hashes -o $(DOCS_DIR)/requirements.txt
 	@echo "Building the documentation ..."
 	@$(UV_CMD) run --group docs sphinx-build -M html $(DOCS_DIR)/docs $(DOCS_DIR)/docs/_build/
 	@echo "Building the API reference..."
