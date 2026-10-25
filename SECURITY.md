@@ -1,31 +1,48 @@
-# Security Policy
+# Security policy
 
-## Reporting a Vulnerability
+## Supported versions
 
-At Ragrank, we take security vulnerabilities seriously. If you discover a security issue within the Ragrank project, please report it to us immediately. We appreciate your efforts in disclosing the vulnerability responsibly and will work to address it promptly.
+ragrank is young, so only the latest release on [PyPI](https://pypi.org/project/ragrank/) gets security
+fixes. Please upgrade (`pip install --upgrade ragrank`) before reporting.
 
-To report a security vulnerability, please follow these steps:
+| Version | Supported |
+|---|---|
+| latest release | yes |
+| older | no |
 
-1. **Privately Notify Us**: Send an email to [security@ragrank.com](mailto:izamdeveloper1@gmail.com) with details about the vulnerability. Please do not disclose the issue publicly until it has been resolved.
+## Reporting a vulnerability
 
-2. **Provide Details**: Include as much information as possible about the vulnerability, including steps to reproduce it and any potential impact.
+Please do not open a public issue, pull request or discussion for a security problem.
 
-3. **Coordinate Disclosure**: We will acknowledge your report within 24 hours and work with you to address the vulnerability. Once a fix is available, we will coordinate the disclosure of the issue.
+Report it privately through GitHub:
+[Report a vulnerability](https://github.com/izam-mohammed/ragrank/security/advisories/new)
+(the "Security" tab, then "Report a vulnerability").
 
-## Responsible Disclosure Guidelines
+Helpful details:
 
-When reporting security vulnerabilities, please adhere to the following guidelines:
+- the version and how you installed it, with any extras (`openai`, `litellm`, `langchain`, `llama-index`, `hf`)
+- what an attacker could do, and what they need first (for example a crafted dataset file, a malicious model
+  response or a poisoned cache)
+- the smallest steps or script that show it
+- any fix you have in mind
 
-- **Do Not Exploit**: Do not attempt to exploit the vulnerability or access data beyond what is necessary to demonstrate the issue.
+Please leave out real API keys and real customer data.
 
-- **Privately Notify**: Report the vulnerability to us privately, rather than disclosing it publicly or to third parties.
+## What happens next
 
-- **Provide Details**: Include sufficient details to reproduce the vulnerability, including any relevant code snippets, screenshots, or logs.
+This is a project with one maintainer, so there are no guaranteed response times. The aim is to:
 
-- **Be Patient**: Allow us time to assess and address the vulnerability. We will keep you informed of our progress throughout the process.
+- acknowledge the report
+- agree on whether it is a vulnerability and how serious it is
+- prepare a fix in a private fork, release it, and publish a GitHub security advisory that credits you (unless
+  you would rather not be named)
 
-## Bug Bounty Program
+Please give a reasonable chance to release a fix before you share details publicly.
 
-Currently, we do not have a bug bounty program in place. However, we greatly appreciate and acknowledge the efforts of security researchers who responsibly disclose vulnerabilities to us.
+## Scope
 
-> Thank you for helping us keep Ragrank safe and secure for all users.
+In scope: the `ragrank` package, its `ragrank` CLI, its pytest plugin (`ragrank_pytest`), and this repository's
+release and docs workflows.
+Problems in the LLM providers and frameworks it talks to (OpenAI, LiteLLM, LangChain, LlamaIndex, Hugging Face
+datasets) should go to those projects; tell us too if ragrank makes them worse.
+There is no bug bounty.

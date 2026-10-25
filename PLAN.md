@@ -16,3 +16,8 @@ on 22/10/2026, so no README plan.
 
 - [ ] `plans/03-site.md` - a one-page site in `site/`, published on GitHub
   Pages.
+
+### Phase 3: repo hygiene
+
+- [x] `plans/04-repo-hygiene.md` - Dependabot for every ecosystem, a truthful
+  security policy and topics.

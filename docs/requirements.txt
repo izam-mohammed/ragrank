@@ -297,7 +297,7 @@ requests-toolbelt==1.0.0
     # via langsmith
 roman-numerals==4.1.0 ; python_full_version >= '3.11'
     # via sphinx
-setuptools==84.0.0
+setuptools==84.1.0
     # via llama-index-core
 six==1.17.0
     # via

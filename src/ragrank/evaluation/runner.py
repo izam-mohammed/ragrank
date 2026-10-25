@@ -155,6 +155,7 @@ def validate_dataset(
 
 
 def _resolve_cache(
+    *,
     cache: CacheBackend | bool | None,
 ) -> CacheBackend | None:
     """Turn the RunConfig setting into a backend, or None.
@@ -323,7 +324,7 @@ def run_metrics(
     validate_dataset(dataset, metrics)
 
     tracker = UsageTracker()
-    backend = _resolve_cache(config.cache)
+    backend = _resolve_cache(cache=config.cache)
     bound = [
         _with_tracking(metric, llm, tracker, backend)
         for metric in metrics

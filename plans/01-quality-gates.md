@@ -132,8 +132,8 @@ locally and the same command blocks a PR.
   `tests/` (`D1`, `ANN` per-file ignores), the rules the code already
   passes; the rest of the 177 findings are fixed, not ignored.
 - `uv.lock` is upgraded for the 7 flagged packages so the audit starts
-  green; Dependabot is pointed at `uv` and `github-actions` as in
-  `izam-mohammed/repo-template`'s `.github/dependabot.yml`.
+  green; Dependabot already watches `uv` and `github-actions`
+  (`.github/dependabot.yml`, from `plans/04-repo-hygiene.md`).
 - CI per decision 4; secrets and static analysis by the shared gate
   (decision 3), gitleaks blocking.
 
@@ -154,7 +154,6 @@ this plan adds `make check` and rewrites the file in Phase 1).
 | `uv.lock` | edit | 1 | the flagged packages upgraded | expected |
 | `.github/workflows/check.yml` | new | 1 | `make check` on PRs and `main` | expected |
 | `.github/workflows/security.yml` | new | 1 | calls the shared gate, `ecosystem: python` | fixed |
-| `.github/dependabot.yml` | new | 2 | `uv` and `github-actions` updates | expected |
 | `.github/workflows/lint.yml` | edit | 2 | removed once `check.yml` is required | expected |
 | `.github/workflows/tests.yml` | edit | 2 | removed once `check.yml` is required | expected |
 | `docs/standards.md` | edit | 1 | the new checks and `make check` | reuse |
@@ -183,7 +182,7 @@ dependency updates bots open.
 | --- | --- | --- | --- |
 | Tampering: a moved action tag runs new code in CI | `uses:` on `@v4`, `@v5` tags today | every action pinned by full SHA with the version in a comment | the gate's zizmor stage reports no unpinned use on the PR |
 | Information disclosure: a secret committed | any PR | gitleaks, blocking, in the shared gate | the gate's stage 1 green on the PR |
-| Elevation of privilege: a PR workflow with a write token | `fun.yml` on `pull_request_target`; new workflows | new workflows `permissions: {}` at the top, `contents: read` per job; `fun.yml` left as a follow-up | zizmor's report on the PR |
+| Elevation of privilege: a PR workflow with a write token | new workflows (`fun.yml`, the `pull_request_target` greeting bot, was retired on `main` 25/10/2026) | new workflows `permissions: {}` at the top, `contents: read` per job | zizmor's report on the PR |
 | Tampering: a vulnerable dependency shipped | `uv.lock` (39 advisories in extras and dev) | the blocking audit in `make check` | `make check` green with the upgraded lock |
 
 No secret is passed to the gate (`secrets: inherit` never used). Logs: CI
@@ -214,8 +213,6 @@ Phase 1 by making it fail on purpose in a scratch branch.
 
 - ruff is pinned at 0.2.2 (February 2024); moving to a current release
   changes rule names (`ANN101` is gone) and is its own change.
-- `fun.yml` uses `pull_request_target` with unpinned actions; remove or
-  rewrite it.
 - The `dev` group still lists `isort`, `flake8`, `bandit` and `codespell`,
   which no command runs.
 - No type checker runs; choosing one (mypy or Pyright) is its own plan.
@@ -253,8 +250,7 @@ repository instructions for recording useful development findings.
 ### Phase 2: tidy the rest of CI
 
 - [ ] `.github/workflows/lint.yml` and `.github/workflows/tests.yml`
-  removed once `check.yml` is green on `main`, and `.github/dependabot.yml`
-  added for `uv` and `github-actions`, as in `izam-mohammed/repo-template`.
+  removed once `check.yml` is green on `main`.
 - [ ] `CLAUDE.md` names `make check` and says Python `>=3.10`, matching
   `pyproject.toml`.
 - [ ] Check: `make check` passes, and the PR shows the check and security
