@@ -88,6 +88,8 @@ that pointed reporters at an address that does not match its link.
 - A `pip` entry for `docs/requirements.txt`: the file is generated from
   `uv.lock` by `uv export` (`make` target in `Makefile`), so a separate
   updater would fight the lock file; the `uv` entry covers those packages.
+  > Amended by `05-docs-on-uv.md`: `docs/requirements.txt` is gone; Read
+  > the Docs installs the `docs` group from `uv.lock` directly.
 - Rewriting `docs/docs/more/security.md` here: it is the docs site's copy,
   left for a docs change.
 
