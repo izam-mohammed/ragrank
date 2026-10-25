@@ -5,7 +5,7 @@ accessible-pygments==0.0.5
     # via furo
 aiohappyeyeballs==2.7.1
     # via aiohttp
-aiohttp==3.14.4
+aiohttp==3.14.5
     # via
     #   fsspec
     #   llama-index-core
@@ -17,7 +17,7 @@ alabaster==1.0.0
     # via sphinx
 annotated-types==0.8.0
     # via pydantic
-anyio==4.14.2
+anyio==4.15.1
     # via
     #   httpx
     #   langsmith
@@ -37,9 +37,9 @@ certifi==2026.7.22
     #   httpcore
     #   httpx
     #   requests
-charset-normalizer==3.5.1
+charset-normalizer==3.5.2
     # via requests
-click==8.4.2
+click==8.5.0
     # via
     #   huggingface-hub
     #   nltk
@@ -51,7 +51,7 @@ colorama==0.4.6
     #   tqdm
 dataclasses-json==0.6.7
     # via llama-index-core
-datasets==5.0.1
+datasets==5.1.0
 defusedxml==0.7.1
     # via nltk
 deprecated==1.3.1
@@ -74,7 +74,7 @@ docutils==0.21.2 ; python_full_version < '3.11'
     #   myst-parser
     #   sphinx
     #   sphinx-rtd-theme
-docutils==0.22.4 ; python_full_version >= '3.11'
+docutils==0.23 ; python_full_version >= '3.11'
     # via
     #   myst-parser
     #   sphinx
@@ -93,25 +93,25 @@ frozenlist==1.8.0
     # via
     #   aiohttp
     #   aiosignal
-fsspec==2026.6.0
+fsspec==2026.9.0
     # via
     #   datasets
     #   huggingface-hub
     #   llama-index-core
 furo==2025.12.19
-greenlet==3.5.5
+greenlet==3.5.6
     # via sqlalchemy
-griffe==2.2.0
+griffe==2.3.0
     # via banks
-griffecli==2.2.0
+griffecli==2.3.0
     # via griffe
-griffelib==2.2.0
+griffelib==2.3.0
     # via
     #   griffe
     #   griffecli
 h11==0.16.0
     # via httpcore
-hf-xet==1.6.0 ; platform_machine == 'AMD64' or platform_machine == 'aarch64' or platform_machine == 'amd64' or platform_machine == 'arm64' or platform_machine == 'x86_64'
+hf-xet==1.7.0 ; platform_machine == 'AMD64' or platform_machine == 'aarch64' or platform_machine == 'amd64' or platform_machine == 'arm64' or platform_machine == 'x86_64'
     # via huggingface-hub
 httpcore==1.0.9
     # via httpx
@@ -125,7 +125,7 @@ httpx==0.28.1
     #   openai
 huggingface-hub==1.28.0
     # via datasets
-idna==3.19
+idna==3.20
     # via
     #   anyio
     #   httpx
@@ -138,33 +138,33 @@ jinja2==3.1.6
     #   banks
     #   myst-parser
     #   sphinx
-jiter==0.16.0
+jiter==0.17.0
     # via openai
-joblib==1.5.3
+joblib==1.6.0
     # via nltk
-jsonpatch==1.33
+jsonpatch==1.35
     # via langchain-core
-jsonpointer==3.1.1
+jsonpointer==3.2.1
     # via jsonpatch
-langchain-core==1.6.0
-langchain-protocol==0.0.18
+langchain-core==1.6.12
+langchain-protocol==0.0.19
     # via langchain-core
-langsmith==0.11.1
+langsmith==0.14.11
     # via langchain-core
-linkify-it-py==2.1.1
-llama-index==0.14.24
-llama-index-core==0.14.24
+linkify-it-py==2.2.0
+llama-index==0.14.25
+llama-index-core==0.14.25
     # via
     #   llama-index
     #   llama-index-embeddings-openai
     #   llama-index-llms-openai
-llama-index-embeddings-openai==0.6.0
+llama-index-embeddings-openai==0.7.0
     # via llama-index
-llama-index-instrumentation==0.5.0
+llama-index-instrumentation==0.6.0
     # via llama-index-workflows
-llama-index-llms-openai==0.7.10
+llama-index-llms-openai==0.8.3
     # via llama-index
-llama-index-workflows==2.23.3
+llama-index-workflows==2.26.0
     # via llama-index-core
 markdown-it-py==3.0.0 ; python_full_version < '3.11'
     # via
@@ -174,7 +174,7 @@ markdown-it-py==4.2.0 ; python_full_version >= '3.11'
     # via
     #   mdit-py-plugins
     #   myst-parser
-markupsafe==3.0.3
+markupsafe==3.0.4
     # via jinja2
 marshmallow==3.26.2
     # via dataclasses-json
@@ -221,7 +221,7 @@ openai==2.54.0
     # via
     #   llama-index-embeddings-openai
     #   llama-index-llms-openai
-orjson==3.12.0 ; platform_python_implementation != 'PyPy'
+orjson==3.13.0 ; platform_python_implementation != 'PyPy'
     # via langsmith
 packaging==26.3
     # via
@@ -241,19 +241,19 @@ pandas==3.0.5 ; python_full_version >= '3.11'
     #   ragrank
 pillow==12.3.0
     # via llama-index-core
-platformdirs==4.11.4
+platformdirs==4.12.4
     # via
     #   banks
     #   llama-index-core
 pockets==0.9.1
     # via sphinxcontrib-napoleon
-propcache==0.5.2
+propcache==0.5.4
     # via
     #   aiohttp
     #   yarl
 pyarrow==25.0.1
     # via datasets
-pydantic==2.13.4
+pydantic==2.14.1
     # via
     #   banks
     #   langchain-core
@@ -263,7 +263,7 @@ pydantic==2.13.4
     #   llama-index-workflows
     #   openai
     #   ragrank
-pydantic-core==2.46.4
+pydantic-core==2.50.1
     # via pydantic
 pygments==2.21.0
     # via
@@ -281,7 +281,7 @@ pyyaml==6.0.3
     #   langchain-core
     #   llama-index-core
     #   myst-parser
-regex==2026.7.19
+regex==2026.9.29
     # via
     #   nltk
     #   tiktoken
@@ -310,7 +310,7 @@ sniffio==1.3.1
     #   openai
 snowballstemmer==3.1.1
     # via sphinx
-soupsieve==2.9.2
+soupsieve==2.10
     # via beautifulsoup4
 sphinx==8.1.3 ; python_full_version < '3.11'
     # via
@@ -372,19 +372,19 @@ sphinxcontrib-qthelp==2.0.0
 sphinxcontrib-serializinghtml==2.0.0
     # via sphinx
 sphinxext-opengraph==0.13.0
-sqlalchemy==2.0.52
+sqlalchemy==2.0.55
     # via llama-index-core
-tenacity==9.1.4
+tenacity==9.2.1
     # via
     #   langchain-core
     #   llama-index-core
 tiktoken==0.14.0
     # via llama-index-core
-tinytag==2.3.0
+tinytag==2.3.2
     # via llama-index-core
 tomli==2.4.1 ; python_full_version < '3.11'
     # via sphinx
-tqdm==4.70.0
+tqdm==4.70.1
     # via
     #   datasets
     #   huggingface-hub
@@ -433,7 +433,7 @@ websockets==16.1.1 ; python_full_version < '3.11'
     # via langsmith
 websockets==17.0.1 ; python_full_version >= '3.11'
     # via langsmith
-wrapt==2.3.0
+wrapt==2.5.1
     # via
     #   deprecated
     #   llama-index-core
@@ -441,7 +441,7 @@ xxhash==4.0.1
     # via
     #   datasets
     #   langsmith
-yarl==1.24.5
+yarl==1.25.1
     # via aiohttp
 zstandard==0.25.0
     # via langsmith
