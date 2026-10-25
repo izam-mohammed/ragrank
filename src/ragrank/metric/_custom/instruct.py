@@ -104,7 +104,7 @@ class CustomInstruct(LLMMetric):
         description="Instructions for the Custom Instruct Metric"
     )
 
-    def model_post_init(self, __context: Any) -> None:  # noqa: ANN401
+    def model_post_init(self, context: Any, /) -> None:  # noqa: ANN401
         """Post-initialization hook to configure the metric."""
         self.metric_type = self.config.metric_type
         self.prompt = Prompt(

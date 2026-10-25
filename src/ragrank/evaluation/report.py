@@ -52,7 +52,7 @@ def _number(value: float | None, digits: int = 3) -> str:
     return f"{value:.{digits}f}"
 
 
-def _verdict(passed: bool | None) -> str:
+def _verdict(*, passed: bool | None) -> str:
     """Format a pass/fail verdict."""
     if passed is None:
         return '<span class="none">-</span>'
@@ -98,7 +98,7 @@ def _summary_table(result: EvalResult) -> str:
             f'<td class="num">{_number(item.value)}{stderr}</td>'
             f'<td class="num">{item.scored}/{item.count}</td>'
             f'<td class="num">{_number(item.pass_rate, 2)}</td>'
-            f'<td class="num">{_verdict(item.passed)}</td>'
+            f'<td class="num">{_verdict(passed=item.passed)}</td>'
             "</tr>"
         )
 
@@ -183,7 +183,7 @@ def _meta(result: EvalResult) -> str:
     verdict = (
         ""
         if result.passed is None
-        else f" &middot; {_verdict(result.passed)}"
+        else f" &middot; {_verdict(passed=result.passed)}"
     )
     return (
         f"{len(result.dataset)} rows &middot; "
