@@ -8,6 +8,8 @@ Ragrank is a Python evaluation library for RAG (Retrieval-Augmented Generation) 
 
 Plans live in `PLAN.md` (the chain) and `plans/NN-*.md`.
 
+Standards: docs/standards.md
+
 ## Commands
 
 ```bash
