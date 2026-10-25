@@ -8,24 +8,6 @@
     </picture>
 </p>
 
-<p align="center">
-    <a href="">
-        <img alt="license" src="https://img.shields.io/github/license/Auto-Playground/ragrank">
-    </a>
-    <a href="https://pypi.org/project/ragrank/">
-        <img alt="python versions" src="https://img.shields.io/pypi/pyversions/ragrank">
-    </a>
-    <a href="https://ragrank.readthedocs.io/latest/">
-        <img alt="docs" src="https://img.shields.io/readthedocs/ragrank">
-    </a>
-    <a href="https://pypi.org/project/ragrank/">
-        <img alt="release" src="https://img.shields.io/github/v/release/Auto-Playground/Ragrank?color=orange">
-    </a>
-    <a href="https://github.com/Auto-Playground/Ragrank/actions">
-        <img alt="tests" src="https://img.shields.io/github/actions/workflow/status/Auto-Playground/ragrank/.github%2Fworkflows%2Ftests.yml">
-    </a>
-</p>
-
 <h4 align="center">
     <p>
         <a href="https://ragrank.readthedocs.io/latest/">Documentation</a> |
