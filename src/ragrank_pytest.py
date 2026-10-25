@@ -41,6 +41,8 @@ import pytest
 if TYPE_CHECKING:  # pragma: no cover
     from _pytest.config import Config
     from _pytest.config.argparsing import Parser
+
+    # isort: split
     from ragrank.dataset import DataNode, Dataset
     from ragrank.evaluation.outputs import EvalResult
     from ragrank.evaluation.runner import RunConfig
