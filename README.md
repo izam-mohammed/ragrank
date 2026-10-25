@@ -9,20 +9,20 @@
 </p>
 
 <p align="center">
-    <a href="">
-        <img alt="license" src="https://img.shields.io/github/license/Auto-Playground/ragrank">
+    <a href="https://github.com/izam-mohammed/ragrank/blob/main/LICENSE">
+        <img alt="license" src="https://img.shields.io/github/license/izam-mohammed/ragrank">
     </a>
     <a href="https://pypi.org/project/ragrank/">
-        <img alt="python versions" src="https://img.shields.io/pypi/pyversions/ragrank">
+        <img alt="python versions" src="https://img.shields.io/python/required-version-toml?tomlFilePath=https%3A%2F%2Fraw.githubusercontent.com%2Fizam-mohammed%2Fragrank%2Fmain%2Fpyproject.toml">
     </a>
     <a href="https://ragrank.readthedocs.io/latest/">
-        <img alt="docs" src="https://img.shields.io/readthedocs/ragrank">
+        <img alt="docs" src="https://img.shields.io/readthedocs/ragrank/latest">
     </a>
-    <a href="https://pypi.org/project/ragrank/">
-        <img alt="release" src="https://img.shields.io/github/v/release/Auto-Playground/Ragrank?color=orange">
+    <a href="https://github.com/izam-mohammed/ragrank/releases">
+        <img alt="release" src="https://img.shields.io/github/v/release/izam-mohammed/ragrank?color=orange">
     </a>
-    <a href="https://github.com/Auto-Playground/Ragrank/actions">
-        <img alt="tests" src="https://img.shields.io/github/actions/workflow/status/Auto-Playground/ragrank/.github%2Fworkflows%2Ftests.yml">
+    <a href="https://github.com/izam-mohammed/ragrank/actions/workflows/tests.yml">
+        <img alt="tests" src="https://img.shields.io/github/actions/workflow/status/izam-mohammed/ragrank/tests.yml?branch=main">
     </a>
 </p>
 
